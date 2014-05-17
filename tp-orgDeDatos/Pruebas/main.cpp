@@ -24,7 +24,7 @@ int main(int argc,char argv[]){
 
 	char* buffer;
 
-	FileManager fileManager = new FIleManager();
+	FileManager fileManager = new FileManager();
 	fileManager.processFile(nombreDelArchivo, buffer);
 	fileOut = fileManager.createFileOut(nombreDelArchivo);
 

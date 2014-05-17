@@ -7,9 +7,9 @@
 
 #include "FileManager.h"
 
-void FileManager::procesarFile(char filename[], char buffer[]){
+void FileManager::processFile(char filename[], char buffer[]){
 	FILE* fileIn;
-	unsigned int lSize;
+	long lSize;
 	unsigned int result;
 
 	fileIn = fopen(filename, "r");
@@ -18,7 +18,7 @@ void FileManager::procesarFile(char filename[], char buffer[]){
 	//obtain file size:
 	fseek (fileIn , 0 , SEEK_END);
 	lSize = ftell (fileIn);
-	rewind (fileIn));
+	rewind (fileIn);
 
 	// allocate memory to contain the whole file:
 	buffer = (char*) malloc (sizeof(char)*lSize);
@@ -32,7 +32,7 @@ void FileManager::procesarFile(char filename[], char buffer[]){
 	fclose (fileIn);
 }
 
-FILE* FileManager::createFileOut(string filename){
+FILE* FileManager::createFileOut(char* filename){
 
 }
 

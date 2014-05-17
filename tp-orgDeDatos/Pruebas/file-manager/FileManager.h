@@ -11,6 +11,8 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstdio>
+#include <cstddef>
 
 class FileManager {
 	public:
@@ -26,7 +28,7 @@ class FileManager {
 		 *  -El metodo modifica el array buffer, agregando el total del contenido del archivo a procesar
 		 * */
 
-		FILE* createFileOut(string filename);
+		FILE* createFileOut(char* filename);
 		/*
 		 * Dado el nombre del archivo a procesar, ya sea a comprimir o descomprimir, se crea el archivo
 		 * en donde se guararan los resultados.
