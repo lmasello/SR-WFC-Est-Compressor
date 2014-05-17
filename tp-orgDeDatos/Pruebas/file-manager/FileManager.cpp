@@ -27,6 +27,7 @@ void FileManager::procesarFile(char filename[], char buffer[]);
 	if (result != lSize) {fputs ("Reading error",stderr); exit (3);}
 
 	/* the whole file is now loaded in the memory buffer. */
+	fclose (fileIn);
 }
 
 
