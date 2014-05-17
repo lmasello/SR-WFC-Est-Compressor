@@ -8,6 +8,8 @@
 #ifndef FILEMANAGER_H_
 #define FILEMANAGER_H_
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 
 class FileManager {
 	public:
@@ -17,9 +19,9 @@ class FileManager {
 		 * Precondiciones:
 		 *  -fileIn debe ser un nombre de archivo valido, ubicado en el mismo directorio del
 		 *   proyecto
-		 *  -buffer ya debe estar inicializado, habiendo contemplado la cantidad de memoria necesaria
+		 *  -buffer todavia no contemplo la cantidad de memoria necesaria
 		 *  Postcondiciones:
-		 *  -El metodo modifica el array buffer, agregando el contenido del archivo a procesar
+		 *  -El metodo modifica el array buffer, agregando el total del contenido del archivo a procesar
 		 * */
 };
 

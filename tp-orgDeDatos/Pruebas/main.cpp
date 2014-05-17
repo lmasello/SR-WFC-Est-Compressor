@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const long megaByte = 1024*1024;
+//const long megaByte = 1024*1024;
 const unsigned int orden = 3;
 
 int main(int argc,char argv[]){
@@ -21,7 +21,7 @@ int main(int argc,char argv[]){
 	char operacionARealizar[] = argv[0];
 	char nombreDelArchivo[] = argv[1];
 
-	char buffer[megaByte*100];
+	char* buffer;
 
 	FileManager fileManager = new FIleManager();
 	fileManager.processFile(nombreDelArchivo, buffer);
