@@ -16,21 +16,20 @@ const unsigned int orden = 3;
 
 int main(int argc,char argv[]){
 
-	/*Variables de argv--> comprime/descomprime, archivo entrada, archivo salida
-	*Ver opcion de que el usuario indique el orden del contexto maximo.*/
+	//Variables de argv--> comprime/descomprime, archivo entrada, archivo salida
+	//Ver opcion de que el usuario indique el orden del contexto maximo.
 	char operacionARealizar[] = argv[0];
 	char nombreDelArchivo[] = argv[1];
+	FILE* fileOut;
 
 	char* buffer;
 
 	FileManager fileManager = new FIleManager();
 	fileManager.processFile(nombreDelArchivo, buffer);
+	fileOut = fileManager.createFileOut(nombreDelArchivo);
 
-	/*Se carga el file en memoria (buffer), aparentemente por partes ya que hay que
-	* tener en cuenta archivos muy grandes que no entran en memoria.
-	*
-	*Se instancia la clase Compresor, pasandole como parametro el vector
-	*que devuelve el fileManager
+	/*
+	*Se instancia la clase Compresor, pasandole como parametro el buffer
 	*
 	*Se instancia a compresor.comprimir() o compresor.descomprimir() de
 	* acuerdo al parametro pasado por el usuario

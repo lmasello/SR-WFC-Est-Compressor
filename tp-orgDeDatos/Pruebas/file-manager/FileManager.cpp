@@ -5,7 +5,9 @@
  *      Author: lmasel
  */
 
-void FileManager::procesarFile(char filename[], char buffer[]);
+#include "FileManager.h"
+
+void FileManager::procesarFile(char filename[], char buffer[]){
 	FILE* fileIn;
 	unsigned int lSize;
 	unsigned int result;
@@ -30,5 +32,7 @@ void FileManager::procesarFile(char filename[], char buffer[]);
 	fclose (fileIn);
 }
 
+FILE* FileManager::createFileOut(string filename){
 
+}
 
