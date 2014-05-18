@@ -1,30 +1,30 @@
-/*
- * SymbolRanking.h
- *
- *  Created on: 18 May 2014
- *      Author: lmasel
- */
-
-#ifndef SYMBOLRANKING_H_
-#define SYMBOLRANKING_H_
+#ifndef SYMBOLRANKING_H
+#define SYMBOLRANKING_H
 
 class SymbolRanking{
-private:
+	private:
+		char tabla[]; //Con los valores ASCII
+		int orden; //Orden maximo de contexto.
 
-public:
-	void comprimir(unsigned int orden, char buffer[], unsigned int output[]);
-	/*Dado un buffer con chars y un orden para la longitud maxima de match, se realiza el algoritmo
-	 * de symbolRanking, colocando en el array de enteros positivos, un numero positivo, donde cada uno
-	 *  de ellos indica el ranking con el cual fue comprimido cada char del buffer.
-	 *
-	 * Precondiciones:
-	 *  - Orden debe ser un valor positivo (se estima que el optimo esta entre 3 y 4)
-	 *  - buffer debe contener el archivo a procesar
-	 * Postcondiciones:
-	 *  - Modifica el array output, el cual debe encontrarse vacio, pero con cantidad de memoria suficiente
-	 *    para almacenar la salida
-	 */
+		/* Dado un orden de contexto y un char busca en el vector y devuelve
+		* true or false segun si lo encontro o no y el numero de no ocurrencias.
+		* EJ: mejor caso (true,0) peor caso (false, contextosQueSeComparan)
+		*/
+		void buscarEnContexto(int orden, char caracter);
+
+		/* Realiza la busqueda del caracter para el caso de contexto = 1 */
+		void buscarEnContextoUno(char caracter, unsigned long pos);
+
+	public:
+		SymbolRanking();
+
+		SymbolRanking(int orden);
+
+		/*Recibe un vector de char a comprimir. El resultado se almacenara en un vector de short (necesito mas de 256 caracteres
+		 * por lo que no se puede guardar en un vector de char */
+		void comprimir(char* aComprimir, short* salida, unsigned long size);
 };
 
+#endif
 
-#endif /* SYMBOLRANKING_H_ */
+
