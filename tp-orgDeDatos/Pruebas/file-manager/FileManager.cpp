@@ -1,10 +1,3 @@
-/*
- * FileManager.cpp
- *
- *  Created on: 17 May 2014
- *      Author: lmasel
- */
-
 #include "FileManager.h"
 using namespace std;
 

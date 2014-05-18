@@ -1,10 +1,3 @@
-/*
- * FileManager.h
- *
- *  Created on: 17 May 2014
- *      Author: lmasel
- */
-
 #ifndef FILEMANAGER_H_
 #define FILEMANAGER_H_
 #include <iostream>
