@@ -1,7 +1,7 @@
 #include "FileManager.h"
 using namespace std;
 
-void FileManager::processFile(char* filename, char buffer[]){
+unsigned long FileManager::processFile(char* filename, char buffer[]){
 	FILE* fileIn;
 	unsigned long lSize;
 	unsigned int result;
@@ -24,6 +24,8 @@ void FileManager::processFile(char* filename, char buffer[]){
 
 	/* the whole file is now loaded in the memory buffer. */
 	fclose (fileIn);
+
+	return result;
 
 }
 

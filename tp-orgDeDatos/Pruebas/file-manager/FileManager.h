@@ -11,7 +11,7 @@ class FileManager {
 	public:
 		FileManager();
 
-		void processFile(char* filename, char buffer[]);
+		unsigned long processFile(char* filename, char buffer[]);
 		/* Dado un filename, lo abre y vuelca su contenido en el buffer.
 		 * Precondiciones:
 		 *  -fileIn debe ser un nombre de archivo valido, ubicado en el mismo directorio del

@@ -17,7 +17,7 @@ class Compresor{
 		/* A partir del buffer obtenido, se generara el archivo comprimido mediante los metodos de Symbol Ranking
 		 * + MTF + Estructurado. Maneja la logica general del proceso y realiza las llamadas a los metodos de compresion
 		 * de cada parte del proceso. */
-		void comprimir(char* buffer);
+		void comprimir(char* buffer, unsigned long size);
 
 
 		/* A partir del buffer obtenido, se genera el archivo descomprimido siguiendo los pasos y logica inversa del

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "FileManager/FileManager.h"
+#include "file-manager/FileManager.h"
 
 using namespace std;
 
@@ -15,9 +15,10 @@ int main(int argc,char *argv[]){
 	char* nombreDelArchivo = argv[2];
 	FILE* fileOut;
 	char* buffer;
+	unsigned long size;
 
 	FileManager fileManager;
-	fileManager.processFile(nombreDelArchivo, buffer);
+	size = fileManager.processFile(nombreDelArchivo, buffer);
 	fileOut = fileManager.createFileOut(nombreDelArchivo);
 
 	/*

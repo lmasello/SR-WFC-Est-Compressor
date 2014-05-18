@@ -10,9 +10,10 @@ RM := rm -rf
 -include sources.mk
 -include subdir.mk
 -include tp-orgDeDatos/Pruebas/subdir.mk
+-include tp-orgDeDatos/Pruebas/file-manager/subdir.mk
 -include tp-orgDeDatos/Pruebas/SymbolRanking/subdir.mk
--include tp-orgDeDatos/Pruebas/FileManager/subdir.mk
 -include tp-orgDeDatos/Pruebas/Compresor/subdir.mk
+-include tp-orgDeDatos/Pruebas/Algoritmos\ de\ compresion/subdir.mk
 -include tp-orgDeDatos/Ideas/Inicial/MTF/subdir.mk
 -include objects.mk
 
