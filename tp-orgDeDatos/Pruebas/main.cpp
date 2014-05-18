@@ -1,30 +1,23 @@
-/*
- * main.cpp
- *
- *  Created on: 17 May 2014
- *      Author: lmasel
- */
-
 #include <iostream>
 #include <string>
-#include "FileManager/FileManager.h"
+#include "file-manager/FileManager.h"
 
 using namespace std;
 
 //const long megaByte = 1024*1024;
-const unsigned int orden = 3;
+const unsigned char orden = 3;
 
-int main(int argc,char argv[]){
+int main(int argc,char *argv[]){
 
 	//Variables de argv--> comprime/descomprime, archivo entrada, archivo salida
 	//Ver opcion de que el usuario indique el orden del contexto maximo.
-	char operacionARealizar[] = argv[0];
-	char nombreDelArchivo[] = argv[1];
-	FILE* fileOut;
 
+	char* operacionARealizar = argv[1];
+	char* nombreDelArchivo = argv[2];
+	FILE* fileOut;
 	char* buffer;
 
-	FileManager fileManager = new FileManager();
+	FileManager fileManager;
 	fileManager.processFile(nombreDelArchivo, buffer);
 	fileOut = fileManager.createFileOut(nombreDelArchivo);
 

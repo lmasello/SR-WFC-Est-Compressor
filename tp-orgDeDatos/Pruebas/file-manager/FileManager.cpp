@@ -6,14 +6,15 @@
  */
 
 #include "FileManager.h"
+using namespace std;
 
-void FileManager::processFile(char filename[], char buffer[]){
+void FileManager::processFile(char* filename, char buffer[]){
 	FILE* fileIn;
-	long lSize;
+	unsigned long lSize;
 	unsigned int result;
 
-	fileIn = fopen(filename, "r");
-	if (fileIn==NULL){fputs ("FIle error",stderr); exit(1);}
+	fileIn = fopen(filename, "rb");
+	if (!fileIn){fputs ("File error",stderr); exit(1);}
 
 	//obtain file size:
 	fseek (fileIn , 0 , SEEK_END);
@@ -30,9 +31,10 @@ void FileManager::processFile(char filename[], char buffer[]){
 
 	/* the whole file is now loaded in the memory buffer. */
 	fclose (fileIn);
+
 }
 
 FILE* FileManager::createFileOut(char* filename){
-
+	return NULL;
 }
 
