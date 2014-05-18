@@ -24,10 +24,8 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 tp-orgDeDatos/Pruebas \
-tp-orgDeDatos/Pruebas/file-manager \
+tp-orgDeDatos/Pruebas/SymbolRanking \
+tp-orgDeDatos/Pruebas/FileManager \
 tp-orgDeDatos/Pruebas/Compresor \
-tp-orgDeDatos/Ideas/Inicial \
-tp-orgDeDatos/Ideas/Inicial/SymbolRanking \
 tp-orgDeDatos/Ideas/Inicial/MTF \
-tp-orgDeDatos/Ideas/Inicial/FileManager \
 

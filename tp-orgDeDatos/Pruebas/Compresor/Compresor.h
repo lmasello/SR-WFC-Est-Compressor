@@ -14,15 +14,16 @@ class Compresor{
 	public:
 		Compresor();
 
-		void comprimir(char* buffer);
 		/* A partir del buffer obtenido, se generara el archivo comprimido mediante los metodos de Symbol Ranking
 		 * + MTF + Estructurado. Maneja la logica general del proceso y realiza las llamadas a los metodos de compresion
 		 * de cada parte del proceso. */
+		void comprimir(char* buffer);
 
-		void descomprimir();
+
 		/* A partir del buffer obtenido, se genera el archivo descomprimido siguiendo los pasos y logica inversa del
 		 * metodo comprimir. Todavia esta por definirse el tipo de datos del buffer que recibe este metodo (por eso
 		 * no lo puse). */
+		void descomprimir();
 };
 
 #endif

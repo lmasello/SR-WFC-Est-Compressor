@@ -1,6 +1,5 @@
 #include <iostream>
-#include <string>
-#include "file-manager/FileManager.h"
+#include "FileManager/FileManager.h"
 
 using namespace std;
 
