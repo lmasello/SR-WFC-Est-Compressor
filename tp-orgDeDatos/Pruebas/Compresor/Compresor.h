@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <cstdio>
 #include <cstddef>
+#include "Algoritmos de compresion/SymbolRanking/SymbolRanking.h"
+#define ORDEN 3
+using namespace std;
 
 
 /*Compresor tendra la logica sobre la compresion y descompresion del archivo de entrada. */

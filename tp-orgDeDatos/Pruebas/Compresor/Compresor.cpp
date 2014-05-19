@@ -1,7 +1,4 @@
 #include "Compresor.h"
-#include "../SymbolRanking/SymbolRanking.h"
-#define ORDEN 3
-using namespace std;
 
 void Compresor::comprimir(char* buffer, unsigned long size){
 /* Va a llamar a SymbolRanking comprimir. El resultado de esto se lo pasa

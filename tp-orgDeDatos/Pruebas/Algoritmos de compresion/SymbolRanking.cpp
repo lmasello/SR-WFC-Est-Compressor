@@ -11,30 +11,74 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 	* en el vector el numero ascii correspondiente al literal, mas el numero de no ocurrencias */
 
 	int ctxActual = orden;
-	char actual;
+	char charToRank;
 	short numero; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
 	for (unsigned long i = 0; i< size; i++){
-		/* actual = aComprimir[i];
-		while(ctxActual >1){
-			tuple = buscarEnContexto(ctxActual, actual, i);      // Es lo proximo a implementar. Hay que buscar una implementacion de tupla
-			numero += tuple[1];								  // e implementar buscarEnContexto.
+		charToRank = aComprimir[i];
+		numero = 0;
+/*		while((ctxActual >1) && (i>=orden)){
+			tuple = buscarEnContexto(ctxActual, charToRank, i, aComprimir);      // Es lo proximo a implementar. Hay que buscar una implementacion de tupla
+			numero += tuple[1];										 			 // e implementar buscarEnContexto.
 			if (tuple[0]) break;
 			ctxActual--;
 		}
-		if (ctxActual == 1){
+		if ((ctxActual == 1) || (i<orden)){
 			tuple = buscarEnContextoUno(actual, i);
 			numero += tuple[1];
 			if (!tuple[0]) numero += buscarIndiceEnTabla	  // Caso de contexto = 0. Se le agrega al numero actual, el valor del char.
 		}
-		salida[i] = numero;*/
+		salida[i] = numero;
+*/	}
+
+}
+
+
+void SymbolRanking::buscarEnContexto(int orden, char caracter, unsigned long pos, char* buffer){
+	unsigned long indexFirstChar = pos-orden;
+	unsigned long indexSecondChar = pos-orden+1;
+	unsigned short noOcurrencias = 0;
+
+	char lastSymbols[] = {buffer[indexFirstChar], buffer[indexSecondChar]};
+	string lastTwoSymbols = string(lastSymbols);
+
+	size_t hashValue = hashKey(lastTwoSymbols);
+/*
+	// get the list of positions with the same hashValue
+	hashValue* listOfPositions;
+	if (listOfPositions.empty()) listOfPositions.push_front(indexFirstChar); //Guarda la posicion en la lista
+	else(){
+		for(list<unsigned long>::iterator iterator = listOfPositions.begin();iterator != listOfPositions.end(); ++iterator){
+			bool hayMatch = this.contextosIguales(*iterator,indexFirstChar,buffer);
+			if (hayMatch){
+				bool elCandidatoEsElBuscado = this.charsIguales(*iterator, orden, caracter, buffer);
+
+				// Aqui habria que consultar la lista de exclusion
+
+				if (elCandidatoEsElBuscado){
+					listOfPositions.push_front(indexFirstChar);
+					return (true,noOcurrencias);
+				}
+				noOcurrencias++;
+			}
+		}
+		listOfPositions.push_front(indexFirstChar);
 	}
+	return (false,noOcurrencias);
+*/
 }
 
-/* Devuelve una tupla de la forma que indica el metodo comprimir */
-void buscarEnContexto(int orden, char caracter, unsigned long pos){
-
+bool SymbolRanking::contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer){
+	for (unsigned short i; i<orden; i++){
+		if (buffer[indexA+i]!=buffer[indexB+i])return false;
+	}
+	return true;
 }
 
-void buscarEnContextoUno(char caracter, unsigned long pos){
+size_t SymbolRanking::hashKey(string stringToHash){
+	hash<std::string> strHash; // Si sigue tirando error, implementamos una funcion de hashing nosotros.
+	return strHash(stringToHash);
+}
+
+void SymbolRanking::buscarEnContextoUno(char caracter, unsigned long pos, char* buffer){
 
 }

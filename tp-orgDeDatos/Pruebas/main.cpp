@@ -1,5 +1,6 @@
 #include <iostream>
-#include "file-manager/FileManager.h"
+#include "FileManager/FileManager.h"
+#include "Compresor/Compresor.h"
 
 using namespace std;
 
@@ -26,9 +27,15 @@ int main(int argc,char *argv[]){
 	*
 	*Se instancia a compresor.comprimir() o compresor.descomprimir() de
 	* acuerdo al parametro pasado por el usuario
-	*
-	*Luego de la instancia de compresion/descompresion se llama al file
-	*Manager para que guarde los resultados en el archivo de salida */
+	*/
+	Compresor compresor = new Compresor();
+	if (operacionARealizar[1] == 'c') compresor.comprimir(buffer,size);
+	//else if(operacionARealizar[1]=='d')compresor.descomprimir(buffer,size);
+
+	/*
+	 * Luego de la instancia de compresion/descompresion se llama al file
+	 * Manager para que guarde los resultados en el archivo de salida
+	 */
 
 	return 0;
 }
