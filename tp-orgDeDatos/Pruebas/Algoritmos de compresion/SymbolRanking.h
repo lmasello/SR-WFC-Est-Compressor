@@ -25,9 +25,27 @@ class SymbolRanking{
 		/* Realiza la busqueda del caracter para el caso de contexto = 1 */
 		void buscarEnContextoUno(char caracter, unsigned long pos, char* buffer);
 
+		/*Dada una clave de (nro de orden) Bytes, devuelve el valor de la funcion hash*/
 		size_t hashKey(string stringToHash);
+
+		/* Dadas dos offset de un buffer, se comparan N Bytes (N = nro de orden).
+		 * Si dichos Bytes son iguales, entonces dichos strings son iguales y por lo tanto los contextos son iguales.
+		 * Precondiciones:
+		 *  -indexA e indexB deben ser offsets validos del buffer, donde indexA < indexB
+		 * Postcondiciones:
+		 *  Devuelve un boolean de acuerdo a si se produce un match de contextos o no
+		 */
 		bool contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer);
-		bool charsIguales(unsigned long index,unsigned short offsetToChar,char charToCompare,char* buffer);
+
+		/*
+		 * Dado un offset de un array, verifica si el char apuntado por esa posicion es el caracter a comparar.
+		 * Precondiciones:
+		 *  - index debe ser un indice valido del buffer
+		 * Postcondiciones:
+		 *  Devuelve un boolean de acuerdo a si hay un match entre los caracteres involucrados
+		 */
+		bool charsIguales(unsigned long index,char charToCompare,char* buffer);
+
 	public:
 		SymbolRanking();
 

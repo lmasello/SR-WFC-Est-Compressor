@@ -50,7 +50,7 @@ void SymbolRanking::buscarEnContexto(int orden, char caracter, unsigned long pos
 		for(list<unsigned long>::iterator iterator = listOfPositions.begin();iterator != listOfPositions.end(); ++iterator){
 			bool hayMatch = this.contextosIguales(*iterator,indexFirstChar,buffer);
 			if (hayMatch){
-				bool elCandidatoEsElBuscado = this.charsIguales(*iterator, orden, caracter, buffer);
+				bool elCandidatoEsElBuscado = this.charsIguales(*iterator + orden, caracter, buffer);
 
 				// Aqui habria que consultar la lista de exclusion
 
@@ -74,8 +74,8 @@ bool SymbolRanking::contextosIguales(unsigned long indexA, unsigned long indexB,
 	return true;
 }
 
-bool SymbolRanking::charsIguales(unsigned long index,unsigned short offsetToChar,char charToCompare,char* buffer){
-	if(buffer[index+offsetToChar]==charToCompare)return true;
+bool SymbolRanking::charsIguales(unsigned long index,char charToCompare,char* buffer){
+	if(buffer[index]==charToCompare)return true;
 	return false;
 }
 
