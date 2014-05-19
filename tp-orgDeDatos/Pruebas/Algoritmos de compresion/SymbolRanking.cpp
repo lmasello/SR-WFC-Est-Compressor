@@ -74,10 +74,16 @@ bool SymbolRanking::contextosIguales(unsigned long indexA, unsigned long indexB,
 	return true;
 }
 
+bool SymbolRanking::charsIguales(unsigned long index,unsigned short offsetToChar,char charToCompare,char* buffer){
+	if(buffer[index+offsetToChar]==charToCompare)return true;
+	return false;
+}
+
 size_t SymbolRanking::hashKey(string stringToHash){
 	hash<std::string> strHash; // Si sigue tirando error, implementamos una funcion de hashing nosotros.
 	return strHash(stringToHash);
 }
+
 
 void SymbolRanking::buscarEnContextoUno(char caracter, unsigned long pos, char* buffer){
 

@@ -27,6 +27,7 @@ class SymbolRanking{
 
 		size_t hashKey(string stringToHash);
 		bool contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer);
+		bool charsIguales(unsigned long index,unsigned short offsetToChar,char charToCompare,char* buffer);
 	public:
 		SymbolRanking();
 
