@@ -28,7 +28,7 @@ int main(int argc,char *argv[]){
 	*Se instancia a compresor.comprimir() o compresor.descomprimir() de
 	* acuerdo al parametro pasado por el usuario
 	*/
-	Compresor compresor = new Compresor();
+	Compresor compresor;
 	if (operacionARealizar[1] == 'c') compresor.comprimir(buffer,size);
 	//else if(operacionARealizar[1]=='d')compresor.descomprimir(buffer,size);
 

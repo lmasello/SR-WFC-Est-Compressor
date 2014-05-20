@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <cstdio>
 #include <cstddef>
-#include "Algoritmos de compresion/SymbolRanking/SymbolRanking.h"
+#include "../Algoritmos de compresion/SymbolRanking.h"
 #define ORDEN 3
 using namespace std;
 

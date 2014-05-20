@@ -1,4 +1,5 @@
 #include "Compresor.h"
+#include "../Algoritmos de compresion/SymbolRanking.h"
 
 void Compresor::comprimir(char* buffer, unsigned long size){
 /* Va a llamar a SymbolRanking comprimir. El resultado de esto se lo pasa
