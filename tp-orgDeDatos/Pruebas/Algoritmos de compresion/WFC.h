@@ -22,7 +22,7 @@ private:
 	 */
 	unsigned short getIndex(char charTobeIndexed);
 
-	void WFC::incrementarFrecuencia(charToTransform);
+	void WFC::incrementarFrecuencia(char charToTransform);
 
 	/*
 	 * Reordena la weithedList en base a las frecuencias. EL criterio de ordenamiento

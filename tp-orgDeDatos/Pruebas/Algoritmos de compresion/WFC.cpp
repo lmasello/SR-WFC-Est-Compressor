@@ -15,7 +15,7 @@ WFC::WFC(){
 
 unsigned short WFC::comprimir(char charToTransform){
 	unsigned short index = getIndex(charToTransform);
-	aumentarFrecuencia(charToTransform);
+	incrementarFrecuencia(charToTransform);
 	updateWeightedList();
 	return index;
 }
@@ -31,7 +31,7 @@ unsigned short WFC::getIndex(char charTobeIndexed){
 }
 
 //iMPLEMENTAR
-void WFC::incrementarFrecuencia(charToTransform){
+void WFC::incrementarFrecuencia(char charToTransform){
 
 }
 
