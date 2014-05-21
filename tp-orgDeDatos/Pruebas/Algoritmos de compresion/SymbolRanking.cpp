@@ -17,25 +17,25 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 
 	for(int i = 0; i < orden; i++){
 		if (i > 1){
-			hashear(aComprimir[i-1], aComprimir[i-2]);	//Ojo, diferencias de parametros con el hashear de buscarEnContexto
+			hashear(aComprimir[i-1], aComprimir[i-2], i-2);	//Ojo, diferencias de parametros con el hashear de buscarEnContexto
 		}
 		salida[i] = aComprimir[i];
 	}
 
 	for (unsigned long i = orden; i< size; i++){	//i= index del char en el buffer
 		charToRank = aComprimir[i];
-		exclusionList.erase(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
+		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
 		nroNoOcurrencias = 0;
 		while(ctxActual > 1){
 			tupla = buscarEnContexto(ctxActual, charToRank, i, aComprimir);
-			nroNoOcurrencias += tupla[1];
-			if (tupla[0]) break;
+			nroNoOcurrencias += get<1> (tupla);
+			if (get<0> (tupla)) break;
 			ctxActual--;
 		}
 		if (ctxActual == 1){
-			tupla = buscarEnContextoUno(actual, i,aComprimir);
-			nroNoOcurrencias += tupla[1];
-			if (!tupla[0]) nroNoOcurrencias += (unsigned short) charToRank;	  // Caso de contexto = 0. Se le agrega al numero actual, el valor del char.
+			tupla = buscarEnContextoUno(charToRank, i,aComprimir);
+			nroNoOcurrencias += get<1> (tupla);
+			if (!get<0> (tupla)) nroNoOcurrencias += (unsigned short) charToRank;	  // Caso de contexto = 0. Se le agrega al numero actual, el valor del char.
 		}
 		salida[i] = nroNoOcurrencias;
 	}
@@ -45,12 +45,10 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char caracter, unsigned long pos, char* buffer){
 	unsigned long indexFirstChar = pos-orden;
 	unsigned long indexSecondChar = pos-orden+1;
-	unsigned short noOcurrencias = 0;
+	unsigned short nroNoOcurrencias = 0;
 	tuple<bool, unsigned short> tupla;
 
-	char lastSymbols[] = {buffer[indexFirstChar], buffer[indexSecondChar]};
-
-	list<unsigned long> listOfPositions = hashear(lastSymbols, indexFirstChar); //hashValue es la posicion en el map de la clave guardada.
+	list<unsigned long> listOfPositions = hashear(buffer[indexFirstChar], buffer[indexSecondChar], indexFirstChar);
 
 	for(list<unsigned long>::iterator iterator = ++listOfPositions.begin();
 		iterator != listOfPositions.end(); ++iterator){							//*iterator seria un unsigned long, indicando una posicion de la lista de posiciones
@@ -60,18 +58,23 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 				bool esElBuscado = charsIguales(*iterator + orden, caracter, buffer);
 				if (esElBuscado){
 					listOfPositions.push_front(indexFirstChar); //Si no me equivoco, esto lo hace la funcion hashear!!!
-					return tupla(true,noOcurrencias);
+					get<0> (tupla) = true;
+					get<1> (tupla) = nroNoOcurrencias;
+					return tupla;
 				}
 				exclusionList.push_front(*iterator+orden);
-				noOcurrencias++;
+				nroNoOcurrencias++;
 			}
 		}
 	}
-	return tupla(false,noOcurrencias);
+	get<0> (tupla) = false;
+	get<1> (tupla) = nroNoOcurrencias;
+	return tupla;
 }
 
 //Se sigue la idea mencionada por Fenwich en el 132
 tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, unsigned long pos, char* buffer){
+	tuple<bool, unsigned short> tupla;
 /*
 
  	 unsigned long posicionDelContexto = pos-1;
@@ -86,10 +89,9 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	 list<tuple<unsigned long,char>> sameContextPositions = hashear (charToRank, charDelContexto, posicionDelContexto);
 
      unsigned short noOcurrencias = 0;
-	 tuple<bool, unsigned short> tupla;
 
 	 for(list<unsigned long>::iterator iterator = ++sameContextPositions.begin();
-		iterator != sameContextPositions.end(); ++iterator){				//*iterator es una tupla (unsigned long,char) indicando la posicion del ctx y el char que le sigue
+		iterator != sameContextPositions.end(); ++iterator){				// *iterator es una tupla (unsigned long,char) indicando la posicion del ctx y el char que le sigue
 
 		unsigned long indexDelCaracterOfrecido = *iterator[0] + 1;
 		bool esElBuscado = charsIguales(indexDelCaracterOfrecido, charToRank, buffer);
@@ -103,11 +105,13 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	return tupla(false,noOcurrencias);
 
 */
+	return tupla;
 }
 
 // IMPLEMENTAR.
-list<unsigned long> SymbolRanking::hashear(char* symbols, unsigned long index){
-	return NULL;
+list<unsigned long> SymbolRanking::hashear(char symbol1, char symbol2, unsigned long indexFirstChar){
+	list<unsigned long> lista;
+	return lista;
 }
 
 bool SymbolRanking::contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer){
@@ -124,7 +128,7 @@ bool SymbolRanking::charsIguales(unsigned long index,char charToCompare,char* bu
 
 // Nota, copiado de cplusplus
 bool SymbolRanking::charNoExcluido(unsigned long pos){
-	auto it = find(exclusionList.being(), exclusionList.end(), pos);
+	auto it = std::find(exclusionList.begin(), exclusionList.end(), pos);
 	if (it == exclusionList.end()) return true;
 	return false;
 }

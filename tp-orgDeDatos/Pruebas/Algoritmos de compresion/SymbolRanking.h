@@ -2,6 +2,7 @@
 #define SYMBOLRANKING_H
 
 #include <string>
+#include <algorithm>
 #include <functional>
 #include <unordered_map>
 #include <list>
@@ -17,7 +18,7 @@ class SymbolRanking{
 
 		//Hash (tambien llamado map) con 255*255 claves que son combinacion de dos char. Sus valores
 		// son listas de las posiciones de sus apariciones de dichas claves en el buffer.
-		unordered_map<char*> map;
+		unordered_map<char*, unsigned long> mymap;
 
 		// Esta es la funcion de hashing (perfecta!) que vamos a usar.
 		hash<char*> fhash;
@@ -58,7 +59,7 @@ class SymbolRanking{
 
 		/* Dado un vector con 2 char, lo hashea en el map (atributo).
 		 */
-		list<unsigned long> hashear(char* charsToHash, unsigned long index);
+		list<unsigned long> hashear(char symbol1, char symbol2, unsigned long indexFirstChar);
 
 	public:
 		SymbolRanking();
