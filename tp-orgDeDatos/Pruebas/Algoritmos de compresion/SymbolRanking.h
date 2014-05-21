@@ -68,6 +68,11 @@ class SymbolRanking{
 		/*Recibe un vector de char a comprimir. El resultado se almacenara en un vector de short (necesito mas de 256 caracteres
 		 * por lo que no se puede guardar en un vector de char */
 		void comprimir(char* aComprimir, short* salida, unsigned long size);
+
+		/*
+		 * Recibe un vector de shorts y genera un vector de chars descomprimidos.
+		 */
+		void descomprimir(short* aDescomprimir, char* salida, unsigned long size);
 };
 
 #endif
