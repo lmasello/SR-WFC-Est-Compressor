@@ -25,7 +25,9 @@ private:
 	void WFC::incrementarFrecuencia(charToTransform);
 
 	/*
-	 * Reordena la weithedList en base a las frecuencias
+	 * Reordena la weithedList en base a las frecuencias. EL criterio de ordenamiento
+	 * es en forma de frecuencias decrecientes, quedando ubicados aquellos char mas
+	 * frecuentes al comienzo de la lista
 	 */
 	void WFC::updateWeightedList();
 
@@ -45,7 +47,5 @@ public:
 	 */
 	char descomprimir(unsigned short numberToTransform);
 };
-
-
 
 #endif /* WFC_H_ */
