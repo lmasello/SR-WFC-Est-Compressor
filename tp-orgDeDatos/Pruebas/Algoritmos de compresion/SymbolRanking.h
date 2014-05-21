@@ -7,12 +7,14 @@
 #include <unordered_map>
 #include <list>
 #include <tuple>
+#include "WFC.h"
 
 using namespace std;
 
 class SymbolRanking{
 	private:
 		char tabla[255]; //Con los valores ASCII no se si usa.
+		WFC wfc;
 		list<unsigned long> exclusionList;
 		int orden; //Orden maximo de contexto.
 

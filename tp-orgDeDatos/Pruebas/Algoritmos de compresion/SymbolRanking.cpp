@@ -15,17 +15,19 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 	unsigned short nroNoOcurrencias; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
 	tuple<bool,unsigned short> tupla;
 
+	//Primeros caracteres [0,orden-1]
 	for(int i = 0; i < orden; i++){
 		if (i > 1){
 			hashear(aComprimir[i-1], aComprimir[i-2], i-2);	//Ojo, diferencias de parametros con el hashear de buscarEnContexto
 		}
 		salida[i] = aComprimir[i];
 	}
-
+	//Siguientes caracteres
 	for (unsigned long i = orden; i< size; i++){	//i= index del char en el buffer
 		charToRank = aComprimir[i];
 		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
 		nroNoOcurrencias = 0;
+
 		while(ctxActual > 1){
 			tupla = buscarEnContexto(ctxActual, charToRank, i, aComprimir);
 			nroNoOcurrencias += get<1> (tupla);
@@ -35,12 +37,11 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 		if (ctxActual == 1){
 			tupla = buscarEnContextoUno(charToRank, i,aComprimir);
 			nroNoOcurrencias += get<1> (tupla);
-			if (!get<0> (tupla)) nroNoOcurrencias += (unsigned short) charToRank;	  // Caso de contexto = 0. Se le agrega al numero actual, el valor del char.
+			if (!get<0> (tupla)) nroNoOcurrencias += wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
 		}
 		salida[i] = nroNoOcurrencias;
 	}
 }
-
 
 tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char caracter, unsigned long pos, char* buffer){
 	unsigned long indexFirstChar = pos-orden;
@@ -75,23 +76,22 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 //Se sigue la idea mencionada por Fenwich en el 132
 tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, unsigned long pos, char* buffer){
 	tuple<bool, unsigned short> tupla;
-/*
+	unsigned long posicionDelContexto = pos-1;
+	char charDelContexto = buffer[posicionDelContexto];
 
- 	 unsigned long posicionDelContexto = pos-1;
- 	 char charDelContexto = buffer[posicionDelContexto];
+	/*Ver de implementar una funcion de hash para un char y que devuelva una lista de tuplas, donde cada tupla
+	  este formada por la posicion en donde aparece el contexto y el char que le sigue.
+ 	  De esta manera se aplica la lista de exclusion en la misma lista de ocurrencias, controlando el agregado y quitado de tuplas, haciendo
+ 	  que haya una sola entrada por cada char que le sigue al contexto. Si la prediccion es positiva, se remueve el ctx antiguo y se deja el actual.
+	  si la prediccion es negativa, queda todo como esta.
+	  Ej: Seria un map, donde la clave es el charDelContexto y tiene como valor (posicionDelContexto,charToRank)
+	*/
+	list<tuple<unsigned long,char>> sameContextPositions = hashear (charToRank, charDelContexto, posicionDelContexto);
 
- 	 //Ver de implementar una funcion de hash para un char y que devuelva una lista de tuplas, donde cada tupla
- 	 // este formada por la posicion en donde aparece el contexto y el char que le sigue.
- 	 // De esta manera se aplica la lista de exclusion en la misma lista, controlan el agregado y quitado de tuplas, haciendo
- 	 // que haya una sola entrada por cada char que le sigue al contexto. Si la prediccion es positiva, se remueve el ctx antiguo y se deja el actual.
- 	 // si la prediccion es negativa, queda todo como esta.
-	 //Ej: Seria un map, donde la clave es el charDelContexto y tiene como valor (posicionDelContexto,charToRank)
-	 list<tuple<unsigned long,char>> sameContextPositions = hashear (charToRank, charDelContexto, posicionDelContexto);
+	unsigned short noOcurrencias = 0;
 
-     unsigned short noOcurrencias = 0;
-
-	 for(list<unsigned long>::iterator iterator = ++sameContextPositions.begin();
-		iterator != sameContextPositions.end(); ++iterator){				// *iterator es una tupla (unsigned long,char) indicando la posicion del ctx y el char que le sigue
+	for(list<unsigned long>::iterator iterator = ++sameContextPositions.begin();
+	iterator != sameContextPositions.end(); ++iterator){				// *iterator es una tupla (unsigned long,char) indicando la posicion del ctx y el char que le sigue
 
 		unsigned long indexDelCaracterOfrecido = *iterator[0] + 1;
 		bool esElBuscado = charsIguales(indexDelCaracterOfrecido, charToRank, buffer);
@@ -103,9 +103,6 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 		noOcurrencias++;
 	}
 	return tupla(false,noOcurrencias);
-
-*/
-	return tupla;
 }
 
 // IMPLEMENTAR.
