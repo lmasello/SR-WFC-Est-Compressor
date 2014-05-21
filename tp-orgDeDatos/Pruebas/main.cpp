@@ -20,6 +20,9 @@ int main(int argc,char *argv[]){
 
 	FileManager fileManager;
 	size = fileManager.processFile(nombreDelArchivo, buffer);
+
+	cout << "El archivo ha sido abierto y colocado en memoria correctamente";
+
 	fileOut = fileManager.createFileOut(nombreDelArchivo);
 
 	/*

@@ -12,6 +12,8 @@ void Compresor::comprimir(char* buffer, unsigned long size){
 
 	sr.comprimir(buffer, salida, size);
 
+	cout<<"Symbol ranking ha finalizado el proceso de compresion correctamente";
+
 }
 
 void Compresor::descomprimir(){

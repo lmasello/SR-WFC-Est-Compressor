@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <cstdio>
 #include <cstddef>
+using namespace std;
 
 class FileManager {
 	public:
