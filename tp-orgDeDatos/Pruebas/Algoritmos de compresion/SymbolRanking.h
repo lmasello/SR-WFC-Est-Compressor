@@ -29,8 +29,8 @@ class SymbolRanking{
 		*/
 		tuple<bool,unsigned short> buscarEnContexto(int orden, char caracter,unsigned long pos, char* buffer);
 
-		/* Realiza la busqueda del caracter para el caso de contexto = 1 */
-		void buscarEnContextoUno(char caracter, unsigned long pos, char* buffer);
+		/* Realiza la busqueda del caracter para el caso de contexto = 1. */
+		tuple<bool,unsigned short> buscarEnContextoUno(char caracter, unsigned long pos, char* buffer);
 
 		/* Dadas dos offset de un buffer, se comparan N Bytes (N = nro de orden).
 		 * Si dichos Bytes son iguales, entonces dichos strings son iguales y por lo tanto los contextos son iguales.
