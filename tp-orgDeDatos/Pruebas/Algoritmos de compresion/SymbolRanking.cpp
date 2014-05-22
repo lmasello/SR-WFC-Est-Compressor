@@ -163,6 +163,12 @@ list<unsigned long> SymbolRanking::hashear(char symbol1, char symbol2, unsigned 
 }
 
 // IMPLEMENTAR. Antes de que me olvide. Esto no va a funcionar.
+/* Deberia funcionar de acuerdo a lo siguiente:
+ * unordered_map<Key,T>::iterator it;
+(*it).first;             // the key value (of type Key)
+(*it).second;            // the mapped value (of type T)
+(*it);                   // the "element value" (of type pair<const Key,T>)
+ */
 list<tuple<unsigned long,char>> SymbolRanking::hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar){
 	list<tuple<unsigned long,char>> lista;
 	return lista;
