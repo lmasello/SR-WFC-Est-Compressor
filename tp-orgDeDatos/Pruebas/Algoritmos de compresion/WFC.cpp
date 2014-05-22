@@ -7,10 +7,10 @@
 #include "WFC.h"
 
 WFC::WFC(){
-	for (unsigned short i=0;i<256;i++)
+	for (unsigned short i=0;i<256;i++){
 		weithedList.push_back((char)i);
-
-	//inicializar en uno el map de frecuencias. Implementar!
+		charFrequencies[(char)i]= (unsigned short) 1; //Iniciailza las frecuencias en uno
+	}
 }
 
 unsigned short WFC::comprimir(char charToTransform){
@@ -23,17 +23,15 @@ unsigned short WFC::comprimir(char charToTransform){
 //Se tomo como ref: stackoverflow.com/questions/4604136/how-to-search-for-an-element-in-an-stl-list
 unsigned short WFC::getIndex(unsigned long charPos){ //Revice la pos, no el char.
 	auto it = find(weithedList.begin(), weithedList.end(), charPos);
-	if (it == weithedList.end()); //throw notInList;
+	if (it == weithedList.end()) throw notInListError;
 	else{
 		const short index = distance(weithedList.begin(),it);
 		return index;
 	}
-	return 0; //Nunca deberia llegar aca.
 }
 
-//iMPLEMENTAR
 void WFC::incrementarFrecuencia(char charToTransform){
-
+	charFrequencies[charToTransform]+=1;
 }
 
 void WFC::updateWeightedList(){
