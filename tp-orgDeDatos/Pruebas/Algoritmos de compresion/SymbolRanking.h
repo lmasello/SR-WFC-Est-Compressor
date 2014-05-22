@@ -1,12 +1,14 @@
 #ifndef SYMBOLRANKING_H
 #define SYMBOLRANKING_H
 
+#include <iostream>
 #include <string>
 #include <algorithm>
 #include <functional>
 #include <unordered_map>
 #include <list>
 #include <tuple>
+
 #include "WFC.h"
 
 using namespace std;
@@ -18,12 +20,18 @@ class SymbolRanking{
 		list<unsigned long> exclusionList;
 		int orden; //Orden maximo de contexto.
 
+		class pairHash{
+		public:
+		    size_t operator()(const string &k) const{
+		    	const char* chars = k.c_str();
+		    	return chars[0]*255+chars[1];
+		    }
+		};
+
 		//Hash (tambien llamado map) con 255*255 claves que son combinacion de dos char. Sus valores
 		// son listas de las posiciones de sus apariciones de dichas claves en el buffer.
-		unordered_map<char*, list<unsigned long>> mymap;
+		unordered_map<string, list<unsigned long>, pairHash> mymap;
 
-		// Esta es la funcion de hashing (perfecta!) que vamos a usar.
-		hash<char*> fhash;
 
 		/* Dado un orden de contexto y un char busca en el vector y devuelve
 		* true or false segun si lo encontro o no y el numero de no ocurrencias.

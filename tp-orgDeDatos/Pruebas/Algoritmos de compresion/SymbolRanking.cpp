@@ -18,7 +18,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 	cout<<"Comienza el proceso de compresion por Symbol Ranking de orden " << orden << endl;
 
 	//Primeros caracteres [0,orden-1]
-	for(unsigned int i = 0; i < orden; i++){
+	for(int i = 0; i < orden; i++){
 		if (i > 1){
 			hashear(aComprimir[i-1], aComprimir[i-2], i-2);
 		}
@@ -28,7 +28,10 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 		cout<<"El caracter " << charAProcesar << " lo procesa como " << salida[i] << endl;
 	}
 	//Siguientes caracteres
-	for (unsigned long i = orden; i< size; i++){	//i= index del char en el buffer
+	for (unsigned long i = 3; i< size; i++){	//i= index del char en el buffer
+
+		cout << i << size << endl;
+
 		charToRank = aComprimir[i];
 		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
 		nroNoOcurrencias = 0;
@@ -45,6 +48,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 			if (!get<0> (tupla)) nroNoOcurrencias += wfc.comprimir(i);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
 		}
 		salida[i] = nroNoOcurrencias;
+		ctxActual = orden;
 	}
 }
 
@@ -54,9 +58,10 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 	unsigned short nroNoOcurrencias = 0;
 	tuple<bool, unsigned short> tupla;
 
+	// Tengo sueño. ESTO NO TIENE QUE IR ACA. ESTAMOS HASHEANDO UNA VEZ POR CADA ORDEN. ESO ES MUY MALO. DA CUALQUIER COSA. Ademas, aca se rompe.
 	list<unsigned long> listOfPositions = hashear(buffer[indexFirstChar], buffer[indexSecondChar], indexFirstChar);
 
-	cout<<"Se realiza la busqueda de contextos iguales, para el caracter a ranquear: " << caracter << endl;
+	cout<<"Se realiza la busqueda de contextos iguales, para el caracter a ranquear: " << caracter << " , " << (short) caracter << endl;
 
 	for(list<unsigned long>::iterator iterator = ++listOfPositions.begin();
 		iterator != listOfPositions.end(); ++iterator){							//*iterator seria un unsigned long, indicando una posicion de la lista de posiciones
@@ -98,9 +103,8 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	tuple<bool, unsigned short> tupla;
 	unsigned long posicionDelContexto = pos-1;
 	char charDelContexto = buffer[posicionDelContexto];
-	char charToRanka = buffer[posicionDelContexto] + 1;
 
-	cout<<"Se comienza la busqueda de contextos iguales de orden 1, para: "<< charToRanka << endl;
+	cout<<"Se comienza la busqueda de contextos iguales de orden 1, para: "<< charToRank << endl;
 
 	/*Ver de implementar una funcion de hash para un char y que devuelva una lista de tuplas, donde cada tupla
 	  este formada por la posicion en donde aparece el contexto y el char que le sigue.
@@ -142,13 +146,23 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	return tupla;
 }
 
-// IMPLEMENTAR.
 list<unsigned long> SymbolRanking::hashear(char symbol1, char symbol2, unsigned long indexFirstChar){
 	list<unsigned long> lista;
-	return lista;
+	char expr[2] = {symbol1, symbol2};
+	string clave (expr);
+
+	pair<string, list<unsigned long>> insertar (clave, lista);
+
+	unordered_map<string, list<unsigned long>>::const_iterator got = mymap.find (clave);
+
+	if(got == mymap.end())
+		mymap.insert(insertar);
+
+	mymap.at(clave).push_front(indexFirstChar);
+	return mymap.at(clave);
 }
 
-// IMPLEMENTAR2.
+// IMPLEMENTAR.
 list<tuple<unsigned long,char>> SymbolRanking::hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar){
 	list<tuple<unsigned long,char>> lista;
 	return lista;
