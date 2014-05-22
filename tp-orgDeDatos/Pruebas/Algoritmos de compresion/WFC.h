@@ -8,8 +8,12 @@
 #ifndef WFC_H_
 #define WFC_H_
 #include <unordered_map>
+#include <string>
+#include <algorithm>
+#include <functional>
 #include <list>
 #include "../Exceptions/notInListError.h"
+
 using namespace std;
 
 class WFC{
@@ -20,18 +24,21 @@ private:
 	/*
 	 * Devuelve el index de un char en la weightedList
 	 */
-	unsigned short getIndex(char charTobeIndexed);
+	unsigned short getIndex(unsigned long charPos);
 
-	void WFC::incrementarFrecuencia(char charToTransform);
+	void incrementarFrecuencia(char charToTransform);
 
 	/*
 	 * Reordena la weithedList en base a las frecuencias. EL criterio de ordenamiento
 	 * es en forma de frecuencias decrecientes, quedando ubicados aquellos char mas
 	 * frecuentes al comienzo de la lista
 	 */
-	void WFC::updateWeightedList();
+	void updateWeightedList();
 
 public:
+
+	WFC();
+
 	/*
 	 * Recibe un char y devuelve su posicion en la weithedList.
 	 * Precondiciones:

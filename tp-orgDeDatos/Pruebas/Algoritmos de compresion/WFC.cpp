@@ -21,13 +21,14 @@ unsigned short WFC::comprimir(char charToTransform){
 }
 
 //Se tomo como ref: stackoverflow.com/questions/4604136/how-to-search-for-an-element-in-an-stl-list
-unsigned short WFC::getIndex(char charTobeIndexed){
-	auto it = std::find(weithedList.begin(), weithedList.end(), charToTransform);
-	if (it == weithedList.end()) throw notInList;
+unsigned short WFC::getIndex(unsigned long charPos){ //Revice la pos, no el char.
+	auto it = find(weithedList.begin(), weithedList.end(), charPos);
+	if (it == weithedList.end()); //throw notInList;
 	else{
 		const short index = distance(weithedList.begin(),it);
 		return index;
 	}
+	return 0; //Nunca deberia llegar aca.
 }
 
 //iMPLEMENTAR
