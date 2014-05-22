@@ -1,6 +1,8 @@
 #include "Compresor.h"
 #include "../Algoritmos de compresion/SymbolRanking.h"
 
+Compresor::Compresor(){}
+
 void Compresor::comprimir(char* buffer, unsigned long size){
 /* Va a llamar a SymbolRanking comprimir. El resultado de esto se lo pasa
  * a Mtf.comprimir finalmente el resultado de esto se lo pasa a

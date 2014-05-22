@@ -12,7 +12,7 @@ class FileManager {
 	public:
 		FileManager();
 
-		unsigned long processFile(char* filename, char buffer[]);
+		char* processFile(char* filename);
 		/* Dado un filename, lo abre y vuelca su contenido en el buffer.
 		 * Precondiciones:
 		 *  -fileIn debe ser un nombre de archivo valido, ubicado en el mismo directorio del
@@ -21,6 +21,8 @@ class FileManager {
 		 *  Postcondiciones:
 		 *  -El metodo modifica el array buffer, agregando el total del contenido del archivo a procesar
 		 * */
+
+		unsigned long getSize(char* filename);
 
 		FILE* createFileOut(char* filename);
 		/*
@@ -33,8 +35,6 @@ class FileManager {
 		 *  -devuelve un FILE* apuntando al archivo de salida creado
 		 */
 };
-
-
 
 
 #endif /* FILEMANAGER_H_ */

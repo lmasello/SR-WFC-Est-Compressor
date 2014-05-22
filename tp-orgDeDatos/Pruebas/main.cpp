@@ -15,15 +15,12 @@ int main(int argc,char *argv[]){
 	char* operacionARealizar = argv[1];
 	char* nombreDelArchivo = argv[2];
 	FILE* fileOut;
-	char* buffer;
-	unsigned long size;
 
 	FileManager fileManager;
-	size = fileManager.processFile(nombreDelArchivo, buffer);
+	char* buffer = fileManager.processFile(nombreDelArchivo);
+	unsigned long size = fileManager.getSize(nombreDelArchivo);
 
-	cout << "El archivo ha sido abierto y colocado en memoria correctamente";
-
-	fileOut = fileManager.createFileOut(nombreDelArchivo);
+	cout << "El archivo ha sido abierto y colocado en memoria correctamente" << endl;
 
 	/*
 	*Se instancia la clase Compresor, pasandole como parametro el buffer
@@ -31,8 +28,11 @@ int main(int argc,char *argv[]){
 	*Se instancia a compresor.comprimir() o compresor.descomprimir() de
 	* acuerdo al parametro pasado por el usuario
 	*/
+
 	Compresor compresor;
-	if (operacionARealizar[1] == 'c') compresor.comprimir(buffer,size);
+	if (*operacionARealizar == 'c'){
+		compresor.comprimir(buffer,size);
+	}
 	//else if(operacionARealizar[1]=='d')compresor.descomprimir(buffer,size);
 
 	/*

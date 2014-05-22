@@ -15,17 +15,17 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 	unsigned short nroNoOcurrencias; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
 	tuple<bool,unsigned short> tupla;
 
-	cout<<"Comienza el proceso de compresion por Symbol Ranking de orden " << orden;
+	cout<<"Comienza el proceso de compresion por Symbol Ranking de orden " << orden << endl;
 
 	//Primeros caracteres [0,orden-1]
-	for(int i = 0; i < orden; i++){
+	for(unsigned int i = 0; i < orden; i++){
 		if (i > 1){
 			hashear(aComprimir[i-1], aComprimir[i-2], i-2);
 		}
 		char charAProcesar = aComprimir[i];
 		salida[i] = wfc.comprimir(charAProcesar);
 
-		cout<<"El caracter " << i << " lo procesa como " << salida[i];
+		cout<<"El caracter " << charAProcesar << " lo procesa como " << salida[i] << endl;
 	}
 	//Siguientes caracteres
 	for (unsigned long i = orden; i< size; i++){	//i= index del char en el buffer
@@ -56,14 +56,14 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 
 	list<unsigned long> listOfPositions = hashear(buffer[indexFirstChar], buffer[indexSecondChar], indexFirstChar);
 
-	cout<<"Se realiza la busqueda de contextos iguales, para el caracter a ranquear: " << caracter;
+	cout<<"Se realiza la busqueda de contextos iguales, para el caracter a ranquear: " << caracter << endl;
 
 	for(list<unsigned long>::iterator iterator = ++listOfPositions.begin();
 		iterator != listOfPositions.end(); ++iterator){							//*iterator seria un unsigned long, indicando una posicion de la lista de posiciones
 		bool hayMatch = contextosIguales(*iterator,indexFirstChar,buffer);
 		if (hayMatch){
 
-			cout<<"Hay match de orden " << orden << " en las posiciones: " << *iterator << " y " << indexFirstChar;
+			cout<<"Hay match de orden " << orden << " en las posiciones: " << *iterator << " y " << indexFirstChar << endl;
 
 			if(charNoExcluido(*iterator+orden)){
 				bool esElBuscado = charsIguales(*iterator + orden, caracter, buffer);
@@ -72,21 +72,21 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 					get<0> (tupla) = true;
 					get<1> (tupla) = nroNoOcurrencias;
 
-					cout<<"El caracter ofrecido del contexto " << *iterator << " matchea con el caracter a rankear";
-					cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << nroNoOcurrencias;
+					cout<<"El caracter ofrecido del contexto " << *iterator << " matchea con el caracter a rankear" << endl;
+					cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << nroNoOcurrencias << endl;
 
 					return tupla;
 				}
 
-				cout<<"No hay match, por lo tanto se agrega el caracter ofrecido a la lista de exclusion";
+				cout<<"No hay match, por lo tanto se agrega el caracter ofrecido a la lista de exclusion" << endl;
 
 				exclusionList.push_front(*iterator+orden);
 				nroNoOcurrencias++;
 			}
 		}
 	}
-	cout<<"No hubieron matches";
-	cout<<"Se han realizado " << nroNoOcurrencias << " ofertas insatisfactorias";
+	cout<<"No hubieron matches" << endl;
+	cout<<"Se han realizado " << nroNoOcurrencias << " ofertas insatisfactorias" << endl;
 
 	get<0> (tupla) = false;
 	get<1> (tupla) = nroNoOcurrencias;
@@ -98,8 +98,9 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	tuple<bool, unsigned short> tupla;
 	unsigned long posicionDelContexto = pos-1;
 	char charDelContexto = buffer[posicionDelContexto];
+	char charToRanka = buffer[posicionDelContexto] + 1;
 
-	cout<<"Se comienza la busqueda de contextos iguales de orden 1, para: "<< charDelContexto;
+	cout<<"Se comienza la busqueda de contextos iguales de orden 1, para: "<< charToRanka << endl;
 
 	/*Ver de implementar una funcion de hash para un char y que devuelva una lista de tuplas, donde cada tupla
 	  este formada por la posicion en donde aparece el contexto y el char que le sigue.
@@ -117,14 +118,14 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 
 		unsigned long indexDelCaracterOfrecido = get<0>(*iterator) + 1;
 
-		cout<<"Evalua el match para la posicion" << indexDelCaracterOfrecido << "del contexto";
+		cout<<"Evalua el match para la posicion" << indexDelCaracterOfrecido << "del contexto" << endl;
 
 		bool esElBuscado = charsIguales(indexDelCaracterOfrecido, charToRank, buffer);
 
 		if (esElBuscado){
 
-			cout<<"Hay match, remueve el contexto anterior y guarda el contexto actual";
-			cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << nroNoOcurrencias;
+			cout<<"Hay match, remueve el contexto anterior y guarda el contexto actual" << endl;
+			cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << nroNoOcurrencias << endl;
 
 			sameContextPositions.remove(*iterator);		//Remueve la tupla del contexto. Ya que ya se coloco la posicion mas reciente del mismo contexto (la actual)
 			get<0> (tupla) = true;
@@ -133,8 +134,8 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 		}
 		nroNoOcurrencias++;
 	}
-	cout<<"No hubieron matches";
-	cout<<"Se han realizado " << nroNoOcurrencias << " ofertas insatisfactorias";
+	cout<<"No hubieron matches" << endl;
+	cout<<"Se han realizado " << nroNoOcurrencias << " ofertas insatisfactorias" << endl;
 
 	get<0> (tupla) = false;
 	get<1> (tupla) = nroNoOcurrencias;
