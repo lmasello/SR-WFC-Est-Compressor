@@ -162,7 +162,7 @@ list<unsigned long> SymbolRanking::hashear(char symbol1, char symbol2, unsigned 
 	return mymap.at(clave);
 }
 
-// IMPLEMENTAR.
+// IMPLEMENTAR. Antes de que me olvide. Esto no va a funcionar.
 list<tuple<unsigned long,char>> SymbolRanking::hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar){
 	list<tuple<unsigned long,char>> lista;
 	return lista;
