@@ -4,13 +4,12 @@
 Compresor::Compresor(){}
 
 void Compresor::comprimir(char* buffer, unsigned long size){
-/* Va a llamar a SymbolRanking comprimir. El resultado de esto se lo pasa
- * a Mtf.comprimir finalmente el resultado de esto se lo pasa a
- * Estructurado.comprimir y modifica/devuelve el archivo comprimido.*/
 
 	SymbolRanking sr (ORDEN);
 
 	short *salida = (short*) malloc (sizeof(buffer) * 2);
+
+	cout<<"Comenzando proceso de compresion por SymbolRanking"<<endl;
 
 	sr.comprimir(buffer, salida, size);
 

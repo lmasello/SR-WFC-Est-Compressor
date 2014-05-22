@@ -19,7 +19,10 @@ class Compresor{
 
 		/* A partir del buffer obtenido, se generara el archivo comprimido mediante los metodos de Symbol Ranking
 		 * + MTF + Estructurado. Maneja la logica general del proceso y realiza las llamadas a los metodos de compresion
-		 * de cada parte del proceso. */
+		 * de cada parte del proceso.
+		 * Va a llamar a SymbolRanking comprimir. El resultado de esto se lo pasa a
+		 * Estructurado.comprimir y modifica/devuelve el archivo comprimido
+		 */
 		void comprimir(char* buffer, unsigned long size);
 
 
