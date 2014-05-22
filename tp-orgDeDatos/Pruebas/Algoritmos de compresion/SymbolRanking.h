@@ -50,7 +50,7 @@ class SymbolRanking{
 		 * Postcondiciones:
 		 *  Devuelve un boolean de acuerdo a si se produce un match de contextos o no
 		 */
-		bool contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer);
+		bool contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer,int ordenDelContexto);
 
 		/*
 		 * Dado un offset de un array, verifica si el char apuntado por esa posicion es el caracter a comparar.
@@ -69,7 +69,7 @@ class SymbolRanking{
 
 		/* Dado un vector con 2 char, lo hashea en el map (atributo).
 		 */
-		list<unsigned long> hashear(char symbol1, char symbol2, unsigned long indexFirstChar);
+		void hashear(char symbol1, char symbol2, unsigned long indexFirstChar);
 
 		// No estoy seguro.
 		list<tuple<unsigned long,char>> hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar);
