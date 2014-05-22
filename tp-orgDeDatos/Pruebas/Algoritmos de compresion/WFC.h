@@ -11,22 +11,21 @@
 #include <string>
 #include <algorithm>
 #include <functional>
-#include <list>
 #include "../Exceptions/notInListError.h"
 
 using namespace std;
 
 class WFC{
 private:
-	list<char> weithedList;
-	unordered_map<char,unsigned short> charFrequencies; //deberia inicializarse en uno para cada char
+	char weightedList[256];
+	unordered_map<char,unsigned short> charFrequencies;
 
 	/*
-	 * Devuelve el index de un char en la weightedList
+	 * Devuelve la posicion de un char de la weightedList
 	 */
-	unsigned short getIndex(unsigned long charPos);
+	unsigned short getIndex(char charToTransform);
 
-	void incrementarFrecuencia(char charToTransform);
+	void incrementarFrecuencia(char charToIncrement);
 
 	/*
 	 * Reordena la weithedList en base a las frecuencias. EL criterio de ordenamiento
@@ -34,6 +33,11 @@ private:
 	 * frecuentes al comienzo de la lista
 	 */
 	void updateWeightedList();
+
+	/*
+	 * Algoritmo que se utiliza para ordenar la lista de pesos en orden decreciente.
+	 */
+	void quickSort(int left, int right);
 
 public:
 

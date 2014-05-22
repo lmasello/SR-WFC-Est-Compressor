@@ -8,7 +8,7 @@
 
 WFC::WFC(){
 	for (unsigned short i=0;i<256;i++){
-		weithedList.push_back((char)i);
+		weightedList[i]=((char)i);
 		charFrequencies[(char)i]= (unsigned short) 1; //Iniciailza las frecuencias en uno
 	}
 }
@@ -16,18 +16,21 @@ WFC::WFC(){
 unsigned short WFC::comprimir(char charToTransform){
 	unsigned short index = getIndex(charToTransform);
 	incrementarFrecuencia(charToTransform);
-	updateWeightedList();
+	updateWeightedList();	//Evaluar la opcion de hacer que se actualice cada N transformaciones
 	return index;
 }
 
-//Se tomo como ref: stackoverflow.com/questions/4604136/how-to-search-for-an-element-in-an-stl-list
-unsigned short WFC::getIndex(unsigned long charPos){ //Revice la pos, no el char.
-	auto it = find(weithedList.begin(), weithedList.end(), charPos);
-	if (it == weithedList.end()) throw notInListError;
-	else{
-		const short index = distance(weithedList.begin(),it);
-		return index;
-	}
+//Referencia: http://stackoverflow.com/questions/7875581/c-get-index-of-char-element-in-array
+unsigned short WFC::getIndex(char charToTransform){
+	unsigned short index;
+	char* end = weightedList + 256;
+	char* match = find(weightedList, end, charToTransform);
+	if(end == match) throw notInListError;
+	index = (match-weightedList);
+
+	cout<<"En la lista de WFC, el char: "<<charToTransform<<" esta en la pos: "<<index<<"\n";
+
+	return index;
 }
 
 void WFC::incrementarFrecuencia(char charToTransform){
@@ -35,6 +38,45 @@ void WFC::incrementarFrecuencia(char charToTransform){
 }
 
 void WFC::updateWeightedList(){
+	quickSort(0,255);
+
+	cout<<"La lista se actualiza a: \n";
+	for(int i=0;i<256;i++)
+		cout<<weightedList[i]<<"\b";
 
 }
 
+//Referencia: http://www.algolist.net/Algorithms/Sorting/Quicksort
+void WFC::quickSort(int left, int right){
+	  int i = left, j = right;
+	  int tmp;
+	  char pivot = weightedList[(left + right) / 2];
+
+	  /* partition */
+	  while (i <= j) {
+		  	char pesoDelCaracterIzq = charFrequencies[weightedList[i]];
+		  	char pesoDelCaracterDer = charFrequencies[weightedList[j]];
+		  	char pesoDelPivot = charFrequencies[pivot];
+
+			while (pesoDelCaracterIzq > pesoDelPivot){
+				i++;
+				pesoDelCaracterIzq = charFrequencies[weightedList[i]];
+			}
+			while (pesoDelCaracterDer < pesoDelPivot){
+				j--;
+				pesoDelCaracterDer = charFrequencies[weightedList[j]];
+			}
+			if (i <= j) {
+				  tmp = weightedList[i];
+				  weightedList[i] = weightedList[j];
+				  weightedList[j] = tmp;
+				  i++;
+				  j--;
+			}
+	  };
+	  /* recursion */
+	  if (left < j)
+			quickSort(left, j);
+	  if (i < right)
+			quickSort(i, right);
+}
