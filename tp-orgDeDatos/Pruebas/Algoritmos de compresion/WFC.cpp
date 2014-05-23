@@ -23,10 +23,13 @@ unsigned short WFC::comprimir(char charToTransform){
 //Referencia: http://stackoverflow.com/questions/7875581/c-get-index-of-char-element-in-array
 unsigned short WFC::getIndex(char charToTransform){
 	unsigned short index;
-	char* end = weightedList + 256;
-	char* match = find(weightedList, end, charToTransform);
-	if(end == match) throw notInListError;
-	index = (match-weightedList);
+	unsigned short size=256;
+    for (unsigned short i = 0; i < size; i++){
+        if (weightedList[i] == charToTransform){
+            index = i;
+        	break;
+        }
+    }
 
 	cout<<"En la lista de WFC, el char: "<<charToTransform<<" esta en la pos: "<<index<<"\n";
 
