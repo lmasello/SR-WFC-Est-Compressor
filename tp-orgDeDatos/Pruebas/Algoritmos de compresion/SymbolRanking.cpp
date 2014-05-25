@@ -46,11 +46,13 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 			nroNoOcurrencias += get<1> (tupla);                  //Este wfc al hacer el quicksort me desordena todoooooo
 			if (!get<0> (tupla)){
 				cout << nroNoOcurrencias << endl;
-				nroNoOcurrencias += charToRank; //wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+				nroNoOcurrencias += charToRank;
+				//wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
 			}
 		}
 		hashear(aComprimir[i-2], aComprimir[i-1], i-2);
 		salida[i] = nroNoOcurrencias;
+		cout << endl << "Salida: " << salida[i] << endl;
 		ctxActual = orden;
 	}
 }
@@ -60,12 +62,9 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 	unsigned short nroNoOcurrencias = 0;
 	tuple<bool, unsigned short> tupla;
 	list<unsigned long> listOfPositions = getListOfPositions(buffer, pos-2);
-	cout<<"Se realiza la busqueda de contextos iguales de orden " << orden << ", para el caracter a ranquear: " << caracter << " , " << (short) caracter << endl;
 
-	cout << "mylist contains:";
-	for (list<unsigned long>::iterator it=listOfPositions.begin(); it!=listOfPositions.end(); ++it)
-		  cout << *it << ' ';
-	cout << endl << endl;
+	cout<<"Se realiza la busqueda de contextos iguales de orden " << orden << ", para el caracter a ranquear: " << caracter << " , " << pos << endl;
+
 	for(list<unsigned long>::iterator iterator = listOfPositions.begin();
 		iterator != listOfPositions.end(); ++iterator){							//*iterator seria un unsigned long, indicando una posicion de la lista de posiciones
 		bool hayMatch = contextosIguales(*iterator,indexFirstChar,buffer,orden);
@@ -87,9 +86,10 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 
 				cout<<"No es el buscado, por lo tanto se agrega el caracter ofrecido a la lista de exclusion" << endl;
 
-				exclusionList.push_front(*iterator+orden);
+				exclusionList.push_front(*iterator+2);
 				nroNoOcurrencias++;
 			}
+			cout << "El caracter correspondiente fue excluido." << endl;
 		}
 	}
 	cout<<"No hubieron matches" << endl;
@@ -118,17 +118,17 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	unsigned short nroNoOcurrencias = 0;
 
 	for(unsigned long i = 2; i < pos; i++){
-		cout<<"Evalua el match para la posicion" << pos-i << "del contexto" << endl;
 		if(buffer[pos-i] == buffer[contextPos]){
-			cout<<"Hay match." << endl;
-			bool esElBuscado = charsIguales(pos-i+1, buffer[pos], buffer);
-			if(esElBuscado && charNoExcluido(pos-i+1)){
-				cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << nroNoOcurrencias << endl;
-				get<0> (tupla) = true;
-				get<1> (tupla) = nroNoOcurrencias;
-				return tupla;
+			cout<<"Hay match de contexto uno." << endl;
+			if(charNoExcluido(pos-i+1)){
+				bool esElBuscado = charsIguales(pos-i+1, buffer[pos], buffer);
+				if(esElBuscado){
+					get<0> (tupla) = true;
+					get<1> (tupla) = nroNoOcurrencias;
+					return tupla;
+				}
+				nroNoOcurrencias++;
 			}
-			nroNoOcurrencias++;
 		}
 	}
 	cout<<"No hubieron matches" << endl;

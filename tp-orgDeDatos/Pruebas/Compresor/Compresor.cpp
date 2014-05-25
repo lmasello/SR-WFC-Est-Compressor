@@ -7,7 +7,7 @@ void Compresor::comprimir(char* buffer, unsigned long size){
 
 	SymbolRanking sr (ORDEN);
 
-	short *salida = (short*) malloc (sizeof(buffer) * 2);
+	short *salida = (short*) malloc (sizeof(short) * size);
 
 	cout<<"Comenzando proceso de compresion por SymbolRanking"<<endl;
 
@@ -15,7 +15,9 @@ void Compresor::comprimir(char* buffer, unsigned long size){
 
 	cout<<"Symbol ranking ha finalizado el proceso de compresion correctamente" << endl;
 
-	for(unsigned int i = 0; i < size; i++) cout << salida[i];
+	for(unsigned int i = 0; i < size; i++){
+		cout<< salida[i] << ' ';
+	}
 
 }
 
