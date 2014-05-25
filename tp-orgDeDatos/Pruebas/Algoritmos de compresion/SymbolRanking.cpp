@@ -19,7 +19,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 
 	//Primeros caracteres [0,orden-1]
 	for(int i = 0; i < orden; i++){
-		if (i > 1 && i <orden-1){
+		if (i > 1){
 			hashear(aComprimir[i-2], aComprimir[i-1], i-2);
 		}
 		char charAProcesar = aComprimir[i];
@@ -58,19 +58,22 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 	unsigned short nroNoOcurrencias = 0;
 	tuple<bool, unsigned short> tupla;
 	list<unsigned long> listOfPositions = getListOfPositions(buffer, pos-2);
-	cout<<"Se realiza la busqueda de contextos iguales, para el caracter a ranquear: " << caracter << " , " << (short) caracter << endl;
+	cout<<"Se realiza la busqueda de contextos iguales de orden " << orden << ", para el caracter a ranquear: " << caracter << " , " << (short) caracter << endl;
 
+	cout << "mylist contains:";
+	for (list<unsigned long>::iterator it=listOfPositions.begin(); it!=listOfPositions.end(); ++it)
+		  cout << *it << ' ';
+	cout << endl << endl;
 	for(list<unsigned long>::iterator iterator = listOfPositions.begin();
 		iterator != listOfPositions.end(); ++iterator){							//*iterator seria un unsigned long, indicando una posicion de la lista de posiciones
 		bool hayMatch = contextosIguales(*iterator,indexFirstChar,buffer,orden);
 		if (hayMatch){
 
-			cout<<"Hay match de orden " << orden << " en las posiciones: " << *iterator << " y " << indexFirstChar << endl;
+			cout<<"Hay match de orden " << orden << " entre las posiciones: " << *iterator << " y " << *iterator+orden-1 << endl;
 
 			if(charNoExcluido(*iterator+orden)){
 				bool esElBuscado = charsIguales(*iterator + orden, caracter, buffer);
 				if (esElBuscado){
-					listOfPositions.push_front(indexFirstChar);
 					get<0> (tupla) = true;
 					get<1> (tupla) = nroNoOcurrencias;
 
