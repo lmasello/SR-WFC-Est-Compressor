@@ -16,11 +16,11 @@ WFC::WFC(){
 unsigned short WFC::comprimir(char charToTransform){
 	unsigned short index = getIndex(charToTransform);
 	incrementarFrecuencia(charToTransform);
-	updateWeightedList();	//Evaluar la opcion de hacer que se actualice cada N transformaciones
+	updateWeightedList(index);
 	return index;
 }
 
-//Referencia: http://stackoverflow.com/questions/7875581/c-get-index-of-char-element-in-array
+
 unsigned short WFC::getIndex(char charToTransform){
 	unsigned short index;
 	unsigned short size=256;
@@ -30,7 +30,6 @@ unsigned short WFC::getIndex(char charToTransform){
         	break;
         }
     }
-
 	return index;
 }
 
@@ -38,41 +37,27 @@ void WFC::incrementarFrecuencia(char charToTransform){
 	charFrequencies[charToTransform]+=1;
 }
 
-void WFC::updateWeightedList(){
-	quickSort(0,255);
+void WFC::updateWeightedList(unsigned short indexDelCharActualizado){
+	//if(indexDelCharActualizado>=256)throw IndexError;
+	while (indexDelCharActualizado > 0){
+		bool pesoMayor = elPesoDeLaPosicionEsMayor(indexDelCharActualizado,indexDelCharActualizado-1);
+		if(pesoMayor){
+			char temp = weightedList[indexDelCharActualizado-1];
+			weightedList[indexDelCharActualizado-1]=weightedList[indexDelCharActualizado];
+			weightedList[indexDelCharActualizado]=temp;
+		}
+		else{
+			break; //Si el peso es < o = no hay que realizar intercambios.
+		}
+		indexDelCharActualizado--;
+	}
 }
 
-//Referencia: http://www.algolist.net/Algorithms/Sorting/Quicksort
-void WFC::quickSort(int left, int right){
-	  int i = left, j = right;
-	  int tmp;
-	  char pivot = weightedList[(left + right) / 2];
+bool WFC::elPesoDeLaPosicionEsMayor(unsigned short pos1, unsigned short pos2){
+	unsigned short pesoDelCharActualizado = charFrequencies[weightedList[pos1]];
+	unsigned short pesoDelCharAnterior = charFrequencies[weightedList[pos2]];
 
-	  /* partition */
-	  while (i <= j) {
-		  	char pesoDelCaracterIzq = charFrequencies[weightedList[i]];
-		  	char pesoDelCaracterDer = charFrequencies[weightedList[j]];
-		  	char pesoDelPivot = charFrequencies[pivot];
-
-			while (pesoDelCaracterIzq > pesoDelPivot){
-				i++;
-				pesoDelCaracterIzq = charFrequencies[weightedList[i]];
-			}
-			while (pesoDelCaracterDer < pesoDelPivot){
-				j--;
-				pesoDelCaracterDer = charFrequencies[weightedList[j]];
-			}
-			if (i <= j) {
-				  tmp = weightedList[i];
-				  weightedList[i] = weightedList[j];
-				  weightedList[j] = tmp;
-				  i++;
-				  j--;
-			}
-	  };
-	  /* recursion */
-	  if (left < j)
-			quickSort(left, j);
-	  if (i < right)
-			quickSort(i, right);
+	if(pesoDelCharActualizado>pesoDelCharAnterior) return true;
+	return false;
 }
+
