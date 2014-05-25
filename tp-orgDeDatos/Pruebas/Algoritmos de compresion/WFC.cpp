@@ -31,8 +31,6 @@ unsigned short WFC::getIndex(char charToTransform){
         }
     }
 
-	cout<<"En la lista de WFC, el char: "<<charToTransform<<" esta en la pos: "<<index<<"\n";
-
 	return index;
 }
 
@@ -42,11 +40,6 @@ void WFC::incrementarFrecuencia(char charToTransform){
 
 void WFC::updateWeightedList(){
 	quickSort(0,255);
-
-	cout<<"La lista se actualiza a: \n";
-	for(int i=0;i<256;i++)
-		cout<<weightedList[i]<<"\b";
-
 }
 
 //Referencia: http://www.algolist.net/Algorithms/Sorting/Quicksort

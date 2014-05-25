@@ -14,7 +14,6 @@ int main(int argc,char *argv[]){
 
 	char* operacionARealizar = argv[1];
 	char* nombreDelArchivo = argv[2];
-	FILE* fileOut;
 
 	FileManager fileManager;
 	char* buffer = fileManager.processFile(nombreDelArchivo);
@@ -39,6 +38,8 @@ int main(int argc,char *argv[]){
 	 * Luego de la instancia de compresion/descompresion se llama al file
 	 * Manager para que guarde los resultados en el archivo de salida
 	 */
+
+	free(buffer);
 
 	return 0;
 }

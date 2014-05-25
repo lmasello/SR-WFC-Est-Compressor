@@ -19,25 +19,23 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 
 	//Primeros caracteres [0,orden-1]
 	for(int i = 0; i < orden; i++){
-		if (i > 1){
-			hashear(aComprimir[i-1], aComprimir[i-2], i-2);
+		if (i > 1 && i <orden-1){
+			hashear(aComprimir[i-2], aComprimir[i-1], i-2);
 		}
 		char charAProcesar = aComprimir[i];
-		salida[i] = wfc.comprimir(charAProcesar);
+		salida[i] = aComprimir[i];
+		//salida[i] = wfc.comprimir(charAProcesar);
 
 		cout<<"El caracter " << charAProcesar << " lo procesa como " << salida[i] << endl;
 	}
 	//Siguientes caracteres
-	for (unsigned long i = 3; i< size; i++){	//i= index del char en el buffer
-
-		cout << i << size << endl;
+	for (unsigned long i = orden; i< size; i++){	//i= index del char en el buffer
 
 		charToRank = aComprimir[i];
 		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
 		nroNoOcurrencias = 0;
 
- 		hashear(aComprimir[i-1], aComprimir[i-2], i-2);
-		while(ctxActual > 1){
+ 		while(ctxActual > 1){
 			tupla = buscarEnContexto(ctxActual, charToRank, i, aComprimir);
 			nroNoOcurrencias += get<1> (tupla);
 			if (get<0> (tupla)) break;
@@ -45,9 +43,11 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 		}
 		if (ctxActual == 1){
 			tupla = buscarEnContextoUno(charToRank, i,aComprimir);
-			nroNoOcurrencias += get<1> (tupla);
-			if (!get<0> (tupla)) nroNoOcurrencias += wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+			nroNoOcurrencias += get<1> (tupla);                  //Este wfc al hacer el quicksort me desordena todoooooo
+			if (!get<0> (tupla)) nroNoOcurrencias += charToRank; //wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
 		}
+		hashear(aComprimir[i-2], aComprimir[i-1], i-2);
+		cout << i << size << endl;
 		salida[i] = nroNoOcurrencias;
 		ctxActual = orden;
 	}
@@ -55,13 +55,12 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 
 tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char caracter, unsigned long pos, char* buffer){
 	unsigned long indexFirstChar = pos-orden;
-	unsigned long indexSecondChar = pos-orden+1;
 	unsigned short nroNoOcurrencias = 0;
 	tuple<bool, unsigned short> tupla;
-
+	list<unsigned long> listOfPositions = getListOfPositions(buffer, pos-2);
 	cout<<"Se realiza la busqueda de contextos iguales, para el caracter a ranquear: " << caracter << " , " << (short) caracter << endl;
 
-	for(list<unsigned long>::iterator iterator = ++listOfPositions.begin();
+	for(list<unsigned long>::iterator iterator = listOfPositions.begin();
 		iterator != listOfPositions.end(); ++iterator){							//*iterator seria un unsigned long, indicando una posicion de la lista de posiciones
 		bool hayMatch = contextosIguales(*iterator,indexFirstChar,buffer,orden);
 		if (hayMatch){
@@ -71,7 +70,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 			if(charNoExcluido(*iterator+orden)){
 				bool esElBuscado = charsIguales(*iterator + orden, caracter, buffer);
 				if (esElBuscado){
-					listOfPositions.push_front(indexFirstChar); //Si no me equivoco, esto lo hace la funcion hashear!!!
+					listOfPositions.push_front(indexFirstChar);
 					get<0> (tupla) = true;
 					get<1> (tupla) = nroNoOcurrencias;
 
@@ -108,7 +107,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	  este formada por la posicion en donde aparece el contexto y el char que le sigue.
  	  De esta manera se aplica la lista de exclusion en la misma lista de ocurrencias, controlando el agregado y quitado de tuplas, haciendo
  	  que haya una sola entrada por cada char que le sigue al contexto. Si la prediccion es positiva, se remueve el ctx antiguo y se deja el actual.
-	  si la prediccion es negativa, queda todo como esta.
+	  si la prediccion es negativa, queda como esta.
 	  Ej: Seria un map, donde la clave es el charDelContexto y tiene como valor (posicionDelContexto,charToRank)
 	*/
 	list<tuple<unsigned long,char>> sameContextPositions = hasheartu(charToRank, charDelContexto, posicionDelContexto);
@@ -143,34 +142,14 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	get<1> (tupla) = nroNoOcurrencias;
 	return tupla;
 }
+
+list<unsigned long> SymbolRanking::getListOfPositions(char* buffer, unsigned long posFirst){
+	return hashmap.get(buffer[posFirst], buffer[posFirst+1]);
+}
+
 void SymbolRanking::hashear(char symbol1, char symbol2, unsigned long indexFirstChar){
-	list<unsigned long> lista;
-	char expr[2] = {symbol1, symbol2};
-	string clave (expr);
-
-	pair<string, list<unsigned long>> insertar (clave, lista);
-
-	unordered_map<string, list<unsigned long>>::const_iterator got = mymap.find (clave);
-
-	if(got == mymap.end())
-		mymap.insert(insertar);
-
-	mymap.at(clave).push_front(indexFirstChar);
+	hashmap.put(symbol1, symbol2, indexFirstChar);
 }
-
-// IMPLEMENTAR. Antes de que me olvide. Esto no va a funcionar.
-/* Deberia funcionar de acuerdo a lo siguiente:
- * unordered_map<Key,T>::iterator it;
-(*it).first;             // the key value (of type Key)
-(*it).second;            // the mapped value (of type T)
-(*it);                   // the "element value" (of type pair<const Key,T>)
- */
-list<tuple<unsigned long,char>> SymbolRanking::hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar){
-	list<tuple<unsigned long,char>> lista;
-	return lista;
-}
-
-
 
 bool SymbolRanking::contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer,int orden){
 	for (unsigned short i; i<orden; i++){
@@ -189,4 +168,10 @@ bool SymbolRanking::charNoExcluido(unsigned long pos){
 	auto it = std::find(exclusionList.begin(), exclusionList.end(), pos);
 	if (it == exclusionList.end()) return true;
 	return false;
+}
+
+//NO SE VA A USAR. Lo tengo por ahora para no tener que rehacer buscarEnContextoUno ahora.
+list<tuple<unsigned long,char>> SymbolRanking::hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar){
+        list<tuple<unsigned long,char>> lista;
+        return lista;
 }

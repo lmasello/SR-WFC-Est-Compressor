@@ -5,33 +5,23 @@
 #include <string>
 #include <algorithm>
 #include <functional>
-#include <unordered_map>
 #include <list>
 #include <tuple>
 
 #include "WFC.h"
+#include "HashMap.h"
 
 using namespace std;
 
 class SymbolRanking{
 	private:
-		char tabla[255]; //Con los valores ASCII no se si usa.
 		WFC wfc;
 		list<unsigned long> exclusionList;
 		int orden; //Orden maximo de contexto.
 
-		class pairHash{
-		public:
-		    size_t operator()(const string &k) const{
-		    	const char* chars = k.c_str();
-		    	return chars[0]*255+chars[1];
-		    }
-		};
-
 		//Hash (tambien llamado map) con 255*255 claves que son combinacion de dos char. Sus valores
 		// son listas de las posiciones de sus apariciones de dichas claves en el buffer.
-		unordered_map<string, list<unsigned long>, pairHash> mymap;
-
+		HashMap hashmap;
 
 		/* Dado un orden de contexto y un char busca en el vector y devuelve
 		* true or false segun si lo encontro o no y el numero de no ocurrencias.
@@ -42,6 +32,14 @@ class SymbolRanking{
 
 		/* Realiza la busqueda del caracter para el caso de contexto = 1. */
 		tuple<bool,unsigned short> buscarEnContextoUno(char caracter, unsigned long pos, char* buffer);
+
+		/* Devuelve la lista correspondiente a la clave conformada por el string entre el caracter en
+		 * la posicion posFirst del buffer, y el siguiente. */
+		list<unsigned long> getListOfPositions(char* buffer, unsigned long posFirst);
+
+		/* Dado un vector con 2 char, lo hashea en el map (atributo).
+		 */
+		void hashear(char symbol1, char symbol2, unsigned long indexFirstChar);
 
 		/* Dadas dos offset de un buffer, se comparan N Bytes (N = nro de orden).
 		 * Si dichos Bytes son iguales, entonces dichos strings son iguales y por lo tanto los contextos son iguales.
@@ -67,11 +65,7 @@ class SymbolRanking{
 		 */
 		bool charNoExcluido(unsigned long pos);
 
-		/* Dado un vector con 2 char, lo hashea en el map (atributo).
-		 */
-		void hashear(char symbol1, char symbol2, unsigned long indexFirstChar);
-
-		// No estoy seguro.
+		// NO SE VA A USAR. PAJA DE SACAR AHORA.
 		list<tuple<unsigned long,char>> hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar);
 
 	public:
