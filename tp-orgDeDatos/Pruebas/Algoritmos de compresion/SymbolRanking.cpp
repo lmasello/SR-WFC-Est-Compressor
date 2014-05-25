@@ -42,12 +42,14 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 			ctxActual--;
 		}
 		if (ctxActual == 1){
-			tupla = buscarEnContextoUno(charToRank, i,aComprimir);
+			tupla = buscarEnContextoUno(charToRank, i, aComprimir);
 			nroNoOcurrencias += get<1> (tupla);                  //Este wfc al hacer el quicksort me desordena todoooooo
-			if (!get<0> (tupla)) nroNoOcurrencias += charToRank; //wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+			if (!get<0> (tupla)){
+				cout << nroNoOcurrencias << endl;
+				nroNoOcurrencias += charToRank; //wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+			}
 		}
 		hashear(aComprimir[i-2], aComprimir[i-1], i-2);
-		cout << i << size << endl;
 		salida[i] = nroNoOcurrencias;
 		ctxActual = orden;
 	}
@@ -72,7 +74,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 			cout<<"Hay match de orden " << orden << " entre las posiciones: " << *iterator << " y " << *iterator+orden-1 << endl;
 
 			if(charNoExcluido(*iterator+orden)){
-				bool esElBuscado = charsIguales(*iterator + orden, caracter, buffer);
+				bool esElBuscado = charsIguales(*iterator + orden-1, caracter, buffer);
 				if (esElBuscado){
 					get<0> (tupla) = true;
 					get<1> (tupla) = nroNoOcurrencias;
@@ -83,7 +85,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 					return tupla;
 				}
 
-				cout<<"No hay match, por lo tanto se agrega el caracter ofrecido a la lista de exclusion" << endl;
+				cout<<"No es el buscado, por lo tanto se agrega el caracter ofrecido a la lista de exclusion" << endl;
 
 				exclusionList.push_front(*iterator+orden);
 				nroNoOcurrencias++;
@@ -101,8 +103,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 //Se sigue la idea mencionada por Fenwich en el 132
 tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, unsigned long pos, char* buffer){
 	tuple<bool, unsigned short> tupla;
-	unsigned long posicionDelContexto = pos-1;
-	char charDelContexto = buffer[posicionDelContexto];
+	unsigned long contextPos = pos-1;
 
 	cout<<"Se comienza la busqueda de contextos iguales de orden 1, para: "<< charToRank << endl;
 
@@ -113,30 +114,22 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	  si la prediccion es negativa, queda como esta.
 	  Ej: Seria un map, donde la clave es el charDelContexto y tiene como valor (posicionDelContexto,charToRank)
 	*/
-	list<tuple<unsigned long,char>> sameContextPositions = hasheartu(charToRank, charDelContexto, posicionDelContexto);
 
 	unsigned short nroNoOcurrencias = 0;
 
-	for(list<tuple<unsigned long,char>>::iterator iterator = ++sameContextPositions.begin();
-	iterator != sameContextPositions.end(); ++iterator){				// *iterator es una tupla (unsigned long,char) indicando la posicion del ctx y el char que le sigue
-
-		unsigned long indexDelCaracterOfrecido = get<0>(*iterator) + 1;
-
-		cout<<"Evalua el match para la posicion" << indexDelCaracterOfrecido << "del contexto" << endl;
-
-		bool esElBuscado = charsIguales(indexDelCaracterOfrecido, charToRank, buffer);
-
-		if (esElBuscado){
-
-			cout<<"Hay match, remueve el contexto anterior y guarda el contexto actual" << endl;
-			cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << nroNoOcurrencias << endl;
-
-			sameContextPositions.remove(*iterator);		//Remueve la tupla del contexto. Ya que ya se coloco la posicion mas reciente del mismo contexto (la actual)
-			get<0> (tupla) = true;
-			get<1> (tupla) = nroNoOcurrencias;
-			return tupla;
+	for(unsigned long i = 2; i < pos; i++){
+		cout<<"Evalua el match para la posicion" << pos-i << "del contexto" << endl;
+		if(buffer[pos-i] == buffer[contextPos]){
+			cout<<"Hay match." << endl;
+			bool esElBuscado = charsIguales(pos-i+1, buffer[pos], buffer);
+			if(esElBuscado && charNoExcluido(pos-i+1)){
+				cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << nroNoOcurrencias << endl;
+				get<0> (tupla) = true;
+				get<1> (tupla) = nroNoOcurrencias;
+				return tupla;
+			}
+			nroNoOcurrencias++;
 		}
-		nroNoOcurrencias++;
 	}
 	cout<<"No hubieron matches" << endl;
 	cout<<"Se han realizado " << nroNoOcurrencias << " ofertas insatisfactorias" << endl;
@@ -168,13 +161,7 @@ bool SymbolRanking::charsIguales(unsigned long index,char charToCompare,char* bu
 
 // Nota, copiado de cplusplus
 bool SymbolRanking::charNoExcluido(unsigned long pos){
-	auto it = std::find(exclusionList.begin(), exclusionList.end(), pos);
+	auto it = find(exclusionList.begin(), exclusionList.end(), pos);
 	if (it == exclusionList.end()) return true;
 	return false;
-}
-
-//NO SE VA A USAR. Lo tengo por ahora para no tener que rehacer buscarEnContextoUno ahora.
-list<tuple<unsigned long,char>> SymbolRanking::hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar){
-        list<tuple<unsigned long,char>> lista;
-        return lista;
 }
