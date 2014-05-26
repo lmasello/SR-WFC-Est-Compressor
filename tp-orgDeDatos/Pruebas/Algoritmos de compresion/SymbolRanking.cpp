@@ -55,47 +55,47 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 	}
 }
 
-tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char caracter, unsigned long pos, char* buffer){
-	unsigned long indexFirstChar = pos-orden;
-	unsigned short nroNoOcurrencias = 0;
+tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char caracter, unsigned long posCharToRank, char* buffer){
+	unsigned long indexFirstCharOfCurrentContext = posCharToRank-orden;
+	unsigned short cantidadDeNoOcurrencias = 0;
 	tuple<bool, unsigned short> tupla;
-	list<unsigned long> listOfPositions = getListOfPositions(buffer, pos-2);
+	list<unsigned long> listOfPositions = getListOfPositions(buffer, posCharToRank-2);
 
-	cout<<"Se realiza la busqueda de contextos iguales de orden " << orden << ", para el caracter a ranquear: " << caracter << " , " << pos << endl;
+	cout<<"Se realiza la busqueda de contextos iguales de orden " << orden << ", para el caracter a ranquear: " << caracter << " , " << posCharToRank << endl;
 
-	for(list<unsigned long>::iterator iterator = listOfPositions.begin();
-		iterator != listOfPositions.end(); ++iterator){							//*iterator seria un unsigned long, indicando una posicion de la lista de posiciones
-		bool hayMatch = contextosIguales(*iterator,indexFirstChar,buffer,orden);
+	for(list<unsigned long>::iterator posDeMatch = listOfPositions.begin();
+		posDeMatch != listOfPositions.end(); ++posDeMatch){							//*iterator seria un unsigned long, indicando una posicion de la lista de posiciones
+		bool hayMatch = contextosIguales(*posDeMatch,indexFirstCharOfCurrentContext,buffer,orden);
 		if (hayMatch){
 
-			cout<<"Hay match de orden " << orden << " entre las posiciones: " << *iterator+(2-orden) << " y " << *iterator+1 << endl;
+			cout<<"Hay match de orden " << orden << " entre las posiciones: " << *posDeMatch+(2-orden) << " y " << *posDeMatch+1 << endl;
 
-			if(charNoExcluido(buffer[*iterator+2])){
-				bool esElBuscado = charsIguales(*iterator + 2, caracter, buffer);
+			if(charNoExcluido(buffer[*posDeMatch+2])){
+				bool esElBuscado = charsIguales(*posDeMatch + 2, caracter, buffer);
 				if (esElBuscado){
 					get<0> (tupla) = true;
-					get<1> (tupla) = nroNoOcurrencias;
+					get<1> (tupla) = cantidadDeNoOcurrencias;
 
-					cout<<"El caracter ofrecido del contexto " << *iterator << " matchea con el caracter a rankear" << endl;
-					cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << nroNoOcurrencias << endl;
+					cout<<"El caracter ofrecido del contexto " << *posDeMatch << " matchea con el caracter a rankear" << endl;
+					cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << cantidadDeNoOcurrencias << endl;
 
 					return tupla;
 				}
 
-				cout<<"El caracter ofrecido no es el buscado, por lo tanto se agrega "<<buffer[*iterator+2]<< " a la lista de exclusion" << endl;
+				cout<<"El caracter ofrecido no es el buscado, por lo tanto se agrega "<<buffer[*posDeMatch+2]<< " a la lista de exclusion" << endl;
 
-				exclusionList.push_front(buffer[*iterator+2]);
-				nroNoOcurrencias++;
+				exclusionList.push_front(buffer[*posDeMatch+2]);
+				cantidadDeNoOcurrencias++;
 			}
 			else{
 				cout << "El caracter ofrecido fue excluido previamente." << endl;
 			}
 		}
 	}
-	cout<<"Se han realizado " << nroNoOcurrencias << " ofertas insatisfactorias" << endl;
+	cout<<"Se han realizado " << cantidadDeNoOcurrencias << " ofertas insatisfactorias" << endl;
 
 	get<0> (tupla) = false;
-	get<1> (tupla) = nroNoOcurrencias;
+	get<1> (tupla) = cantidadDeNoOcurrencias;
 	return tupla;
 }
 
