@@ -100,37 +100,38 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 }
 
 
-tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, unsigned long pos, char* buffer){
+tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, unsigned long posCharToRank, char* buffer){
 	tuple<bool, unsigned short> tupla;
-	unsigned long contextPos = pos-1;
+	unsigned long contextCharToRank = posCharToRank-1;
 
-	cout<<"Se comienza la busqueda de contextos iguales de orden 1, para: "<< charToRank <<" , "<<pos<< endl;
+	cout<<"Se comienza la busqueda de contextos iguales de orden 1, para: "<< charToRank <<" , "<<posCharToRank<< endl;
 
-	unsigned short nroNoOcurrencias = 0;
+	unsigned short cantidadDeNoOcurrencias = 0;
 
-	for(unsigned long i = 2; i <= pos; i++){
-		if(buffer[pos-i] == buffer[contextPos]){
-			cout<<"Hay match de contexto uno en la posicion "<<(pos-i) << endl;
-			if(charNoExcluido(buffer[pos-i+1])){
-				bool esElBuscado = charsIguales(pos-i+1, buffer[pos], buffer);
+	for(unsigned long i = 2; i <= posCharToRank; i++){
+		unsigned long contextAComparar = posCharToRank-i;
+		if(buffer[contextAComparar] == buffer[contextCharToRank]){
+			cout<<"Hay match de contexto uno en la posicion "<<(contextAComparar) << endl;
+			if(charNoExcluido(buffer[contextAComparar+1])){
+				bool esElBuscado = charsIguales(contextAComparar+1, buffer[posCharToRank], buffer);
 				if(esElBuscado){
 					get<0> (tupla) = true;
-					get<1> (tupla) = nroNoOcurrencias;
+					get<1> (tupla) = cantidadDeNoOcurrencias;
 					return tupla;
 				}
-				cout<<"El caracter ofrecido no es el buscado, por lo tanto se agrega "<<buffer[pos-i+1]<< " a la lista de exclusion" << endl;
-				exclusionList.push_front(buffer[pos-i+1]);
-				nroNoOcurrencias++;
+				cout<<"El caracter ofrecido no es el buscado, por lo tanto se agrega "<<buffer[posCharToRank-i+1]<< " a la lista de exclusion" << endl;
+				exclusionList.push_front(buffer[contextAComparar+1]);
+				cantidadDeNoOcurrencias++;
 			}
 			else{
 				cout << "El caracter ofrecido fue excluido previamente." << endl;
 			}
 		}
 	}
-	cout<<"Se han realizado " << nroNoOcurrencias << " ofertas insatisfactorias" << endl;
+	cout<<"Se han realizado " << cantidadDeNoOcurrencias << " ofertas insatisfactorias" << endl;
 
 	get<0> (tupla) = false;
-	get<1> (tupla) = nroNoOcurrencias;
+	get<1> (tupla) = cantidadDeNoOcurrencias;
 	return tupla;
 }
 
