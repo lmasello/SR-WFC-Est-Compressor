@@ -12,45 +12,45 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 
 	int ctxActual = orden;
 	char charToRank;
-	unsigned short nroNoOcurrencias; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
+	unsigned short cantidadDeNoOcurrencias; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
 	tuple<bool,unsigned short> tupla;
 
 	cout<<"Comienza el proceso de compresion por Symbol Ranking de orden " << orden << endl;
 
 	//Primeros caracteres [0,orden-1]
-	for(int i = 0; i < orden; i++){
-		if (i > 1){
-			hashear(aComprimir[i-2], aComprimir[i-1], i-2);
+	for(int posCharToRank = 0; posCharToRank < orden; posCharToRank++){
+		if (posCharToRank > 1){
+			hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
 		}
-		char charAProcesar = aComprimir[i];
-		salida[i] = wfc.comprimir(charAProcesar);
+		char charAProcesar = aComprimir[posCharToRank];
+		salida[posCharToRank] = wfc.comprimir(charAProcesar);
 
-		cout<<"El caracter " << charAProcesar << " lo procesa como " << salida[i] << endl;
+		cout<<"El caracter " << charAProcesar << " lo procesa como " << salida[posCharToRank] << endl;
 	}
 	//Siguientes caracteres
-	for (unsigned long i = orden; i< size; i++){	//i= index del char en el buffer
+	for (unsigned long posCharToRank = orden; posCharToRank< size; posCharToRank++){	//i= index del char en el buffer
 
-		charToRank = aComprimir[i];
+		charToRank = aComprimir[posCharToRank];
 		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
-		nroNoOcurrencias = 0;
+		cantidadDeNoOcurrencias = 0;
 
  		while(ctxActual > 1){
-			tupla = buscarEnContexto(ctxActual, charToRank, i, aComprimir);
-			nroNoOcurrencias += get<1> (tupla);
+			tupla = buscarEnContexto(ctxActual, charToRank, posCharToRank, aComprimir);
+			cantidadDeNoOcurrencias += get<1> (tupla);
 			if (get<0> (tupla)) break;
 			ctxActual--;
 		}
 		if (ctxActual == 1){
-			tupla = buscarEnContextoUno(charToRank, i, aComprimir);
-			nroNoOcurrencias += get<1> (tupla);
+			tupla = buscarEnContextoUno(charToRank, posCharToRank, aComprimir);
+			cantidadDeNoOcurrencias += get<1> (tupla);
 			if (!get<0> (tupla)){
-				cout << "EL numero total de ofertas negativas fue de: "<<nroNoOcurrencias << endl;
-				nroNoOcurrencias += wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+				cout << "EL numero total de ofertas negativas fue de: "<<cantidadDeNoOcurrencias << endl;
+				cantidadDeNoOcurrencias += wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
 			}
 		}
-		hashear(aComprimir[i-2], aComprimir[i-1], i-2);
-		salida[i] = nroNoOcurrencias;
-		cout<<"Salida: " << salida[i] << endl<<endl;
+		hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
+		salida[posCharToRank] = cantidadDeNoOcurrencias;
+		cout<<"Salida: " << salida[posCharToRank] << endl<<endl;
 		ctxActual = orden;
 	}
 }
