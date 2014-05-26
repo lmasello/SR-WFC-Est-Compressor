@@ -70,8 +70,8 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 
 			cout<<"Hay match de orden " << orden << " entre las posiciones: " << *iterator+(2-orden) << " y " << *iterator+1 << endl;
 
-			if(charNoExcluido(*iterator+orden)){
-				bool esElBuscado = charsIguales(*iterator + orden, caracter, buffer);
+			if(charNoExcluido(buffer[*iterator+2])){
+				bool esElBuscado = charsIguales(*iterator + 2, caracter, buffer);
 				if (esElBuscado){
 					get<0> (tupla) = true;
 					get<1> (tupla) = nroNoOcurrencias;
@@ -82,9 +82,9 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 					return tupla;
 				}
 
-				cout<<"No es el buscado, por lo tanto se agrega el caracter ofrecido a la lista de exclusion" << endl;
+				cout<<"El caracter ofrecido no es el buscado, por lo tanto se agrega "<<buffer[*iterator+2]<< " a la lista de exclusion" << endl;
 
-				exclusionList.push_front(*iterator+2);
+				exclusionList.push_front(buffer[*iterator+2]);
 				nroNoOcurrencias++;
 			}
 			else{
@@ -99,33 +99,27 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 	return tupla;
 }
 
-//Se sigue la idea mencionada por Fenwich en el 132
+
 tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, unsigned long pos, char* buffer){
 	tuple<bool, unsigned short> tupla;
 	unsigned long contextPos = pos-1;
 
 	cout<<"Se comienza la busqueda de contextos iguales de orden 1, para: "<< charToRank <<" , "<<pos<< endl;
 
-	/*Ver de implementar una funcion de hash para un char y que devuelva una lista de tuplas, donde cada tupla
-	  este formada por la posicion en donde aparece el contexto y el char que le sigue.
- 	  De esta manera se aplica la lista de exclusion en la misma lista de ocurrencias, controlando el agregado y quitado de tuplas, haciendo
- 	  que haya una sola entrada por cada char que le sigue al contexto. Si la prediccion es positiva, se remueve el ctx antiguo y se deja el actual.
-	  si la prediccion es negativa, queda como esta.
-	  Ej: Seria un map, donde la clave es el charDelContexto y tiene como valor (posicionDelContexto,charToRank)
-	*/
-
 	unsigned short nroNoOcurrencias = 0;
 
 	for(unsigned long i = 2; i <= pos; i++){
 		if(buffer[pos-i] == buffer[contextPos]){
 			cout<<"Hay match de contexto uno en la posicion "<<(pos-i) << endl;
-			if(charNoExcluido(pos-i+1)){
+			if(charNoExcluido(buffer[pos-i+1])){
 				bool esElBuscado = charsIguales(pos-i+1, buffer[pos], buffer);
 				if(esElBuscado){
 					get<0> (tupla) = true;
 					get<1> (tupla) = nroNoOcurrencias;
 					return tupla;
 				}
+				cout<<"El caracter ofrecido no es el buscado, por lo tanto se agrega "<<buffer[pos-i+1]<< " a la lista de exclusion" << endl;
+				exclusionList.push_front(buffer[pos-i+1]);
 				nroNoOcurrencias++;
 			}
 			else{
@@ -162,8 +156,8 @@ bool SymbolRanking::charsIguales(unsigned long index,char charToCompare,char* bu
 }
 
 // Nota, copiado de cplusplus
-bool SymbolRanking::charNoExcluido(unsigned long pos){
-	auto it = find(exclusionList.begin(), exclusionList.end(), pos);
+bool SymbolRanking::charNoExcluido(char charToFind){
+	auto it = find(exclusionList.begin(), exclusionList.end(), charToFind);
 	if (it == exclusionList.end()) return true;
 	return false;
 }

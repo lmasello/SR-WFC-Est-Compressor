@@ -16,7 +16,7 @@ using namespace std;
 class SymbolRanking{
 	private:
 		WFC wfc;
-		list<unsigned long> exclusionList;
+		list<char> exclusionList;
 		int orden; //Orden maximo de contexto.
 
 		//Hash (tambien llamado map) con 255*255 claves que son combinacion de dos char. Sus valores
@@ -63,7 +63,7 @@ class SymbolRanking{
 		 * Postcondiciones:
 		 *  devuelve True si no se encuentra en la lista.
 		 */
-		bool charNoExcluido(unsigned long pos);
+		bool charNoExcluido(char charToFind);
 
 		// NO SE VA A USAR. PAJA DE SACAR AHORA.
 		list<tuple<unsigned long,char>> hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar);
