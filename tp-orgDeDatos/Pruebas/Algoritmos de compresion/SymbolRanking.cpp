@@ -1,7 +1,7 @@
 #include "SymbolRanking.h"
 
-SymbolRanking::SymbolRanking(int ctxorden){
-	orden = ctxorden;
+SymbolRanking::SymbolRanking(unsigned short ctxorden){
+	ordenMaximo = ctxorden;
 }
 
 void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long size){
@@ -10,15 +10,15 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 	* En caso de no ocurrencias, se itera hasta llegar a contexto 0, donde se almacena
 	* en el vector el numero ascii correspondiente al literal, mas el numero de no ocurrencias */
 
-	int ctxActual = orden;
+	unsigned short ctxActual = ordenMaximo;
 	char charToRank;
 	unsigned short cantidadDeNoOcurrencias; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
 	tuple<bool,unsigned short> tupla;
 
-	cout<<"Comienza el proceso de compresion por Symbol Ranking de orden " << orden << endl;
+	cout<<"Comienza el proceso de compresion por Symbol Ranking de orden " << ordenMaximo << endl;
 
 	//Primeros caracteres [0,orden-1]
-	for(int posCharToRank = 0; posCharToRank < orden; posCharToRank++){
+	for(int posCharToRank = 0; posCharToRank < ordenMaximo; posCharToRank++){
 		if (posCharToRank > 1){
 			hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
 		}
@@ -28,7 +28,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 		cout<<"El caracter " << charAProcesar << " lo procesa como " << salida[posCharToRank] << endl;
 	}
 	//Siguientes caracteres
-	for (unsigned long posCharToRank = orden; posCharToRank< size; posCharToRank++){	//i= index del char en el buffer
+	for (unsigned long posCharToRank = ordenMaximo; posCharToRank< size; posCharToRank++){	//i= index del char en el buffer
 
 		charToRank = aComprimir[posCharToRank];
 		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
@@ -51,11 +51,11 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 		hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
 		salida[posCharToRank] = cantidadDeNoOcurrencias;
 		cout<<"Salida: " << salida[posCharToRank] << endl<<endl;
-		ctxActual = orden;
+		ctxActual = ordenMaximo;
 	}
 }
 
-tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char caracter, unsigned long posCharToRank, char* buffer){
+tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden, char caracter, unsigned long posCharToRank, char* buffer){
 	unsigned long indexFirstCharOfCurrentContext = posCharToRank-orden;
 	unsigned short cantidadDeNoOcurrencias = 0;
 	tuple<bool, unsigned short> tupla;
@@ -98,7 +98,6 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(int orden, char carac
 	get<1> (tupla) = cantidadDeNoOcurrencias;
 	return tupla;
 }
-
 
 tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, unsigned long posCharToRank, char* buffer){
 	tuple<bool, unsigned short> tupla;

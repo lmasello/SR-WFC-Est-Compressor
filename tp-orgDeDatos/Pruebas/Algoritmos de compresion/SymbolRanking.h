@@ -7,7 +7,6 @@
 #include <functional>
 #include <list>
 #include <tuple>
-
 #include "WFC.h"
 #include "HashMap.h"
 
@@ -17,7 +16,7 @@ class SymbolRanking{
 	private:
 		WFC wfc;
 		list<char> exclusionList;
-		int orden; //Orden maximo de contexto.
+		unsigned short ordenMaximo;
 
 		//Hash (tambien llamado map) con 255*255 claves que son combinacion de dos char. Sus valores
 		// son listas de las posiciones de sus apariciones de dichas claves en el buffer.
@@ -28,7 +27,7 @@ class SymbolRanking{
 		* EJ: mejor caso (true,0) peor caso (false, contextosQueSeComparan).
 		* Sigue el esquema de hashing presentado en el Tech paper 132 de P. Fenwich
 		*/
-		tuple<bool,unsigned short> buscarEnContexto(int orden, char caracter,unsigned long pos, char* buffer);
+		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, char caracter,unsigned long pos, char* buffer);
 
 		/* Realiza la busqueda del caracter para el caso de contexto = 1. */
 		tuple<bool,unsigned short> buscarEnContextoUno(char caracter, unsigned long pos, char* buffer);
@@ -65,13 +64,10 @@ class SymbolRanking{
 		 */
 		bool charNoExcluido(char charToFind);
 
-		// NO SE VA A USAR. PAJA DE SACAR AHORA.
-		list<tuple<unsigned long,char>> hasheartu(char symbol1, char symbol2, unsigned long indexFirstChar);
-
 	public:
 		SymbolRanking();
 
-		SymbolRanking(int orden);
+		SymbolRanking(unsigned short orden);
 
 		/*Recibe un vector de char a comprimir. El resultado se almacenara en un vector de short (necesito mas de 256 caracteres
 		 * por lo que no se puede guardar en un vector de char */
