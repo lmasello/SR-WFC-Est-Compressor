@@ -11,8 +11,7 @@
 #include <string>
 #include <algorithm>
 #include <functional>
-#include "../Exceptions/notInListError.h"
-#include "../Exceptions/indexError.h"
+#include "../Exceptions/IndexError.h"
 
 using namespace std;
 

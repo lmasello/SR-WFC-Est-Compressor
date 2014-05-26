@@ -38,7 +38,7 @@ void WFC::incrementarFrecuencia(char charToTransform){
 }
 
 void WFC::updateWeightedList(unsigned short indexDelCharActualizado){
-	//if(indexDelCharActualizado>=256)throw IndexError;
+	if(indexDelCharActualizado>=256)throw IndexError();
 	while (indexDelCharActualizado > 0){
 		bool pesoMayor = elPesoDeLaPosicionEsMayor(indexDelCharActualizado,indexDelCharActualizado-1);
 		if(pesoMayor){
