@@ -155,13 +155,13 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoD(unsigned short orden
 		bool hayMatch = contextosIguales(*posDeMatch,indexFirstCharOfCurrentContext,buffer,orden);
 		if (hayMatch){
 			if(charNoExcluido(buffer[*posDeMatch+2])){
-				ranking--;
-				if(ranking<0){ //El char ofrecido es el descomprimido!
+				if(ranking==0){ //El char ofrecido es el descomprimido!
 					unsigned short charDelRanking = (unsigned short) buffer[*posDeMatch+2];
 					get<0> (tupla) = true;
 					get<1> (tupla) = charDelRanking;
 					return tupla;
 				}
+				ranking--;
 				exclusionList.push_front(buffer[*posDeMatch+2]);
 				cantidadDeNoOcurrencias++;//Si el ranking ofrecido no es la oferta acertada aumenta la cantidad de no ocurrencias
 			}
@@ -212,17 +212,17 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUnoD(unsigned short ra
 	unsigned long contextCharToRank = posCharToRank-1;
 	unsigned short cantidadDeNoOcurrencias = 0;
 
-	for(unsigned long i = 2; i <= posCharToRank; i++){
+	for(unsigned long i = ordenMaximo-1; i <= posCharToRank; i++){
 		unsigned long contextAComparar = posCharToRank-i;
 		if(buffer[contextAComparar] == buffer[contextCharToRank]){
 			if(charNoExcluido(buffer[contextAComparar+1])){
-				ranking--;
-				if(ranking<0){ //El char ofrecido es el descomprimido!
+				if(ranking==0){ //El char ofrecido es el descomprimido!
 					unsigned short charDelRanking = (unsigned short) buffer[contextAComparar+1];
 					get<0> (tupla) = true;
 					get<1> (tupla) = charDelRanking;
 					return tupla;
 				}
+				ranking--;
 				exclusionList.push_front(buffer[contextAComparar+1]);
 				cantidadDeNoOcurrencias++;//Si el ranking ofrecido no es la oferta acertada aumenta la cantidad de no ocurrencias
 			}
