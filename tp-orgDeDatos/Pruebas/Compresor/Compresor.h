@@ -27,9 +27,9 @@ class Compresor{
 
 
 		/* A partir del buffer obtenido, se genera el archivo descomprimido siguiendo los pasos y logica inversa del
-		 * metodo comprimir. Todavia esta por definirse el tipo de datos del buffer que recibe este metodo (por eso
-		 * no lo puse). */
-		void descomprimir();
+		 * metodo comprimir.
+		 */
+		void descomprimir(unsigned short* entrada, unsigned long size);
 };
 
 #endif

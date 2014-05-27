@@ -76,7 +76,7 @@ class SymbolRanking{
 		/*
 		 * Recibe un vector de shorts y genera un vector de chars descomprimidos.
 		 */
-		void descomprimir(short* aDescomprimir, char* salida, unsigned long size);
+		void descomprimir(unsigned short* aDescomprimir, char* salida, unsigned long size);
 };
 
 #endif

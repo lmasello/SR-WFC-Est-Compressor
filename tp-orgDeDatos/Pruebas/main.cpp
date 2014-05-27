@@ -32,7 +32,7 @@ int main(int argc,char *argv[]){
 	if (*operacionARealizar == 'c'){
 		compresor.comprimir(buffer,size);
 	}
-	//else if(operacionARealizar[1]=='d')compresor.descomprimir(buffer,size);
+	else if(operacionARealizar[1]=='d')compresor.descomprimir(buffer,size);
 
 	/*
 	 * Luego de la instancia de compresion/descompresion se llama al file

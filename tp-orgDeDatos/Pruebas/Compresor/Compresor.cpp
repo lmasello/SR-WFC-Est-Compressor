@@ -29,7 +29,7 @@ void Compresor::descomprimir(unsigned short* entrada, unsigned long size){
 
 	cout << "Comenzando el proceso de descompresion por SymbolRanking" << endl;
 
-	sr.descomprimi(entrada, salida, size);
+	sr.descomprimir(entrada, salida, size);
 
 	cout << "SymbolRanking ha finalizado el proceso de descompresion correctamente";
 

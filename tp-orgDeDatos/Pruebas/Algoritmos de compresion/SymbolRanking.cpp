@@ -56,7 +56,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 	}
 }
 
-void SymbolRanking::descomprimir(short* aDescomprimir, char* salida, unsigned long size){
+void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, unsigned long size){
 
 	unsigned short ctxActual = ordenMaximo;
 	unsigned short rankToChar;
@@ -254,7 +254,6 @@ bool SymbolRanking::charsIguales(unsigned long index,char charToCompare,char* bu
 	if(buffer[index]==charToCompare)return true;
 	return false;
 }
-
 // Nota, copiado de cplusplus
 bool SymbolRanking::charNoExcluido(char charToFind){
 	auto it = find(exclusionList.begin(), exclusionList.end(), charToFind);
