@@ -28,7 +28,7 @@ class SymbolRanking{
 		* Sigue el esquema de hashing presentado en el Tech paper 132 de P. Fenwich
 		*/
 		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, char caracter,unsigned long pos, char* buffer);
-
+		tuple<bool,unsigned short> buscarEnContextoD(unsigned short orden, unsigned short ranking, unsigned long pos, char* buffer);
 		/* Realiza la busqueda del caracter para el caso de contexto = 1. */
 		tuple<bool,unsigned short> buscarEnContextoUno(char caracter, unsigned long pos, char* buffer);
 

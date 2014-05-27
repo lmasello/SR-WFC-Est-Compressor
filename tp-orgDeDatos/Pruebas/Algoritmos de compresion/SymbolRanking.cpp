@@ -112,7 +112,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 //	cout<<"Se realiza la busqueda de contextos iguales de orden " << orden << ", para el caracter a ranquear: " << caracter << " , " << posCharToRank << endl;
 
 	for(list<unsigned long>::iterator posDeMatch = listOfPositions.begin();
-		posDeMatch != listOfPositions.end(); ++posDeMatch){							//*iterator seria un unsigned long, indicando una posicion de la lista de posiciones
+		posDeMatch != listOfPositions.end(); ++posDeMatch){
 		bool hayMatch = contextosIguales(*posDeMatch,indexFirstCharOfCurrentContext,buffer,orden);
 		if (hayMatch){
 //			cout<<"Hay match de orden " << orden << " entre las posiciones: " << *posDeMatch+(2-orden) << " y " << *posDeMatch+1 << endl;
@@ -138,6 +138,32 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 	}
 //	cout<<"Se han realizado " << cantidadDeNoOcurrencias << " ofertas insatisfactorias" << endl;
 
+	get<0> (tupla) = false;
+	get<1> (tupla) = cantidadDeNoOcurrencias;
+	return tupla;
+}
+
+tuple<bool,unsigned short> SymbolRanking::buscarEnContextoD(unsigned short orden, unsigned short ranking, unsigned long posActual, char* buffer){
+
+	unsigned long indexFirstCharOfCurrentContext = posActual-orden;
+	unsigned short cantidadDeNoOcurrencias = 0;
+	tuple<bool, unsigned short> tupla;
+	list<unsigned long> listOfPositions = getListOfPositions(buffer, posActual-2);
+
+	for(list<unsigned long>::iterator posDeMatch = listOfPositions.begin();
+		posDeMatch != listOfPositions.end(); ++posDeMatch){
+		bool hayMatch = contextosIguales(*posDeMatch,indexFirstCharOfCurrentContext,buffer,orden);
+		if (hayMatch){
+			ranking--;
+			if(ranking<0){ //El char ofrecido es el descomprimido!
+				unsigned short charDelRanking = (unsigned short) buffer[*posDeMatch+2];
+				get<0> (tupla) = true;
+				get<1> (tupla) = charDelRanking;
+				return tupla;
+			}
+			cantidadDeNoOcurrencias++;//Si el ranking ofrecido no es la oferta acertada aumenta la cantidad de no ocurrencias
+		}
+	}
 	get<0> (tupla) = false;
 	get<1> (tupla) = cantidadDeNoOcurrencias;
 	return tupla;
