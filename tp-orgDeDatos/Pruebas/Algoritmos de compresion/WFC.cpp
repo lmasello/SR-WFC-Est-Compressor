@@ -55,3 +55,9 @@ bool WFC::elPesoDeLaPosicionEsMayor(unsigned short pos1, unsigned short pos2){
 	return false;
 }
 
+char WFC::descomprimir(unsigned short numberToTransform){
+	char charDeSalida = weightedList[numberToTransform];
+	incrementarFrecuencia(charDeSalida);
+	updateWeightedList(numberToTransform);
+	return charDeSalida;
+}
