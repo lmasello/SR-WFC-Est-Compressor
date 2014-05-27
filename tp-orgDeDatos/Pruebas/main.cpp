@@ -26,7 +26,7 @@ int main(int argc,char *argv[]){
 		compresor.comprimir(buffer,size);
 		free(buffer);
 	}
-	else if(operacionARealizar[1]=='d'){
+	else if(*operacionARealizar=='d'){
 //		FileManager<unsigned short> fileManager;
 //		unsigned short* buffer = fileManager.processFile(nombreDelArchivo);
 //		unsigned long size = fileManager.getSize(nombreDelArchivo);

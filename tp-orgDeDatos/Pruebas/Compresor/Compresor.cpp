@@ -31,6 +31,10 @@ void Compresor::descomprimir(unsigned short* entrada, unsigned long size){
 
 	sr.descomprimir(entrada, salida, size);
 
-	cout << "SymbolRanking ha finalizado el proceso de descompresion correctamente";
+	cout << "SymbolRanking ha finalizado el proceso de descompresion correctamente"<<endl;
+	cout << "Salida:"<<endl;
+	for(unsigned int i = 0; i < size; i++){
+		cout<< salida[i] << ' ';
+	}
 
 }
