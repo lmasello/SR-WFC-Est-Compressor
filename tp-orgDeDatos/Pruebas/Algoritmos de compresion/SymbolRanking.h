@@ -31,7 +31,7 @@ class SymbolRanking{
 		tuple<bool,unsigned short> buscarEnContextoD(unsigned short orden, unsigned short ranking, unsigned long pos, char* buffer);
 		/* Realiza la busqueda del caracter para el caso de contexto = 1. */
 		tuple<bool,unsigned short> buscarEnContextoUno(char caracter, unsigned long pos, char* buffer);
-
+		tuple<bool,unsigned short> buscarEnContextoUnoD(unsigned short ranking, unsigned long posCharToRank, char* buffer);
 		/* Devuelve la lista correspondiente a la clave conformada por el string entre el caracter en
 		 * la posicion posFirst del buffer, y el siguiente. */
 		list<unsigned long> getListOfPositions(char* buffer, unsigned long posFirst);

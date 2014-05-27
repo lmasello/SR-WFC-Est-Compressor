@@ -154,14 +154,17 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoD(unsigned short orden
 		posDeMatch != listOfPositions.end(); ++posDeMatch){
 		bool hayMatch = contextosIguales(*posDeMatch,indexFirstCharOfCurrentContext,buffer,orden);
 		if (hayMatch){
-			ranking--;
-			if(ranking<0){ //El char ofrecido es el descomprimido!
-				unsigned short charDelRanking = (unsigned short) buffer[*posDeMatch+2];
-				get<0> (tupla) = true;
-				get<1> (tupla) = charDelRanking;
-				return tupla;
+			if(charNoExcluido(buffer[*posDeMatch+2])){
+				ranking--;
+				if(ranking<0){ //El char ofrecido es el descomprimido!
+					unsigned short charDelRanking = (unsigned short) buffer[*posDeMatch+2];
+					get<0> (tupla) = true;
+					get<1> (tupla) = charDelRanking;
+					return tupla;
+				}
+				exclusionList.push_front(buffer[*posDeMatch+2]);
+				cantidadDeNoOcurrencias++;//Si el ranking ofrecido no es la oferta acertada aumenta la cantidad de no ocurrencias
 			}
-			cantidadDeNoOcurrencias++;//Si el ranking ofrecido no es la oferta acertada aumenta la cantidad de no ocurrencias
 		}
 	}
 	get<0> (tupla) = false;
@@ -199,6 +202,32 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(char charToRank, u
 	}
 	cout<<"Se han realizado " << cantidadDeNoOcurrencias << " ofertas insatisfactorias" << endl;
 
+	get<0> (tupla) = false;
+	get<1> (tupla) = cantidadDeNoOcurrencias;
+	return tupla;
+}
+
+tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUnoD(unsigned short ranking, unsigned long posCharToRank, char* buffer){
+	tuple<bool, unsigned short> tupla;
+	unsigned long contextCharToRank = posCharToRank-1;
+	unsigned short cantidadDeNoOcurrencias = 0;
+
+	for(unsigned long i = 2; i <= posCharToRank; i++){
+		unsigned long contextAComparar = posCharToRank-i;
+		if(buffer[contextAComparar] == buffer[contextCharToRank]){
+			if(charNoExcluido(buffer[contextAComparar+1])){
+				ranking--;
+				if(ranking<0){ //El char ofrecido es el descomprimido!
+					unsigned short charDelRanking = (unsigned short) buffer[contextAComparar+1];
+					get<0> (tupla) = true;
+					get<1> (tupla) = charDelRanking;
+					return tupla;
+				}
+				exclusionList.push_front(buffer[contextAComparar+1]);
+				cantidadDeNoOcurrencias++;//Si el ranking ofrecido no es la oferta acertada aumenta la cantidad de no ocurrencias
+			}
+		}
+	}
 	get<0> (tupla) = false;
 	get<1> (tupla) = cantidadDeNoOcurrencias;
 	return tupla;
