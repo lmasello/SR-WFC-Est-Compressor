@@ -1,10 +1,3 @@
-/*
- * WFC.h
- *
- *  Created on: May 21, 2014
- *      Author: leandro
- */
-
 #ifndef WFC_H_
 #define WFC_H_
 #include <unordered_map>

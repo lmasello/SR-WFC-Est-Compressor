@@ -13,7 +13,7 @@ void Compresor::comprimir(char* buffer, unsigned long size){
 
 	sr.comprimir(buffer, salida, size);
 
-	cout<<"Symbol ranking ha finalizado el proceso de compresion correctamente" << endl;
+	cout<<"SymbolRanking ha finalizado el proceso de compresion correctamente" << endl;
 
 	for(unsigned int i = 0; i < size; i++){
 		cout<< salida[i] << ' ';
@@ -21,8 +21,16 @@ void Compresor::comprimir(char* buffer, unsigned long size){
 
 }
 
-void Compresor::descomprimir(){
-
+void Compresor::descomprimir(unsigned short* entrada, unsigned long size){
 //Deberia ser una sucesion de pasos inversa a la de comprimir
+	SymbolRanking sr(ORDEN);
+
+	char *salida = (char*) malloc (sizeof(char) * size);
+
+	cout << "Comenzando el proceso de descompresion por SymbolRanking" << endl;
+
+	sr.descomprimi(entrada, salida, size);
+
+	cout << "SymbolRanking ha finalizado el proceso de descompresion correctamente";
 
 }

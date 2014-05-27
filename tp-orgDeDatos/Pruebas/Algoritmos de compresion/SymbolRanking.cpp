@@ -28,7 +28,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 		cout<<"El caracter " << charAProcesar << " lo procesa como " << salida[posCharToRank] << endl;
 	}
 	//Siguientes caracteres
-	for (unsigned long posCharToRank = ordenMaximo; posCharToRank< size; posCharToRank++){	//i= index del char en el buffer
+	for (unsigned long posCharToRank = ordenMaximo; posCharToRank< size; posCharToRank++){
 
 		charToRank = aComprimir[posCharToRank];
 		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
@@ -48,9 +48,60 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 				cantidadDeNoOcurrencias += wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
 			}
 		}
+		if(get<0>(tupla)) wfc.comprimir(charToRank); //Nota: es solo me actualiza la frecuencia del char, y el a weightedList.
 		hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
 		salida[posCharToRank] = cantidadDeNoOcurrencias;
 		cout<<"Salida: " << salida[posCharToRank] << endl<<endl;
+		ctxActual = ordenMaximo;
+	}
+}
+
+void descomprimir(short* aDescomprimir, char* salida, unsigned long size){
+
+	unsigned short ctxActual = ordenMaximo;
+	char rankToChar;
+	unsigned short cantidadDeNoOcurrencias; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
+	tuple<bool,unsigned short> tupla;
+
+	cout<<"Comienza el proceso de descompresion por Symbol Ranking de orden " << ordenMaximo << endl;
+
+	//Primeros rankings [0,orden-1]
+	for(int posRankToChar = 0; posRankToChar < ordenMaximo; posRankToChar++){
+		if (posRankToChar > 1){
+			hashear(salida[posRankToChar-2], salida[posRankToChar-1], posRankToChar-2);
+		}
+		unsigned short rankAProcesar = aDescomprimir[posRankToChar];
+		salida[posRankToChar] = wfc.descomprimir(rankAProcesar);
+
+		cout<<"El rank " << rankAProcesar << " lo procesa como el caracter " << salida[posRankToChar] << endl;
+	}
+
+	//Siguientes caracteres
+	for (unsigned long posRankToChar = ordenMaximo; posRankToChar< size; posRankToChar++){
+		rankToChar = aDescomprimir[posRankToChar];
+		exclusionList.clear();
+
+		while(ctxActual > 1){
+			tupla = buscarEnContextoD(ctxActual, rankToChar, posRankToChar, salida);
+			if (get<0> (tupla)) break;
+			rankToChar -= get<1> (tupla);
+			ctxActual--;
+		}
+		if (ctxActual == 1){
+			tupla = buscarEnContextoUnoD(rankToChar, posRankToChar, salida); //Debe checkear en su implementacion que charToRank - NoOcurrencias sea 0. Si es 0, devuelve True, y el char siguiente al contexto. Si no es 0, sigue buscando y repite. Si se termino, devuelve False, y las NoOcurrencias.
+			rankToChar -= get<1> (tupla);
+			if (!get<0> (tupla)){
+				//cout << "EL numero total de ofertas negativas fue de: " << cantidadDeNoOcurrencias << endl;
+				salida[posRankToChar] = wfc.descomprimir(rankToChar);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+			}
+		}
+		//Nota: cuando la tupla me devuelve True, quiere decir que el segundo elemento es el caracter ofrecido por un contexto
+		// existente que matcheo. Por lo tanto, esto siempre va a ser un char
+		if(get<0>(tupla)){
+			salida[posRankToChar] = (char) get<1>(tupla);
+			wfc.descomprimir(salida[posRankToChar]);
+		}
+		hashear(salida[posRankToChar-2], salida[posRankToChar-1], posRankToChar-2);
 		ctxActual = ordenMaximo;
 	}
 }
@@ -143,7 +194,8 @@ void SymbolRanking::hashear(char symbol1, char symbol2, unsigned long indexFirst
 }
 
 bool SymbolRanking::contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer,int orden){
-	unsigned long comienzoDeContextoAComparar = indexA+2-orden; // Ubica al index en la posicion inicial del string a comparar de acuerdo al orden. Como se hashea para los ultimos 2 chars, la posicion incial se obtiene como (2-orden)
+	int comienzoDeContextoAComparar = indexA+2-orden; // Ubica al index en la posicion inicial del string a comparar de acuerdo al orden. Como se hashea para los ultimos 2 chars, la posicion incial se obtiene como (2-orden)
+	if (comienzoDeContextoAComparar<0) return false; //Este es el caso que en el hash tengo posicion 0, y debido al contexto actual me genera underflow.
 	for (unsigned short i=0; i<orden; i++){
 		if (buffer[comienzoDeContextoAComparar+i]!=buffer[indexB+i])return false;
 	}
