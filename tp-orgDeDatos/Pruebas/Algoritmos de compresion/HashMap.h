@@ -10,9 +10,9 @@ using namespace std;
 class HashEntry {
 	private:
 		char* key;
-		list<unsigned long> value;
+		list<unsigned int> value;
 	public:
-		HashEntry(char* key, list<unsigned long> value) {
+		HashEntry(char* key, list<unsigned int> value) {
 			this->key = key;
 			this->value = value;
 		}
@@ -21,7 +21,7 @@ class HashEntry {
 			return key;
 		}
 
-		list<unsigned long> getValue() {
+		list<unsigned int> getValue() {
 			return value;
 		}
 };
@@ -36,10 +36,10 @@ class HashMap {
 		~HashMap();
 
 		/* Devuelve el valor asignado a la clave pasada por parametro. */
-		list<unsigned long> get(char first, char second);
+		list<unsigned int> get(char first, char second);
 
 		/* Le asigna el valor value a la clave key */
-		void put(char first, char second, unsigned long value);
+		void put(char first, char second, unsigned int value);
 
 };
 

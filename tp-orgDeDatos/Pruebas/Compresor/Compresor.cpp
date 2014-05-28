@@ -3,7 +3,7 @@
 
 Compresor::Compresor(){}
 
-void Compresor::comprimir(char* buffer, unsigned long size){
+void Compresor::comprimir(char* buffer, unsigned int size){
 
 	SymbolRanking sr (ORDEN);
 
@@ -21,7 +21,7 @@ void Compresor::comprimir(char* buffer, unsigned long size){
 
 }
 
-void Compresor::descomprimir(unsigned short* entrada, unsigned long size){
+void Compresor::descomprimir(unsigned short* entrada, unsigned int size){
 //Deberia ser una sucesion de pasos inversa a la de comprimir
 	SymbolRanking sr(ORDEN);
 

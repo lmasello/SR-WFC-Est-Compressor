@@ -40,7 +40,7 @@ class SymbolRanking{
 		 *  		   Si tuple[0]==false, indica la cantidad de ofertas negativas.
 		 *
 		 */
-		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, unsigned long posCharToRank, char* buffer,char operacion,unsigned short ranking);
+		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, unsigned int posCharToRank, char* buffer,char operacion,unsigned short ranking);
 
 		/*
 		 * Evalua si hay un match de orden 1 y en dicho caso, evalua si la oferta realizada por dicho contexto
@@ -57,15 +57,15 @@ class SymbolRanking{
 		 *  							  la operacion es 'd' --> es el caracter ofrecido casteado a unsigned short
 		 *  		   Si tuple[0]==false, indica la cantidad de ofertas negativas.
 		 */
-		tuple<bool,unsigned short> buscarEnContextoUno(unsigned long posCharToRank, char* buffer, char operacion,unsigned short ranking);
+		tuple<bool,unsigned short> buscarEnContextoUno(unsigned int posCharToRank, char* buffer, char operacion,unsigned short ranking);
 
 		/* Devuelve la lista correspondiente a la clave conformada por el string entre el caracter en
 		 * la posicion posFirst del buffer, y el siguiente. */
-		list<unsigned long> getListOfPositions(char* buffer, unsigned long posFirst);
+		list<unsigned int> getListOfPositions(char* buffer, unsigned int posFirst);
 
 		/* Dado un vector con 2 char, lo hashea en el map (atributo).
 		 */
-		void hashear(char symbol1, char symbol2, unsigned long indexFirstChar);
+		void hashear(char symbol1, char symbol2, unsigned int indexFirstChar);
 
 		/* Dadas dos offset de un buffer, se comparan N Bytes (N = nro de orden).
 		 * Si dichos Bytes son iguales, entonces dichos strings son iguales y por lo tanto los contextos son iguales.
@@ -74,7 +74,7 @@ class SymbolRanking{
 		 * Postcondiciones:
 		 *  Devuelve un boolean de acuerdo a si se produce un match de contextos o no
 		 */
-		bool contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer,int ordenDelContexto);
+		bool contextosIguales(unsigned int indexA, unsigned int indexB, char* buffer,int ordenDelContexto);
 
 		/*
 		 * Dado un offset de un array, verifica si el char apuntado por esa posicion es el caracter a comparar.
@@ -83,7 +83,7 @@ class SymbolRanking{
 		 * Postcondiciones:
 		 *  Devuelve un boolean de acuerdo a si hay un match entre los caracteres involucrados
 		 */
-		bool charsIguales(unsigned long index,char charToCompare,char* buffer);
+		bool charsIguales(unsigned int index,char charToCompare,char* buffer);
 
 		/* Busca si el caracter ofrecido como ranking esta en la lista de exclusion.
 		 * Postcondiciones:
@@ -98,12 +98,12 @@ class SymbolRanking{
 
 		/*Recibe un vector de char a comprimir. El resultado se almacenara en un vector de short (necesito mas de 256 caracteres
 		 * por lo que no se puede guardar en un vector de char */
-		void comprimir(char* aComprimir, short* salida, unsigned long size);
+		void comprimir(char* aComprimir, short* salida, unsigned int size);
 
 		/*
 		 * Recibe un vector de shorts y genera un vector de chars descomprimidos.
 		 */
-		void descomprimir(unsigned short* aDescomprimir, char* salida, unsigned long size);
+		void descomprimir(unsigned short* aDescomprimir, char* salida, unsigned int size);
 };
 
 #endif

@@ -4,7 +4,7 @@ SymbolRanking::SymbolRanking(unsigned short ctxorden){
 	ordenMaximo = ctxorden;
 }
 
-void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long size){
+void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size){
 	/* Busca el contexto con un orden maximo. Si devuelve (true,x) almacenamos x en el
 	* vector y avanzamos. Si devuelve (false,x) se busca contexto de orden n-1.
 	* En caso de no ocurrencias, se itera hasta llegar a contexto 0, donde se almacena
@@ -28,7 +28,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 		cout<<"El caracter " << charAProcesar << " lo procesa como " << salida[posCharToRank] << endl;
 	}
 	//Siguientes caracteres
-	for (unsigned long posCharToRank = ordenMaximo; posCharToRank< size; posCharToRank++){
+	for (unsigned int posCharToRank = ordenMaximo; posCharToRank< size; posCharToRank++){
 
 		charToRank = aComprimir[posCharToRank];
 		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
@@ -56,7 +56,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 	}
 }
 
-void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, unsigned long size){
+void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, unsigned int size){
 
 	unsigned short ctxActual = ordenMaximo;
 	unsigned short rankToChar;
@@ -107,14 +107,14 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 	}
 }
 
-tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden, unsigned long posCharToRank, char* buffer,char operacion,unsigned short ranking){
+tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden, unsigned int posCharToRank, char* buffer,char operacion,unsigned short ranking){
 
-	unsigned long indexFirstCharOfCurrentContext = posCharToRank-orden;
+	unsigned int indexFirstCharOfCurrentContext = posCharToRank-orden;
 	unsigned short cantidadDeNoOcurrencias = 0;
 	tuple<bool, unsigned short> tupla;
-	list<unsigned long> listOfPositions = getListOfPositions(buffer, posCharToRank-2);
+	list<unsigned int> listOfPositions = getListOfPositions(buffer, posCharToRank-2);
 
-	for(list<unsigned long>::iterator posDeMatch = listOfPositions.begin();
+	for(list<unsigned int>::iterator posDeMatch = listOfPositions.begin();
 		posDeMatch != listOfPositions.end(); ++posDeMatch){
 		bool hayMatch = contextosIguales(*posDeMatch,indexFirstCharOfCurrentContext,buffer,orden);
 		if ((hayMatch) && (charNoExcluido(buffer[*posDeMatch+2]))){
@@ -146,9 +146,9 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 	return tupla;
 }
 
-tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(unsigned long posCharToRank, char* buffer, char operacion,unsigned short ranking){
+tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(unsigned int posCharToRank, char* buffer, char operacion,unsigned short ranking){
 	tuple<bool, unsigned short> tupla;
-	unsigned long contextCharToRank = posCharToRank-1;
+	unsigned int contextCharToRank = posCharToRank-1;
 	unsigned short cantidadDeNoOcurrencias = 0;
 
 	for(unsigned int i = ordenMaximo-1; i <= posCharToRank; i++){
@@ -182,15 +182,15 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(unsigned long posC
 	return tupla;
 }
 
-list<unsigned long> SymbolRanking::getListOfPositions(char* buffer, unsigned long posFirst){
+list<unsigned int> SymbolRanking::getListOfPositions(char* buffer, unsigned int posFirst){
 	return hashmap.get(buffer[posFirst], buffer[posFirst+1]);
 }
 
-void SymbolRanking::hashear(char symbol1, char symbol2, unsigned long indexFirstChar){
+void SymbolRanking::hashear(char symbol1, char symbol2, unsigned int indexFirstChar){
 	hashmap.put(symbol1, symbol2, indexFirstChar);
 }
 
-bool SymbolRanking::contextosIguales(unsigned long indexA, unsigned long indexB, char* buffer,int orden){
+bool SymbolRanking::contextosIguales(unsigned int indexA, unsigned int indexB, char* buffer,int orden){
 	int comienzoDeContextoAComparar = indexA+2-orden; // Ubica al index en la posicion inicial del string a comparar de acuerdo al orden. Como se hashea para los ultimos 2 chars, la posicion incial se obtiene como (2-orden)
 	if (comienzoDeContextoAComparar<0) return false; //Este es el caso que en el hash tengo posicion 0, y debido al contexto actual me genera underflow.
 	for (unsigned short i=0; i<orden; i++){
@@ -199,7 +199,7 @@ bool SymbolRanking::contextosIguales(unsigned long indexA, unsigned long indexB,
 	return true;
 }
 
-bool SymbolRanking::charsIguales(unsigned long index,char charToCompare,char* buffer){
+bool SymbolRanking::charsIguales(unsigned int index,char charToCompare,char* buffer){
 	if(buffer[index]==charToCompare)return true;
 	return false;
 }

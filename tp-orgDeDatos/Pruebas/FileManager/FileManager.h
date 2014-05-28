@@ -26,7 +26,7 @@ class FileManager {
 		*/
 		dato* processFile(char* filename){
 			FILE* fileIn;
-			unsigned long lSize;
+			unsigned int lSize;
 			unsigned int result;
 			dato* buffer;
 
@@ -51,9 +51,9 @@ class FileManager {
 			return buffer;
 		}
 
-		unsigned long getSize(char* filename){
+		unsigned int getSize(char* filename){
 			FILE* fileIn;
-			unsigned long lSize;
+			unsigned int lSize;
 
 			fileIn = fopen(filename, "rb");
 			if (!fileIn){fputs ("File error",stderr); exit(1);}
