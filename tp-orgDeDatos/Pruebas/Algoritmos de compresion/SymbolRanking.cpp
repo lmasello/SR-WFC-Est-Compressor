@@ -48,7 +48,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned long siz
 				cantidadDeNoOcurrencias += wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
 			}
 		}
-		if(get<0>(tupla)) wfc.comprimir(charToRank); //Nota: es solo me actualiza la frecuencia del char, y el a weightedList.
+		if(get<0>(tupla)) wfc.incrementarFrecuencia(charToRank);
 		hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
 		salida[posCharToRank] = cantidadDeNoOcurrencias;
 		cout<<"Salida: " << salida[posCharToRank] << endl<<endl;
@@ -98,7 +98,7 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 		// existente que matcheo. Por lo tanto, esto siempre va a ser un char
 		if(get<0>(tupla)){
 			salida[posRankToChar] = (char) get<1>(tupla);
-			wfc.descomprimir(salida[posRankToChar]); //Aumenta la frecuencia del char descomprimido y actualiza la weighted list. VER de hacer dichos metodos del WFC publicos
+			wfc.incrementarFrecuencia(salida[posRankToChar]);
 
 			cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
 		}

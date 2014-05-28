@@ -28,7 +28,11 @@ unsigned short WFC::getIndex(char charToTransform){
 }
 
 void WFC::incrementarFrecuencia(char charToTransform){
+
+	unsigned short indexDelCharActualizado = getIndex(charToTransform);
 	charFrequencies[charToTransform]+=1;
+	updateWeightedList(indexDelCharActualizado);
+
 }
 
 void WFC::updateWeightedList(unsigned short indexDelCharActualizado){
@@ -59,5 +63,8 @@ char WFC::descomprimir(unsigned short numberToTransform){
 	char charDeSalida = weightedList[numberToTransform];
 	incrementarFrecuencia(charDeSalida);
 	updateWeightedList(numberToTransform);
+
+	cout<<"Transforma el ranking "<<numberToTransform<<" al char "<< charDeSalida<<endl;
+
 	return charDeSalida;
 }

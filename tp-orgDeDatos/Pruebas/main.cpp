@@ -33,10 +33,10 @@ int main(int argc,char *argv[]){
 
 		cout << "El archivo ha sido abierto y colocado en memoria correctamente" << endl;
 
-		unsigned short buffer[23] = {97,98,99,100,101,0,0,4,0,0,4,0,112,1,0,2,0,0,0,1,3,0,0};
-		unsigned long size = 23;
+		unsigned short buffer[24] = {97,98,99,100,101,0,0,4,0,0,4,0,112,1,0,2,0,0,0,1,0,0,0,0};
+		unsigned long size = 24;
 		compresor.descomprimir(buffer,size);
-		free(buffer);
+//		free(buffer);
 	}
 
 	/*

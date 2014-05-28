@@ -18,8 +18,6 @@ private:
 	 */
 	unsigned short getIndex(char charToTransform);
 
-	void incrementarFrecuencia(char charToIncrement);
-
 	/*
 	 * Reordena la weithedList en base a las frecuencias. EL criterio de ordenamiento
 	 * es en forma de frecuencias decrecientes, quedando ubicados aquellos char mas
@@ -57,6 +55,8 @@ public:
 	 *  - numberToTransform debe ser un numero entre 0 y weithedList.size()
 	 */
 	char descomprimir(unsigned short numberToTransform);
+
+	void incrementarFrecuencia(char charToIncrement);
 };
 
 #endif /* WFC_H_ */
