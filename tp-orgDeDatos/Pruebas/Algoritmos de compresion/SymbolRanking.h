@@ -9,6 +9,7 @@
 #include <tuple>
 #include "WFC.h"
 #include "HashMap.h"
+#include "../Exceptions/ErrorDeParametro.h"
 
 using namespace std;
 
@@ -29,9 +30,19 @@ class SymbolRanking{
 		*/
 		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, char caracter,unsigned long pos, char* buffer);
 		tuple<bool,unsigned short> buscarEnContextoD(unsigned short orden, unsigned short ranking, unsigned long pos, char* buffer);
-		/* Realiza la busqueda del caracter para el caso de contexto = 1. */
-		tuple<bool,unsigned short> buscarEnContextoUno(char caracter, unsigned long pos, char* buffer);
-		tuple<bool,unsigned short> buscarEnContextoUnoD(unsigned short ranking, unsigned long posCharToRank, char* buffer);
+
+		/*
+		 * Evalua si hay un match de orden 1 y en dicho caso, evalua si la oferta realizada por dicho contexto
+		 * es positiva.
+		 * Precondiciones:
+		 *  - posCharToRank: Es la posicion actual en el buffer que se esta procesando. Debe ser un unsigned int
+		 *  - buffer: Contiene los datos que han sido procesados desde la posicion 0 hasta posCharToRank
+		 *  - operacion: Indica si la busqueda del contexto se esta realizando para el caso del compresor ('c') o descompresor ('d).
+		 *               Se debe ingresar 'c' o 'd'. En caso contrario se levanta la excepcion ErrorDeParametro
+		 *  - ranking: Este parametro unicamente es utilizado para el descompresor e indica el ranking del char a descomprimir.
+		 */
+		tuple<bool,unsigned short> buscarEnContextoUno(unsigned long posCharToRank, char* buffer, char operacion,unsigned short ranking);
+
 		/* Devuelve la lista correspondiente a la clave conformada por el string entre el caracter en
 		 * la posicion posFirst del buffer, y el siguiente. */
 		list<unsigned long> getListOfPositions(char* buffer, unsigned long posFirst);
