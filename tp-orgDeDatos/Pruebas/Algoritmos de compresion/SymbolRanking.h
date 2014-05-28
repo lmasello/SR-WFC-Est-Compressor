@@ -28,8 +28,7 @@ class SymbolRanking{
 		* EJ: mejor caso (true,0) peor caso (false, contextosQueSeComparan).
 		* Sigue el esquema de hashing presentado en el Tech paper 132 de P. Fenwich
 		*/
-		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, char caracter,unsigned long pos, char* buffer);
-		tuple<bool,unsigned short> buscarEnContextoD(unsigned short orden, unsigned short ranking, unsigned long pos, char* buffer);
+		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, unsigned long posCharToRank, char* buffer,char operacion,unsigned short ranking);
 
 		/*
 		 * Evalua si hay un match de orden 1 y en dicho caso, evalua si la oferta realizada por dicho contexto

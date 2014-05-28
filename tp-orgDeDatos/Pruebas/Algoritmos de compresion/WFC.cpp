@@ -63,8 +63,5 @@ char WFC::descomprimir(unsigned short numberToTransform){
 	char charDeSalida = weightedList[numberToTransform];
 	incrementarFrecuencia(charDeSalida);
 	updateWeightedList(numberToTransform);
-
-	cout<<"Transforma el ranking "<<numberToTransform<<" al char "<< charDeSalida<<endl;
-
 	return charDeSalida;
 }
