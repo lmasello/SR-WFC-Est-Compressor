@@ -23,11 +23,23 @@ class SymbolRanking{
 		// son listas de las posiciones de sus apariciones de dichas claves en el buffer.
 		HashMap hashmap;
 
-		/* Dado un orden de contexto y un char busca en el vector y devuelve
-		* true or false segun si lo encontro o no y el numero de no ocurrencias.
-		* EJ: mejor caso (true,0) peor caso (false, contextosQueSeComparan).
-		* Sigue el esquema de hashing presentado en el Tech paper 132 de P. Fenwich
-		*/
+		/* Evalua si hay un match en el buffer, dado un orden de contexto. En caso de que haya match de contextos.
+		 * evalua si la oferta realizada es positiva. EJ: mejor caso (true,0) peor caso (false, contextosQueSeComparan).
+		 * Sigue el esquema de hashing presentado en el Tech paper 132 de P. Fenwich
+ 		 * Precondiciones:
+ 		 *  - orden: Indica el orden del contexto que se debe buscar el match.
+		 *  - posCharToRank: Es la posicion actual en el buffer que se esta procesando. Debe ser un unsigned int
+		 *  - buffer: Contiene los datos que han sido procesados desde la posicion 0 hasta posCharToRank
+		 *  - operacion: Indica si la busqueda del contexto se esta realizando para el caso del compresor ('c') o descompresor ('d).
+		 *               Se debe ingresar 'c' o 'd'. En caso contrario se levanta la excepcion ErrorDeParametro
+		 *  - ranking: Este parametro unicamente es utilizado para el descompresor e indica el ranking del char a descomprimir.
+		 * Postcondiciones:
+		 *  -tuple[0] es un bool que indica si la oferta fue positiva (true) o no (false)
+		 *  -tuple[1]: Si tuple[0]==true y la operacion es 'c' --> indica la cantidad de ofertas negativas que se realizaron hasta lograr la oferta positiva
+		 *  							  la operacion es 'd' --> es el caracter ofrecido casteado a unsigned short
+		 *  		   Si tuple[0]==false, indica la cantidad de ofertas negativas.
+		 *
+		 */
 		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, unsigned long posCharToRank, char* buffer,char operacion,unsigned short ranking);
 
 		/*
@@ -39,6 +51,11 @@ class SymbolRanking{
 		 *  - operacion: Indica si la busqueda del contexto se esta realizando para el caso del compresor ('c') o descompresor ('d).
 		 *               Se debe ingresar 'c' o 'd'. En caso contrario se levanta la excepcion ErrorDeParametro
 		 *  - ranking: Este parametro unicamente es utilizado para el descompresor e indica el ranking del char a descomprimir.
+		 * Postcondiciones:
+		 *  -tuple[0] es un bool que indica si la oferta fue positiva (true) o no (false)
+		 *  -tuple[1]: Si tuple[0]==true y la operacion es 'c' --> indica la cantidad de ofertas negativas que se realizaron hasta lograr la oferta positiva
+		 *  							  la operacion es 'd' --> es el caracter ofrecido casteado a unsigned short
+		 *  		   Si tuple[0]==false, indica la cantidad de ofertas negativas.
 		 */
 		tuple<bool,unsigned short> buscarEnContextoUno(unsigned long posCharToRank, char* buffer, char operacion,unsigned short ranking);
 
