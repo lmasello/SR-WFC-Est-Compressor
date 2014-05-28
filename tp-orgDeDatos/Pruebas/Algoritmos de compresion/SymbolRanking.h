@@ -23,7 +23,7 @@ class SymbolRanking{
 		// son listas de las posiciones de sus apariciones de dichas claves en el buffer.
 		HashMap hashmap;
 
-		/* Evalua si hay un match en el buffer, dado un orden de contexto. En caso de que haya match de contextos.
+		/* Evalua si hay un match entre una posicion del buffer y el contexto actual, dado un orden determinado. En caso de que haya match de contextos.
 		 * evalua si la oferta realizada es positiva. EJ: mejor caso (true,0) peor caso (false, contextosQueSeComparan).
 		 * Sigue el esquema de hashing presentado en el Tech paper 132 de P. Fenwich
  		 * Precondiciones:
@@ -40,7 +40,7 @@ class SymbolRanking{
 		 *  		   Si tuple[0]==false, indica la cantidad de ofertas negativas.
 		 *
 		 */
-		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, unsigned int posCharToRank, char* buffer,char operacion,unsigned short ranking);
+		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, unsigned int posCharToRank,unsigned int posDeMatch, char* buffer,char operacion,unsigned short ranking);
 
 		/*
 		 * Evalua si hay un match de orden 1 y en dicho caso, evalua si la oferta realizada por dicho contexto
