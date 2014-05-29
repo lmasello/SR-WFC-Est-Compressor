@@ -40,7 +40,7 @@ class SymbolRanking{
 		 *  		   Si tuple[0]==false, indica la cantidad de ofertas negativas.
 		 *
 		 */
-		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, unsigned int posCharToRank,unsigned int posDeMatch, char* buffer,char operacion,unsigned short ranking);
+		tuple<bool,unsigned short> buscarEnContexto(unsigned short orden, unsigned int posCharToRank, char* buffer,char operacion,unsigned short ranking);
 
 		/*
 		 * Evalua si hay un match de orden 1 y en dicho caso, evalua si la oferta realizada por dicho contexto
@@ -58,6 +58,9 @@ class SymbolRanking{
 		 *  		   Si tuple[0]==false, indica la cantidad de ofertas negativas.
 		 */
 		tuple<bool,unsigned short> buscarEnContextoUno(unsigned int posCharToRank, char* buffer, char operacion,unsigned short ranking);
+
+		/* Resetea los hashmaps */
+		void resetHashMap();
 
 		/* Devuelve la lista correspondiente a la clave conformada por el string entre el caracter en
 		 * la posicion posFirst del buffer, y el siguiente. */

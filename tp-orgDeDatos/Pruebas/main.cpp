@@ -15,6 +15,9 @@ int main(int argc,char *argv[]){
 	char* operacionARealizar = argv[1];
 	char* nombreDelArchivo = argv[2];
 
+	// Get start time
+	clock_t start=clock();
+
 	Compresor compresor;
 	if (*operacionARealizar == 'c'){
 		FileManager<char> fileManager;
@@ -39,6 +42,9 @@ int main(int argc,char *argv[]){
 //		free(buffer);
 	}
 
+	// Report result
+	printf("\n%s in %1.2f sec.\n",
+		 argv[2], double(clock()-start)/CLOCKS_PER_SEC);
 	/*
 	 * Luego de la instancia de compresion/descompresion se debe llamar al file
 	 * Manager para que guarde los resultados en el archivo de salida

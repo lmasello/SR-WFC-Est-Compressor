@@ -24,6 +24,10 @@ class HashEntry {
 		list<unsigned int> getValue() {
 			return value;
 		}
+
+		void setValue(list<unsigned int> val){
+			this->value = val;
+		}
 };
 
 class HashMap {
@@ -34,6 +38,8 @@ class HashMap {
 	public:
 		HashMap();
 		~HashMap();
+
+		void reset();
 
 		/* Devuelve el valor asignado a la clave pasada por parametro. */
 		list<unsigned int> get(char first, char second);

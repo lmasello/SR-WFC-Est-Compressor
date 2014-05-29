@@ -33,16 +33,12 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 		charToRank = aComprimir[posCharToRank];
 		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
 		cantidadDeNoOcurrencias = 0;
-
-		list<unsigned int> listOfPositions = getListOfPositions(aComprimir, posCharToRank-2);
+		if(posCharToRank%100000 == 0) resetHashMap();
 
 		while(ctxActual > 1){
-			for(list<unsigned int>::iterator posDeMatch = listOfPositions.begin();
-				posDeMatch != listOfPositions.end(); ++posDeMatch){
-				tupla = buscarEnContexto(ctxActual,posCharToRank, *posDeMatch, aComprimir,'c',0);//El ultimo parametro (ranking) no se utiliza para el compresor, por lo tanto se lo pone en 0
-				cantidadDeNoOcurrencias += get<1> (tupla);
-				if (get<0> (tupla)) break;
-			}
+			tupla = buscarEnContexto(ctxActual,posCharToRank, aComprimir,'c',0);//El ultimo parametro (ranking) no se utiliza para el compresor, por lo tanto se lo pone en 0
+			cantidadDeNoOcurrencias += get<1> (tupla);
+			if (get<0> (tupla)) break;
 			ctxActual--;
 		}
 		if (ctxActual == 1){
@@ -54,7 +50,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 			}
 		}
 		if(get<0>(tupla)) wfc.incrementarFrecuencia(charToRank);
-		hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
+		if(posCharToRank > 1) hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
 		salida[posCharToRank] = cantidadDeNoOcurrencias;
 //		cout<<"Salida: " << salida[posCharToRank] << endl<<endl;
 		ctxActual = ordenMaximo;
@@ -85,16 +81,10 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 		rankToChar = aDescomprimir[posRankToChar];
 		exclusionList.clear();
 
-		list<unsigned int> listOfPositions = getListOfPositions(salida, posRankToChar-2);
-
 		while(ctxActual > 1){
-			for(list<unsigned int>::iterator posDeMatch = listOfPositions.begin();
-				posDeMatch != listOfPositions.end(); ++posDeMatch){
-
-				tupla = buscarEnContexto(ctxActual, posRankToChar,*posDeMatch, salida, 'd', rankToChar);
-				if (get<0> (tupla))break;
-				rankToChar -= get<1> (tupla);
-			}
+			tupla = buscarEnContexto(ctxActual, posRankToChar, salida, 'd', rankToChar);
+			if (get<0> (tupla))break;
+			rankToChar -= get<1> (tupla);
 			ctxActual--;
 		}
 		if (ctxActual == 1){
@@ -110,7 +100,6 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 		if(get<0>(tupla)){
 			salida[posRankToChar] = (char) get<1>(tupla);
 			wfc.incrementarFrecuencia(salida[posRankToChar]);
-
 //			cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
 		}
 		hashear(salida[posRankToChar-2], salida[posRankToChar-1], posRankToChar-2);
@@ -118,33 +107,40 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 	}
 }
 
-tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden, unsigned int posCharToRank,unsigned int posDeMatch, char* buffer, char operacion,unsigned short ranking){
-
+tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden, unsigned int posCharToRank, char* buffer, char operacion,unsigned short ranking){
 	unsigned int indexFirstCharOfCurrentContext = posCharToRank-orden;
 	unsigned short cantidadDeNoOcurrencias = 0;
 	tuple<bool, unsigned short> tupla;
-	bool hayMatch = contextosIguales(posDeMatch,indexFirstCharOfCurrentContext,buffer,orden);
-	if ((hayMatch) && (charNoExcluido(buffer[posDeMatch+2]))){
-		if(operacion=='c'){
-			bool esElBuscado = charsIguales(posDeMatch + 2, buffer[posCharToRank], buffer);
-			if (esElBuscado){
-				get<0> (tupla) = true;
-				get<1> (tupla) = cantidadDeNoOcurrencias;
-				return tupla;
+
+	list<unsigned int> listOfPositions = getListOfPositions(buffer, posCharToRank-2);
+
+	for(list<unsigned int>::iterator posDeMatch = listOfPositions.begin(); posDeMatch != listOfPositions.end(); ++posDeMatch){
+
+		bool hayMatch = contextosIguales(*posDeMatch,indexFirstCharOfCurrentContext,buffer,orden);
+		if (hayMatch){
+			if(charNoExcluido(buffer[*posDeMatch+2])){
+			if(operacion=='c'){
+				bool esElBuscado = charsIguales(*posDeMatch + 2, buffer[posCharToRank], buffer);
+				if (esElBuscado){
+					get<0> (tupla) = true;
+					get<1> (tupla) = cantidadDeNoOcurrencias;
+					return tupla;
+				}
+			}
+			else if(operacion=='d'){
+				if(ranking==0){ //El char ofrecido es el descomprimido!
+					unsigned short charDelRanking = (unsigned short) buffer[*posDeMatch+2];
+					get<0> (tupla) = true;
+					get<1> (tupla) = charDelRanking;
+					return tupla;
+				}
+				ranking--;
+			}
+			else throw ErrorDeParametro();
+			exclusionList.push_front(buffer[*posDeMatch+2]);
+			cantidadDeNoOcurrencias++;
 			}
 		}
-		else if(operacion=='d'){
-			if(ranking==0){ //El char ofrecido es el descomprimido!
-				unsigned short charDelRanking = (unsigned short) buffer[posDeMatch+2];
-				get<0> (tupla) = true;
-				get<1> (tupla) = charDelRanking;
-				return tupla;
-			}
-			ranking--;
-		}
-		else throw ErrorDeParametro();
-		exclusionList.push_front(buffer[posDeMatch+2]);
-		cantidadDeNoOcurrencias++;
 	}
 	get<0> (tupla) = false;
 	get<1> (tupla) = cantidadDeNoOcurrencias;
@@ -158,33 +154,39 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(unsigned int posCh
 
 	for(unsigned int i = ordenMaximo-1; i <= posCharToRank; i++){
 		unsigned int contextAComparar = posCharToRank-i;
-		if((buffer[contextAComparar] == buffer[contextCharToRank])&&(charNoExcluido(buffer[contextAComparar+1]))){
+		if(buffer[contextAComparar] == buffer[contextCharToRank]){
+			if(charNoExcluido(buffer[contextAComparar+1])){
 
-			if(operacion=='c'){
-				bool esElBuscado = charsIguales(contextAComparar+1, buffer[posCharToRank], buffer);
-				if(esElBuscado){
-					get<0> (tupla) = true;
-					get<1> (tupla) = cantidadDeNoOcurrencias;
-					return tupla;
+				if(operacion=='c'){
+					bool esElBuscado = charsIguales(contextAComparar+1, buffer[posCharToRank], buffer);
+					if(esElBuscado){
+						get<0> (tupla) = true;
+						get<1> (tupla) = cantidadDeNoOcurrencias;
+						return tupla;
+					}
 				}
-			}
-			else if(operacion=='d'){
-				if(ranking==0){ //El char ofrecido es el que hay que descomprimir
-					unsigned short charDelRanking = (unsigned short) buffer[contextAComparar+1];
-					get<0> (tupla) = true;
-					get<1> (tupla) = charDelRanking;
-					return tupla;
+				else if(operacion=='d'){
+					if(ranking==0){ //El char ofrecido es el que hay que descomprimir
+						unsigned short charDelRanking = (unsigned short) buffer[contextAComparar+1];
+						get<0> (tupla) = true;
+						get<1> (tupla) = charDelRanking;
+						return tupla;
+					}
+					ranking--;
 				}
-				ranking--;
+				else throw ErrorDeParametro();
+				exclusionList.push_front(buffer[contextAComparar+1]);
+				cantidadDeNoOcurrencias++;
 			}
-			else throw ErrorDeParametro();
-			exclusionList.push_front(buffer[contextAComparar+1]);
-			cantidadDeNoOcurrencias++;
 		}
 	}
 	get<0> (tupla) = false;
 	get<1> (tupla) = cantidadDeNoOcurrencias;
 	return tupla;
+}
+
+void SymbolRanking::resetHashMap(){
+	hashmap.reset();
 }
 
 list<unsigned int> SymbolRanking::getListOfPositions(char* buffer, unsigned int posFirst){
