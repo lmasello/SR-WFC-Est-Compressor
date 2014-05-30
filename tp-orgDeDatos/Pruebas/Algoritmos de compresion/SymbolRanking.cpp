@@ -33,7 +33,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 		charToRank = aComprimir[posCharToRank];
 		exclusionList.clear(); 						//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del 132.
 		cantidadDeNoOcurrencias = 0;
-		if(posCharToRank%100000 == 0) resetHashMap();
+//		if(posCharToRank%100000 == 0) resetHashMap();
 
 		while(ctxActual > 1){
 			tupla = buscarEnContexto(ctxActual,posCharToRank, aComprimir,'c',0);//El ultimo parametro (ranking) no se utiliza para el compresor, por lo tanto se lo pone en 0
