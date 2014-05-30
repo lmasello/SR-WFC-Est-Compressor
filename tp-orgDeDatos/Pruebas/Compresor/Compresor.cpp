@@ -11,11 +11,11 @@ void Compresor::comprimir(char* buffer, unsigned int size){
 	int fniveles[10];
 	int fcaracteres[255];
 
-	SymbolRanking sr (3);
+	SymbolRanking sr (ORDEN);
 
 	short *salida = (short*) malloc (sizeof(short) * size);
 
-	cout<<"Comenzando proceso de compresion por SymbolRanking"<<endl;
+	cout<<"Comenzando proceso de compresion por SymbolRanking de orden "<< ORDEN <<endl;
 
 	sr.comprimir(buffer, salida, size);
 
