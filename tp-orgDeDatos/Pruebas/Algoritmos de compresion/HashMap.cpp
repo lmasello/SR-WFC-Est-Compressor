@@ -52,6 +52,9 @@ void HashMap::put(char first, char second, unsigned int value){
 	}
 	else{
 		list <unsigned int> lista = table[hash]->getValue();
+		//Si la lista contiene 100 elementos, borra el ultimo y agrega uno al principio
+		unsigned short tamanioMaximo = 100;
+		if (lista.size() == tamanioMaximo) lista.pop_back();
 		lista.push_front(value);
 		HashEntry* entry = table[hash];
 		entry->setValue(lista);
