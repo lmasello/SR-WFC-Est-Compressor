@@ -152,7 +152,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContextoUno(unsigned int posCh
 	unsigned int contextCharToRank = posCharToRank-1;
 	unsigned short cantidadDeNoOcurrencias = 0;
 
-	for(unsigned int i = ordenMaximo-1; i <= posCharToRank; i++){
+	for(unsigned int i = 2; i <= posCharToRank; i++){
 		unsigned int contextAComparar = posCharToRank-i;
 		if(buffer[contextAComparar] == buffer[contextCharToRank]){
 			if(charNoExcluido(buffer[contextAComparar+1])){
