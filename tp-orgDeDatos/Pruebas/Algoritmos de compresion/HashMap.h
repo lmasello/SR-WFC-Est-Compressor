@@ -1,7 +1,7 @@
 #include <cstddef>
 #include <stdlib.h>
 #include <list>
-
+#include <iostream>
 using namespace std;
 
 #ifndef HASHMAP_H_
@@ -38,6 +38,8 @@ class HashMap {
 	public:
 		HashMap();
 		~HashMap();
+
+		void imprimir();
 
 		void reset();
 

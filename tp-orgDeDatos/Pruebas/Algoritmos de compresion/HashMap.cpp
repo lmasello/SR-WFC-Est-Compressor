@@ -1,6 +1,6 @@
 #include "HashMap.h"
 
-const int TABLE_SIZE = 255*255;
+const int TABLE_SIZE = 256*256;
 
 HashMap::HashMap(){
 	table = new HashEntry*[TABLE_SIZE];
@@ -16,10 +16,21 @@ HashMap::~HashMap(){
 }
 
 int HashMap::fhash(char* clave){
-	return clave[0]*255+clave[1];
+	return (unsigned char)clave[0] * 256 + (unsigned char) clave[1];
 }
+
+void HashMap::imprimir(){
+	for(int i = 0; i < 256; i++){
+		for(int j = 0; j<256; j++){
+			list <unsigned int> lista = table[i*256+j]->getValue();
+			cout << lista.size();
+		}
+		cout << endl;
+	}
+}
+
 void HashMap::reset(){
-	for(int i = 0; i<255*255; i++){
+	for(int i = 0; i<256*256; i++){
 		if(!table[i]) continue;
 		list <unsigned int> lista = table[i]->getValue();
 		lista.clear();
@@ -53,7 +64,7 @@ void HashMap::put(char first, char second, unsigned int value){
 	else{
 		list <unsigned int> lista = table[hash]->getValue();
 		//Si la lista contiene 100 elementos, borra el ultimo y agrega uno al principio
-		unsigned short tamanioMaximo = 100;
+		unsigned short tamanioMaximo = 150;
 		if (lista.size() == tamanioMaximo) lista.pop_back();
 		lista.push_front(value);
 		HashEntry* entry = table[hash];
