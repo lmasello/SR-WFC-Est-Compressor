@@ -29,7 +29,6 @@
 								<option id="gnu.cpp.compiler.option.other.other.39251865" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" useByScannerDiscovery="false" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.include.paths.2009007542" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include"/>
-									<listOptionValue builtIn="false" value="/home/lmasel/Downloads/gtest-1.7.0/include"/>
 									<listOptionValue builtIn="false" value="/usr/include/c++/4.6"/>
 									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6"/>
 									<listOptionValue builtIn="false" value="/usr/include/c++/4.6.3"/>
@@ -100,41 +99,8 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.1449548971.545848184" name="WFCTests.cpp" rcbsApplicability="disable" resourcePath="tests/WFCTests.cpp" toolsToInvoke="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.382393280.1391596835">
-						<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.382393280.1391596835" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.382393280">
-							<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1675999202" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-						</tool>
-					</fileInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.exe.debug.1449548971.463584465" name="/" resourcePath="contrib">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.exe.debug.225064709" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.exe.debug" unusedChildren="">
-							<targetPlatform id="cdt.managedbuild.target.gnu.platform.exe.debug" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.exe.debug"/>
-							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1465759004" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.446142710"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.2030704058" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.33066593">
-								<option id="gnu.cpp.compiler.option.include.paths.759619730" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/contrib}&quot;"/>
-									<listOptionValue builtIn="false" value="/home/lmasel/Downloads/gtest-1.7.0/include"/>
-									<listOptionValue builtIn="false" value="/usr/include/c++/4.6"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6"/>
-									<listOptionValue builtIn="false" value="/usr/include/c++/4.6.3"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6.3"/>
-									<listOptionValue builtIn="false" value="/usr/include/c++/4.7"/>
-									<listOptionValue builtIn="false" value="/usr/include/c++/4.7.3"/>
-								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1420189331" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1050031028" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1776311980">
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.763711500" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.5228619" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug.561868076"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.998708761" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.712574353"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.919280678" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug.1708818591">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1893747163" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
-						<entry excluding="tests|tests/WFCTests.cpp|contrib" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="tests/AllTests.cpp|tests/WFCTests.cpp|contrib" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -184,6 +150,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="tests/AllTests.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
@@ -215,6 +184,7 @@
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.356388692" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.other.other.1609655635" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++11" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.include.paths.684126641" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/gtest}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="/usr/include/c++/4.6"/>
 									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6"/>
@@ -236,6 +206,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.54229528" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.2122276625" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
 								<option id="gnu.cpp.link.option.paths.893528672" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/gtest}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/include/c++/4.6"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Pruebas}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/include/c++/4.6.3"/>
@@ -264,8 +235,8 @@
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.1369023362" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.901318180"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.434270520" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.788807822">
 								<option id="gnu.cpp.compiler.option.include.paths.1101263771" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/gtest}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/contrib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Pruebas}&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/include/c++/4.6"/>
 									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6"/>
@@ -286,35 +257,13 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.exe.debug.1449548971.1255430112.contrib" name="/" resourcePath="contrib">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.exe.debug.531992187" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.exe.debug" unusedChildren="">
-							<targetPlatform id="cdt.managedbuild.target.gnu.platform.exe.debug.325453098" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.exe.debug"/>
-							<tool id="cdt.managedbuild.tool.gnu.archiver.base.633297867" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base.901318180"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.2076263734" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.788807822">
-								<option id="gnu.cpp.compiler.option.include.paths.1407618778" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/include"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/contrib}&quot;"/>
-									<listOptionValue builtIn="false" value="/usr/include/c++/4.6"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6"/>
-									<listOptionValue builtIn="false" value="/usr/include/c++/4.6.3"/>
-									<listOptionValue builtIn="false" value="/usr/lib/gcc/x86_64-linux-gnu/4.6.3"/>
-									<listOptionValue builtIn="false" value="/usr/include/c++/4.7"/>
-									<listOptionValue builtIn="false" value="/usr/include/c++/4.7.3"/>
-								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.305443132" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.532318581" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.505050180">
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1948320321" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.778497297" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug.54229528"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.327536400" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.2122276625"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.exe.debug.818661958" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.exe.debug.1461813727">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1390780235" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.1449548971.1255430112.1436971470" name="WFCTests.cpp" rcbsApplicability="disable" resourcePath="tests/WFCTests.cpp" toolsToInvoke="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.434270520.1795118381">
+						<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.434270520.1795118381" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.434270520">
+							<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.839888068" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="contrib|Pruebas/main.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="tests/WFCTests.cpp|gtest|contrib|tests/WFCTest.cpp|Pruebas/main.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -335,8 +284,16 @@
 			<resource resourceType="PROJECT" workspacePath="/tp-orgDeDatos"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1449548971.1255430112;cdt.managedbuild.config.gnu.exe.debug.1449548971.1255430112.;cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.788807822;cdt.managedbuild.tool.gnu.cpp.compiler.input.500992432">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1449548971.1255430112;cdt.managedbuild.config.gnu.exe.debug.1449548971.1255430112.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.505050180;cdt.managedbuild.tool.gnu.c.compiler.input.844680645">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.1449548971;cdt.managedbuild.config.gnu.exe.debug.1449548971.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1776311980;cdt.managedbuild.tool.gnu.c.compiler.input.1825452540">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
@@ -356,5 +313,4 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>
