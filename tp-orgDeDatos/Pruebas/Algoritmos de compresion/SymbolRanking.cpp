@@ -11,6 +11,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 	* en el vector el numero ascii correspondiente al literal, mas el numero de no ocurrencias */
 
 	unsigned short ctxActual = ordenMaximo;
+	unsigned short posicionMinimaParaHashear = 2;
 	char charToRank;
 	unsigned short cantidadDeNoOcurrencias; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
 	tuple<bool,unsigned short> tupla;
@@ -50,7 +51,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 			}
 		}
 		if(get<0>(tupla)) wfc.incrementarFrecuencia(charToRank);
-		if(posCharToRank > 1) hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
+		if(posCharToRank >= posicionMinimaParaHashear) hashear(aComprimir[posCharToRank-2], aComprimir[posCharToRank-1], posCharToRank-2);
 		salida[posCharToRank] = cantidadDeNoOcurrencias;
 //		cout<<"Salida: " << salida[posCharToRank] << endl<<endl;
 		ctxActual = ordenMaximo;
@@ -60,10 +61,11 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, unsigned int size){
 
 	unsigned short ctxActual = ordenMaximo;
+	unsigned short posicionMinimaParaHashear = 2;
 	unsigned short rankToChar;
 	tuple<bool,unsigned short> tupla;
 
-//	cout<<"Comienza el proceso de descompresion por Symbol Ranking de orden " << ordenMaximo << endl;
+	cout<<"Comienza el proceso de descompresion por Symbol Ranking de orden " << ordenMaximo << endl;
 
 	//Primeros rankings [0,orden-1]
 	for(unsigned int posRankToChar = 0; posRankToChar < ordenMaximo; posRankToChar++){
@@ -73,7 +75,7 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 		unsigned short rankToChar = aDescomprimir[posRankToChar];
 		salida[posRankToChar] = wfc.descomprimir(rankToChar);
 
-//		cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl;
+		cout<<"El rank " << rankToChar << " lo procesa como el caracter: " << salida[posRankToChar] << endl;
 	}
 
 	//Siguientes caracteres
@@ -92,7 +94,7 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 			if (!get<0> (tupla)){
 			rankToChar -= get<1> (tupla);
 			salida[posRankToChar] = wfc.descomprimir(rankToChar);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
-//			cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
+			cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
 			}
 		}
 		//Nota: cuando la tupla me devuelve True, quiere decir que el segundo elemento es el caracter ofrecido por un contexto
@@ -100,9 +102,9 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 		if(get<0>(tupla)){
 			salida[posRankToChar] = (char) get<1>(tupla);
 			wfc.incrementarFrecuencia(salida[posRankToChar]);
-//			cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
+			cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
 		}
-		hashear(salida[posRankToChar-2], salida[posRankToChar-1], posRankToChar-2);
+		if(posRankToChar >= posicionMinimaParaHashear)hashear(salida[posRankToChar-2], salida[posRankToChar-1], posRankToChar-2);
 		ctxActual = ordenMaximo;
 	}
 }

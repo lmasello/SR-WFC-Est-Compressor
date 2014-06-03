@@ -41,7 +41,7 @@ namespace{
 			ASSERT_EQ(expected[i],salidaCompresor[i]);
 		}
 	}
-/*
+
 	TEST_F(SymbolRankingTest,descomprimirMaxCtx1){
 		SymbolRanking sr(1);
 		unsigned short aDescomprimir[]={97,98,99,100,0,3,0,0,1,0,0,3,5,1};
@@ -53,7 +53,7 @@ namespace{
 			ASSERT_EQ(expected[i],salidaDescompresor[i]);
 		}
 	}
-*/
+
 
 	TEST_F(SymbolRankingTest,descomprimirMaxCtx3){
 		SymbolRanking sr(3);
