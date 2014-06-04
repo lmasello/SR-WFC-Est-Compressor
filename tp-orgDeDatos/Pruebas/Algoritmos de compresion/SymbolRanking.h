@@ -57,7 +57,7 @@ class SymbolRanking{
 		 *  							  la operacion es 'd' --> es el caracter ofrecido casteado a unsigned short
 		 *  		   Si tuple[0]==false, indica la cantidad de ofertas negativas.
 		 */
-		tuple<bool,unsigned short> buscarEnContextoUno(unsigned int posCharToRank, char* buffer, char operacion,unsigned short ranking);
+		tuple<bool,unsigned short> busquedaLinealEnContexto(unsigned int posCharToRank,unsigned short orden, char* buffer, char operacion,unsigned short ranking);
 
 		/* Resetea los hashmaps */
 		void resetHashMap();
@@ -66,9 +66,9 @@ class SymbolRanking{
 		 * la posicion posFirst del buffer, y el siguiente. */
 		list<unsigned int> getListOfPositions(char* buffer, unsigned int posFirst);
 
-		/* Dado un vector con 2 char, lo hashea en el map (atributo).
+		/* Dado un vector con 3 char, lo hashea en el map (atributo).
 		 */
-		void hashear(char symbol1, char symbol2, unsigned int indexFirstChar);
+		void hashear(char symbol1, char symbol2,char symbol3, unsigned int indexFirstChar);
 
 		/* Dadas dos offset de un buffer, se comparan N Bytes (N = nro de orden).
 		 * Si dichos Bytes son iguales, entonces dichos strings son iguales y por lo tanto los contextos son iguales.
@@ -77,7 +77,7 @@ class SymbolRanking{
 		 * Postcondiciones:
 		 *  Devuelve un boolean de acuerdo a si se produce un match de contextos o no
 		 */
-		bool contextosIguales(unsigned int indexA, unsigned int indexB, char* buffer,int ordenDelContexto);
+		bool contextosIguales(unsigned int indexA, unsigned int indexB, char* buffer,unsigned short ordenDelContexto);
 
 		/*
 		 * Dado un offset de un array, verifica si el char apuntado por esa posicion es el caracter a comparar.

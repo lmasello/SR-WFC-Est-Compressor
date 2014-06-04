@@ -1,6 +1,6 @@
 #include "HashMap.h"
 
-const int TABLE_SIZE = 256*256;
+const int TABLE_SIZE = 256*256*256;
 
 HashMap::HashMap(){
 	table = new HashEntry*[TABLE_SIZE];
@@ -16,21 +16,23 @@ HashMap::~HashMap(){
 }
 
 int HashMap::fhash(char* clave){
-	return (unsigned char)clave[0] * 256 + (unsigned char) clave[1];
+	return (unsigned char)clave[0] * 256 * 256 + (unsigned char) clave[1] * 256 + (unsigned char) clave[2];
 }
 
 void HashMap::imprimir(){
 	for(int i = 0; i < 256; i++){
 		for(int j = 0; j<256; j++){
-			list <unsigned int> lista = table[i*256+j]->getValue();
-			cout << lista.size();
+			for(int k=0;k<256;k++){
+				list <unsigned int> lista = table[i*256*256+j*256+k]->getValue();
+				cout << lista.size();
+			}
 		}
 		cout << endl;
 	}
 }
 
 void HashMap::reset(){
-	for(int i = 0; i<256*256; i++){
+	for(int i = 0; i<TABLE_SIZE; i++){
 		if(!table[i]) continue;
 		list <unsigned int> lista = table[i]->getValue();
 		lista.clear();
@@ -39,10 +41,11 @@ void HashMap::reset(){
 	}
 }
 
-list<unsigned int> HashMap::get(char first, char second){
-    char* key = (char*) malloc (sizeof(char)*2);
+list<unsigned int> HashMap::get(char first, char second, char third){
+    char* key = (char*) malloc (sizeof(char)*3);
     key[0] = first;
     key[1] = second;
+    key[2] = third;
 	list<unsigned int> lista;
 	int hash = fhash(key);
 	free(key);
@@ -51,10 +54,11 @@ list<unsigned int> HashMap::get(char first, char second){
 	return table[hash]->getValue();
 }
 
-void HashMap::put(char first, char second, unsigned int value){
-    char* key = (char*) malloc (sizeof(char)*2);
+void HashMap::put(char first, char second, char third, unsigned int value){
+    char* key = (char*) malloc (sizeof(char)*3);
     key[0] = first;
     key[1] = second;
+    key[2] = third;
 	list <unsigned int> lista;
 	int hash = fhash(key);
 	if(!table[hash]){
@@ -63,7 +67,7 @@ void HashMap::put(char first, char second, unsigned int value){
 	}
 	else{
 		list <unsigned int> lista = table[hash]->getValue();
-		//Si la lista contiene 100 elementos, borra el ultimo y agrega uno al principio
+		//Si la lista contiene 150 elementos, borra el ultimo y agrega uno al principio
 		unsigned short tamanioMaximo = 150;
 		if (lista.size() == tamanioMaximo) lista.pop_back();
 		lista.push_front(value);

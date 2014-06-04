@@ -44,10 +44,10 @@ class HashMap {
 		void reset();
 
 		/* Devuelve el valor asignado a la clave pasada por parametro. */
-		list<unsigned int> get(char first, char second);
+		list<unsigned int> get(char first, char second, char third);
 
 		/* Le asigna el valor value a la clave key */
-		void put(char first, char second, unsigned int value);
+		void put(char first, char second, char third, unsigned int value);
 
 };
 
