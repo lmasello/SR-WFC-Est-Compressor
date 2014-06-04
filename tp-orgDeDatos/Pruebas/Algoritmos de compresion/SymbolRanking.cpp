@@ -73,8 +73,8 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 
 	//Primeros rankings [0,orden-1]
 	for(unsigned int posRankToChar = 0; posRankToChar < ordenMaximo; posRankToChar++){
-		if (posRankToChar > 1){
-			hashear(salida[posRankToChar-3], salida[posRankToChar-2],salida[posRankToChar-1], posRankToChar-1);
+		if (posRankToChar > 2){
+			hashear(salida[posRankToChar-3], salida[posRankToChar-2],salida[posRankToChar-1], posRankToChar-3);
 		}
 		unsigned short rankToChar = aDescomprimir[posRankToChar];
 		salida[posRankToChar] = wfc.descomprimir(rankToChar);
@@ -88,29 +88,24 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 		exclusionList.clear();
 
 		while(ctxActual > 2){
-			cout<<"Busca en ctx: "<<ctxActual<<endl;
-
 			tupla = buscarEnContexto(ctxActual, posRankToChar, salida, 'd', rankToChar);
 			if (get<0> (tupla))break;
 			rankToChar -= get<1> (tupla);
 			ctxActual--;
 		}
 		if (ctxActual == 2){
-			cout<<"Busca en ctx: "<<ctxActual<<endl;
-
 			tupla = busquedaLinealEnContexto(posRankToChar, ctxActual, salida, 'd', rankToChar);
-			if (get<0> (tupla))break;
-			rankToChar -= get<1> (tupla);
-			ctxActual--;
+			if (!get<0> (tupla)){
+				rankToChar -= get<1> (tupla);
+				ctxActual--;
+			}
 		}
 		if (ctxActual == 1){
-			cout<<"Busca en ctx: "<<ctxActual<<endl;
-
 			tupla = busquedaLinealEnContexto(posRankToChar,ctxActual, salida, 'd', rankToChar); //Debe checkear en su implementacion que charToRank - NoOcurrencias sea 0. Si es 0, devuelve True, y el char siguiente al contexto. Si no es 0, sigue buscando y repite. Si se termino, devuelve False, y las NoOcurrencias.
 			if (!get<0> (tupla)){
-			rankToChar -= get<1> (tupla);
-			salida[posRankToChar] = wfc.descomprimir(rankToChar);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
-			cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
+				rankToChar -= get<1> (tupla);
+				salida[posRankToChar] = wfc.descomprimir(rankToChar);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+				cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
 			}
 		}
 		//Nota: cuando la tupla me devuelve True, quiere decir que el segundo elemento es el caracter ofrecido por un contexto
@@ -133,7 +128,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 	tuple<bool, unsigned short> tupla;
 	list<unsigned int> listOfPositions = getListOfPositions(buffer, posCharToRank-3);
 
-    cout<<"Se realiza la busqueda de contextos iguales de orden " << orden << ", para el caracter a ranquear: " << buffer[posCharToRank] << " , " << posCharToRank << endl;
+    cout<<"Se realiza la busqueda de contextos iguales de orden " << orden <<endl;
 
 	for(list<unsigned int>::iterator posDeMatch = listOfPositions.begin(); posDeMatch != listOfPositions.end(); ++posDeMatch){
 		bool hayMatch;
@@ -146,6 +141,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 
 			if(charNoExcluido(buffer[*posDeMatch+offsetDelHash])){
 				if(operacion=='c'){
+					cout<<"Char a rankear: "<<buffer[posCharToRank]<<endl;
 					bool esElBuscado = charsIguales(*posDeMatch + offsetDelHash, buffer[posCharToRank], buffer);
 					if (esElBuscado){
 						get<0> (tupla) = true;
@@ -158,6 +154,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 					}
 				}
 				else if(operacion=='d'){
+					cout<<"ranking: "<<ranking<<endl;
 					if(ranking==0){ //El char ofrecido es el descomprimido!
 						unsigned short charDelRanking = (unsigned short) buffer[*posDeMatch+offsetDelHash];
 						get<0> (tupla) = true;
@@ -208,8 +205,10 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 					}
 				}
 				else if(operacion=='d'){
+					cout<<"ranking: "<<ranking<<endl;
 					if(ranking==0){ //El char ofrecido es el que hay que descomprimir
 						unsigned short charDelRanking = (unsigned short) buffer[contextAComparar+contexto];
+						cout<< "char del ranking: "<< buffer[contextAComparar+contexto]<<" pos: "<< contextAComparar+contexto<< " casteado: "<<charDelRanking<<endl;
 						get<0> (tupla) = true;
 						get<1> (tupla) = charDelRanking;
 						return tupla;
