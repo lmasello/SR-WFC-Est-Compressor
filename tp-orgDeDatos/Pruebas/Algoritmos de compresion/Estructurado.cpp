@@ -91,9 +91,23 @@ void Estructurado::emitirNro(int nro_nivel, int nro){
 }
 
 void Estructurado::emitirEOF(){
+    for (int i = 0; i < CANT_NIVELES; i++)
+        emitirEscape(i);
 }
 
 double buscar_potencia2_rango(double inicio, double fin){
+    double log_inicio = log2(inicio);
+    if (log_inicio == int(log_inicio))
+        return log_inicio;
+    double suma = 0, proximo;
+    int i = -1;
+    while (suma < inicio){
+        proximo = 2^i;
+        if (suma + proximo < fin)
+            suma += proximo;
+        i--;
+    }
+    return suma;
 }
 
 double Estructurado::comprimir(string &indices){
@@ -126,16 +140,19 @@ int obtenerNro(int nro_nivel, double nro_comprimido){
     fin_segmento = nuevo_seg_fin;
     (*it)->ocurrencias++;
     nivel->total_ocurrencias++;
+    return (*it)->numero;
 }
 
 string Estructurado::descomprimir(double nro_comprimido){
     string indices = new string;
     int emitido = NRO_ESCAPE;
     while(true){
-        for (int nivel_act = NIVEL_INICIAL, emitido != NRO_ESCAPE; nivel_act++){
+        int nivel_act = NIVEL_INICIAL;
+        for (; emitido != NRO_ESCAPE; nivel_act++){
             emitido = obtenerNro(nivel_act, nro_comprimido);
         }
-        if (emitido == NRO_EOF) break;
+        if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
         indices << emitido;
     }
+    return indices;
 }
