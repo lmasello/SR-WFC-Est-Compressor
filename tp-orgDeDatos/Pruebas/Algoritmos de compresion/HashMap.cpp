@@ -15,8 +15,8 @@ HashMap::~HashMap(){
 	delete[] table;
 }
 
-int HashMap::fhash(char* clave){
-	return (unsigned char)clave[0] * 256 * 256 + (unsigned char) clave[1] * 256 + (unsigned char) clave[2];
+int HashMap::fhash(char primero, char segundo, char tercero){
+	return (unsigned char)primero * 256 * 256 + (unsigned char) segundo * 256 + (unsigned char) tercero;
 }
 
 void HashMap::imprimir(){
@@ -42,37 +42,23 @@ void HashMap::reset(){
 }
 
 list<unsigned int> HashMap::get(char first, char second, char third){
-    char* key = (char*) malloc (sizeof(char)*3);
-    key[0] = first;
-    key[1] = second;
-    key[2] = third;
 	list<unsigned int> lista;
-	int hash = fhash(key);
-	free(key);
+	int hash = fhash(first, second, third);
 	if (!table[hash])
 		return lista;
 	return table[hash]->getValue();
 }
 
 void HashMap::put(char first, char second, char third, unsigned int value){
-    char* key = (char*) malloc (sizeof(char)*3);
-    key[0] = first;
-    key[1] = second;
-    key[2] = third;
-	list <unsigned int> lista;
-	int hash = fhash(key);
+	int hash = fhash(first, second, third);
 	if(!table[hash]){
+	    char* key = (char*) malloc (sizeof(char)*3);
+	    key[0] = first; key[1] = second; key[2] = third;
+		list <unsigned int> lista;
 		lista.push_front(value);
 		table[hash] = new HashEntry(key, lista);
 	}
 	else{
-		list <unsigned int> lista = table[hash]->getValue();
-		//Si la lista contiene 150 elementos, borra el ultimo y agrega uno al principio
-		unsigned short tamanioMaximo = 150;
-		if (lista.size() == tamanioMaximo) lista.pop_back();
-		lista.push_front(value);
-		HashEntry* entry = table[hash];
-		entry->setValue(lista);
-		free(key);
+		table[hash]->addValue(value);
 	}
 }

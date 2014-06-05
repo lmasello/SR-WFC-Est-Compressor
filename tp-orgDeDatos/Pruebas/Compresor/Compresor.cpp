@@ -36,8 +36,8 @@ void Compresor::comprimir(char* buffer, unsigned int size){
 	sr.comprimir(buffer, salida, size);
 
 	cout<<"SymbolRanking ha finalizado el proceso de compresion correctamente" << endl << "Salida:" <<endl;
-	for(unsigned int i = 0; i < size; i++)cout<<salida[i]<<' ';
-	cout<<endl;
+//	for(unsigned int i = 0; i < size; i++)cout<<salida[i]<<' ';
+//	cout<<endl;
 
 
 	for(int i = 0; i < 10; i++) fniveles[i] = 0;
