@@ -11,9 +11,12 @@ class Estructurado {
         Estructurado();
         virtual ~Estructurado();
         double comprimir(std::string &indices);
+        std::string& descomprimir(double nro_comprimido);
     protected:
-        void emitirEscape();
-        void emitirNro(int nro);
+        void emitirEscape(int nivel);
+        void emitirNro(int nro_nivel, int nro);
+        void emitirEOF();
+        int obtenerNro(int nro_nivel, double nro_comprimido);
     private:
         double inicio_segmento;
         double fin_segmento;
