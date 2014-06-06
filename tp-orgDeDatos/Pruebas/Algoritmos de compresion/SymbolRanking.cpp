@@ -20,8 +20,6 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 	for(int posCharToRank = 0; posCharToRank < ordenMaximo; posCharToRank++){
 		if (posCharToRank > 2){
 			hashear(aComprimir[posCharToRank-3], aComprimir[posCharToRank-2],aComprimir[posCharToRank-1], posCharToRank-3);
-			hashear(NULL,aComprimir[posCharToRank-2],aComprimir[posCharToRank-1], posCharToRank-3);
-			hashear(NULL,NULL,aComprimir[posCharToRank-1], posCharToRank-3);
 		}
 		char charAProcesar = aComprimir[posCharToRank];
 		salida[posCharToRank] = wfc.comprimir(charAProcesar);
@@ -57,11 +55,9 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 		if(get<0>(tupla)) wfc.incrementarFrecuencia(charToRank);
 		if(posCharToRank >= posicionMinimaParaHashear){
 			hashear(aComprimir[posCharToRank-3], aComprimir[posCharToRank-2],aComprimir[posCharToRank-1], posCharToRank-3);
-			hashear(NULL,aComprimir[posCharToRank-2],aComprimir[posCharToRank-1], posCharToRank-3);
-			hashear(NULL,NULL,aComprimir[posCharToRank-1], posCharToRank-3);
 		}
 		salida[posCharToRank] = cantidadDeNoOcurrencias;
-		//cout<<"Salida: " << salida[posCharToRank] << endl<<endl;
+		cout<<"Salida: " << salida[posCharToRank] << endl<<endl;
 		ctxActual = ordenMaximo;
 	}
 }
@@ -126,14 +122,9 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 
 tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden, unsigned int posCharToRank, char* buffer, char operacion,unsigned short ranking){
 	unsigned int indexFirstChar = posCharToRank-orden;
-//Terminar de implementar esto
-	unsigned int hashingAComparar;
-	if(orden>2)hashmap.fhash(buffer[indexFirstChar], buffer[indexFirstChar+1], buffer[indexFirstChar+2]);
-	else if (orden==2)hashmap.fhash(NULL, buffer[indexFirstChar+1], buffer[indexFirstChar+2]);
-	else hashmap.fhash(NULL, NULL, buffer[indexFirstChar+2]);
 
+	unsigned int hashingAComparar = hashmap.fhash(buffer[indexFirstChar], buffer[indexFirstChar+1], buffer[indexFirstChar+2]);
 	unsigned short cantidadDeNoOcurrencias = 0;
-	unsigned short charsHasheadosPerfectamente = 3;
 	unsigned short offsetDelHash = 3;
 	tuple<bool, unsigned short> tupla;
 	list<unsigned int> listOfPositions = getListOfPositions(buffer, posCharToRank-3);
@@ -141,11 +132,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 //    cout<<"Se realiza la busqueda de contextos iguales de orden " << orden <<endl;
 
 	for(list<unsigned int>::iterator posDeMatch = listOfPositions.begin(); posDeMatch != listOfPositions.end(); ++posDeMatch){
-		bool hayMatch;
-		if (orden==charsHasheadosPerfectamente) hayMatch=true; //Debido a fhash perfecta
-		else hayMatch = hashingIguales(hashingAComparar, *posDeMatch+offsetDelHash-orden, buffer);
-		//else hayMatch = contextosIguales(*posDeMatch+offsetDelHash-orden,indexFirstChar,buffer,orden); // Ubica al index en la posicion inicial del string a comparar de acuerdo al orden. Como se hashea para los ultimos 3 chars, la posicion incial se obtiene como (3-orden)
-
+		bool hayMatch = hashingIguales(hashingAComparar, *posDeMatch+offsetDelHash-orden, buffer);;
 		if (hayMatch){
 
 //			cout<<"Hay match de orden " << orden << " entre las posiciones: " << *posDeMatch+(offsetDelHash-orden) << " y " << *posDeMatch+2 << endl;
