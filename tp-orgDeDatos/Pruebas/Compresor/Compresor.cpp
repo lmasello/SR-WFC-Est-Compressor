@@ -27,7 +27,7 @@ void Compresor::comprimir(char* buffer, unsigned int size){
 	cout << "Ahora voy a calcular la entropia: H = ";
 	cout << entropia << endl;
 
-	SymbolRanking sr (ORDEN);
+	SymbolRanking sr (4);
 
 	short *salida = (short*) malloc (sizeof(short) * size);
 
@@ -36,7 +36,7 @@ void Compresor::comprimir(char* buffer, unsigned int size){
 	sr.comprimir(buffer, salida, size);
 
 	cout<<"SymbolRanking ha finalizado el proceso de compresion correctamente" << endl << "Salida:" <<endl;
-//	for(unsigned int i = 0; i < size; i++)cout<<salida[i]<<' ';
+	//for(unsigned int i = 0; i < size; i++)cout<<salida[i]<<' ';
 //	cout<<endl;
 
 
@@ -73,7 +73,7 @@ void Compresor::comprimir(char* buffer, unsigned int size){
 	}
 
 	cout << "Ahora voy a calcular la entropia: H = ";
-	cout << entropia << " - ";
+	cout << entropia;
 }
 
 void Compresor::descomprimir(unsigned short* entrada, unsigned int size){

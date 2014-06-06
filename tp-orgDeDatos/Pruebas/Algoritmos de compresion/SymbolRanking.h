@@ -79,6 +79,9 @@ class SymbolRanking{
 		 */
 		bool contextosIguales(unsigned int indexA, unsigned int indexB, char* buffer,unsigned short ordenDelContexto);
 
+		//Documentar.
+		bool hashingIguales(unsigned int hashing1, unsigned int pos, char* buffer);
+
 		/*
 		 * Dado un offset de un array, verifica si el char apuntado por esa posicion es el caracter a comparar.
 		 * Precondiciones:

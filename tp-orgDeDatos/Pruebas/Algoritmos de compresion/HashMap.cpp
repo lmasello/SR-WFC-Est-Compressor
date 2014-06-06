@@ -15,7 +15,7 @@ HashMap::~HashMap(){
 	delete[] table;
 }
 
-int HashMap::fhash(char primero, char segundo, char tercero){
+unsigned int HashMap::fhash(char primero, char segundo, char tercero){
 	return (unsigned char)primero * 256 * 256 + (unsigned char) segundo * 256 + (unsigned char) tercero;
 }
 
@@ -43,14 +43,14 @@ void HashMap::reset(){
 
 list<unsigned int> HashMap::get(char first, char second, char third){
 	list<unsigned int> lista;
-	int hash = fhash(first, second, third);
+	unsigned int hash = fhash(first, second, third);
 	if (!table[hash])
 		return lista;
 	return table[hash]->getValue();
 }
 
 void HashMap::put(char first, char second, char third, unsigned int value){
-	int hash = fhash(first, second, third);
+	unsigned int hash = fhash(first, second, third);
 	if(!table[hash]){
 	    char* key = (char*) malloc (sizeof(char)*3);
 	    key[0] = first; key[1] = second; key[2] = third;

@@ -32,7 +32,7 @@ class HashEntry {
 		void addValue(unsigned int value){
 			this->value.push_front(value);
 			//Si la lista contiene 150 elementos, borra el ultimo y agrega uno al principio
-			unsigned short tamanioMaximo = 150;
+			unsigned short tamanioMaximo = 500;
 			if (this->value.size() == tamanioMaximo) this->value.pop_back();
 		}
 };
@@ -41,12 +41,13 @@ class HashMap {
 	private:
 		HashEntry **table;
 
-		int fhash(char primero, char segundo, char tercero);
 	public:
 		HashMap();
 		~HashMap();
 
 		void imprimir();
+
+		unsigned int fhash(char primero, char segundo, char tercero);
 
 		void reset();
 
