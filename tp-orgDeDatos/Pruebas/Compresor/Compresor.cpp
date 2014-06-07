@@ -27,7 +27,7 @@ void Compresor::comprimir(char* buffer, unsigned int size){
 	cout << "Ahora voy a calcular la entropia: H = ";
 	cout << entropia << endl;
 
-	SymbolRanking sr (4);
+	SymbolRanking sr (ORDEN);
 
 	short *salida = (short*) malloc (sizeof(short) * size);
 
