@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "FileManager/FileManager.h"
 #include "Compresor/Compresor.h"
 
@@ -33,6 +34,8 @@ int main(int argc,char *argv[]){
 		cout << "El archivo ha sido abierto y colocado en memoria correctamente" << endl;
 
 		double salida = compresor.comprimir(buffer,size);
+
+		cout << endl << "Resultado final: " << std::setprecision(51) << salida << endl;
 	}
 	else if(*operacionARealizar=='d'){
 //		FileManager<unsigned short> fileManager;

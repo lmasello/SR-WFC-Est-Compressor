@@ -85,10 +85,8 @@ void Estructurado::emitirNro(int nro_nivel, int nro){
     for (; (*it)->numero != nro; it++){
         cant_parcial += (*it)->ocurrencias;
     }
-    double div1 = (fin_segmento - inicio_segmento) *(double) cant_parcial / nivel.total_ocurrencias;
-    double div2 = (fin_segmento - inicio_segmento) * (double) cant_parcial / nivel.total_ocurrencias;
     double nuevo_seg_ini = (fin_segmento - inicio_segmento) * cant_parcial / nivel.total_ocurrencias + inicio_segmento;
-    double nuevo_seg_fin = (fin_segmento - inicio_segmento) * (cant_parcial+1) / nivel.total_ocurrencias + inicio_segmento;
+    double nuevo_seg_fin = (fin_segmento - inicio_segmento) * (cant_parcial+(*it)->ocurrencias) / nivel.total_ocurrencias + inicio_segmento;
     inicio_segmento = nuevo_seg_ini;
     fin_segmento = nuevo_seg_fin;
     (*it)->ocurrencias++;
@@ -107,7 +105,7 @@ double buscar_potencia2_rango(double inicio, double fin){
     double suma = 0, proximo;
     int i = -1;
     while (suma < inicio){
-        proximo = 2^i;
+        proximo = pow(2,i);
         if (suma + proximo < fin)
             suma += proximo;
         i--;
