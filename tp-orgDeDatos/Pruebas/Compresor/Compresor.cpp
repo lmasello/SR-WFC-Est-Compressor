@@ -16,7 +16,7 @@ double Compresor::comprimir(char* buffer, unsigned int size){
 
 	for(unsigned int j = 0; j < size; j++) fcaracteres[(int)buffer[j]]++;
 
-	entropia = 0;
+/*	entropia = 0;
 	Pi = 0;
 	for(int i = 0; i < 255; i++){
 		if(fcaracteres[i] == 0) continue;
@@ -26,7 +26,7 @@ double Compresor::comprimir(char* buffer, unsigned int size){
 	}
 
 	cout << "Ahora voy a calcular la entropia: H = ";
-	cout << entropia << endl;
+	cout << entropia << endl;*/
 
 	SymbolRanking sr (ORDEN);
 
@@ -41,43 +41,43 @@ double Compresor::comprimir(char* buffer, unsigned int size){
 //	cout<<endl;
 
 
-	for(int i = 0; i < 10; i++) fniveles[i] = 0;
-	for(int i = 0; i < 256; i++) fcaracteres[i] = 0;
+//	for(int i = 0; i < 10; i++) fniveles[i] = 0;
+//	for(int i = 0; i < 256; i++) fcaracteres[i] = 0;
+//
+//	for(unsigned int i = 0; i < size; i++){
+//
+//		fcaracteres[(unsigned char) salida[i]]++;
+//
+//		if     ((unsigned char) salida[i] == 0)  fniveles[0]++;
+//		else if((unsigned char) salida[i] == 1)  fniveles[1]++;
+//		else if((unsigned char) salida[i] < 4)   fniveles[2]++;
+//		else if((unsigned char) salida[i] < 8)   fniveles[3]++;
+//		else if((unsigned char) salida[i] < 16)  fniveles[4]++;
+//		else if((unsigned char) salida[i] < 32)  fniveles[5]++;
+//		else if((unsigned char) salida[i] < 64)  fniveles[6]++;
+//		else if((unsigned char) salida[i] < 128) fniveles[7]++;
+//		else if((unsigned char) salida[i] < 256) fniveles[8]++;
+//	}
+//
+//	contador = 0;
+//	for(int i = 0; i<10; i++){
+//		cout << "Nivel" << i << " - " << fniveles[i] << endl;
+//		contador += fniveles[i];
+//	}
+//	entropia = 0;
+//	Pi = 0;
+//	for(int i = 0; i < 255; i++){
+//		if(fcaracteres[i] == 0) continue;
+//		Pi = fcaracteres[i]/(float)contador;
+//		float elLog = (-(log(Pi)/log(2)));
+//		entropia += Pi*elLog;
+//	}
+//
+//	cout << "Ahora voy a calcular la entropia: H = ";
+//	cout << entropia;
 
-	for(unsigned int i = 0; i < size; i++){
-
-		fcaracteres[(unsigned char) salida[i]]++;
-
-		if     ((unsigned char) salida[i] == 0)  fniveles[0]++;
-		else if((unsigned char) salida[i] == 1)  fniveles[1]++;
-		else if((unsigned char) salida[i] < 4)   fniveles[2]++;
-		else if((unsigned char) salida[i] < 8)   fniveles[3]++;
-		else if((unsigned char) salida[i] < 16)  fniveles[4]++;
-		else if((unsigned char) salida[i] < 32)  fniveles[5]++;
-		else if((unsigned char) salida[i] < 64)  fniveles[6]++;
-		else if((unsigned char) salida[i] < 128) fniveles[7]++;
-		else if((unsigned char) salida[i] < 256) fniveles[8]++;
-	}
-
-	contador = 0;
-	for(int i = 0; i<10; i++){
-		cout << "Nivel" << i << " - " << fniveles[i] << endl;
-		contador += fniveles[i];
-	}
-	entropia = 0;
-	Pi = 0;
-	for(int i = 0; i < 255; i++){
-		if(fcaracteres[i] == 0) continue;
-		Pi = fcaracteres[i]/(float)contador;
-		float elLog = (-(log(Pi)/log(2)));
-		entropia += Pi*elLog;
-	}
-
-	cout << "Ahora voy a calcular la entropia: H = ";
-	cout << entropia;
-
-	//Estructurado estructurado;
-	return NULL;
+	Estructurado estructurado;
+	return estructurado.comprimir(salida, size);
 }
 
 void Compresor::descomprimir(unsigned short* entrada, unsigned int size){

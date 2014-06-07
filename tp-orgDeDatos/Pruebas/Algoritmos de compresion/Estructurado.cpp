@@ -1,5 +1,6 @@
 #include "Estructurado.h"
 
+#include <iostream>
 #include <cmath>
 
 #define INICIO_SEGMENTO 0
@@ -12,6 +13,8 @@
 
 using std::list;
 using std::string;
+
+using namespace std;
 
 typedef struct _par{
     int numero;
@@ -40,7 +43,7 @@ nivel_t& nivel_crear(int nro_nivel){
         nivel->cant_por_nro.push_back(par_crear(0));
         total_ocurrencias++;
     } else {
-        for (int i = 2^(nro_nivel - 1); i < (2^nro_nivel); i++){
+        for (int i = pow(2, nro_nivel-1); i < pow(2, nro_nivel); i++){
             nivel->cant_por_nro.push_back(par_crear(i));
             total_ocurrencias++;
         }
@@ -65,8 +68,8 @@ Estructurado::Estructurado(){
 }
 
 Estructurado::~Estructurado(){
-    for (int i = 0; i < CANT_NIVELES; i++)
-        nivel_destruir(niveles[i]);
+//    for (int i = 0; i < CANT_NIVELES; i++)
+//        nivel_destruir(niveles[i]);
     delete[] niveles;
 }
 
@@ -77,13 +80,15 @@ void Estructurado::emitirEscape(int nivel){
 void Estructurado::emitirNro(int nro_nivel, int nro){
     nivel_t& nivel = niveles[nro_nivel];
     int cant_parcial = 0;
-
+    int ocurrencias = nivel.total_ocurrencias;
     list<par_t*>::iterator it = nivel.cant_por_nro.begin();
     for (; (*it)->numero != nro; it++){
         cant_parcial += (*it)->ocurrencias;
     }
-    int nuevo_seg_ini = (fin_segmento - inicio_segmento) * cant_parcial / nivel.total_ocurrencias + inicio_segmento;
-    int nuevo_seg_fin = (fin_segmento - inicio_segmento) * (cant_parcial + (*it)->ocurrencias)/ nivel.total_ocurrencias + inicio_segmento;
+    double div1 = (fin_segmento - inicio_segmento) *(double) cant_parcial / nivel.total_ocurrencias;
+    double div2 = (fin_segmento - inicio_segmento) * (double) cant_parcial / nivel.total_ocurrencias;
+    double nuevo_seg_ini = (fin_segmento - inicio_segmento) * cant_parcial / nivel.total_ocurrencias + inicio_segmento;
+    double nuevo_seg_fin = (fin_segmento - inicio_segmento) * (cant_parcial+1) / nivel.total_ocurrencias + inicio_segmento;
     inicio_segmento = nuevo_seg_ini;
     fin_segmento = nuevo_seg_fin;
     (*it)->ocurrencias++;
