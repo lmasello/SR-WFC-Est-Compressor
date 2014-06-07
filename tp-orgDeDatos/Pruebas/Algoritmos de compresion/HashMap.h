@@ -9,16 +9,10 @@ using namespace std;
 
 class HashEntry {
 	private:
-		char* key;
 		list<unsigned int> value;
 	public:
-		HashEntry(char* key, list<unsigned int> value) {
-			this->key = key;
+		HashEntry(list<unsigned int> value) {
 			this->value = value;
-		}
-
-		char* getKey() {
-			return key;
 		}
 
 		list<unsigned int> getValue() {

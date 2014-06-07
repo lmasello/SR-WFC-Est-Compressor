@@ -12,8 +12,14 @@ int main(int argc,char *argv[]){
 	//Variables de argv--> comprime/descomprime, archivo entrada, archivo salida
 	//Ver opcion de que el usuario indique el orden del contexto maximo.
 
+	if(argc != 4){
+		cout << "Parametros: c/d FileIn FileOut" << endl;
+		fputs ("Parameter error\n",stderr); exit(1);
+	}
+
 	char* operacionARealizar = argv[1];
-	char* nombreDelArchivo = argv[2];
+	char* fileIn = argv[2];
+	char* fileOut = argv[3];
 
 	// Get start time
 	clock_t start=clock();
@@ -21,13 +27,12 @@ int main(int argc,char *argv[]){
 	Compresor compresor;
 	if (*operacionARealizar == 'c'){
 		FileManager<char> fileManager;
-		char* buffer = fileManager.processFile(nombreDelArchivo);
-		unsigned int size = fileManager.getSize(nombreDelArchivo);
+		char* buffer = fileManager.processFile(fileIn);
+		unsigned int size = fileManager.getSize(fileIn);
 
 		cout << "El archivo ha sido abierto y colocado en memoria correctamente" << endl;
 
-		compresor.comprimir(buffer,size);
-		free(buffer);
+		double salida = compresor.comprimir(buffer,size);
 	}
 	else if(*operacionARealizar=='d'){
 //		FileManager<unsigned short> fileManager;

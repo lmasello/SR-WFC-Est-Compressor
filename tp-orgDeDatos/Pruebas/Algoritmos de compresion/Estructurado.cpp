@@ -110,9 +110,9 @@ double buscar_potencia2_rango(double inicio, double fin){
     return suma;
 }
 
-double Estructurado::comprimir(string &indices){
-    for (int i = 0; i < indices.length(); i++){
-        int indice = indices[i] - '0', nivel_indice = int(log2(indice)) + 1;
+double Estructurado::comprimir(short* salida, unsigned int size){
+    for (unsigned int i = 0; i < size; i++){
+        int indice = salida[i], nivel_indice = int(log2(indice)) + 1;
         int nivel_act = NIVEL_INICIAL;
         for (; nivel_act < nivel_indice; nivel_act++){
             emitirEscape(nivel_act);

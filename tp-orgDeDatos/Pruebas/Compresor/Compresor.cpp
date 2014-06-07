@@ -1,9 +1,10 @@
 #include "Compresor.h"
 #include "../Algoritmos de compresion/SymbolRanking.h"
+#include "../Algoritmos de compresion/Estructurado.h"
 
 Compresor::Compresor(){}
 
-void Compresor::comprimir(char* buffer, unsigned int size){
+double Compresor::comprimir(char* buffer, unsigned int size){
 
 	float entropia = 0;
 	float Pi;
@@ -74,6 +75,9 @@ void Compresor::comprimir(char* buffer, unsigned int size){
 
 	cout << "Ahora voy a calcular la entropia: H = ";
 	cout << entropia;
+
+	//Estructurado estructurado;
+	return NULL;
 }
 
 void Compresor::descomprimir(unsigned short* entrada, unsigned int size){

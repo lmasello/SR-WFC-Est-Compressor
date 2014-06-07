@@ -42,21 +42,20 @@ void HashMap::reset(){
 }
 
 list<unsigned int> HashMap::get(char first, char second, char third){
-	list<unsigned int> lista;
 	unsigned int hash = fhash(first, second, third);
-	if (!table[hash])
+	if (!table[hash]){
+		list<unsigned int> lista;
 		return lista;
-	return table[hash]->getValue();
+	}
+	return (table[hash]->getValue());
 }
 
 void HashMap::put(char first, char second, char third, unsigned int value){
 	unsigned int hash = fhash(first, second, third);
 	if(!table[hash]){
-	    char* key = (char*) malloc (sizeof(char)*3);
-	    key[0] = first; key[1] = second; key[2] = third;
 		list <unsigned int> lista;
 		lista.push_front(value);
-		table[hash] = new HashEntry(key, lista);
+		table[hash] = new HashEntry(lista);
 	}
 	else{
 		table[hash]->addValue(value);

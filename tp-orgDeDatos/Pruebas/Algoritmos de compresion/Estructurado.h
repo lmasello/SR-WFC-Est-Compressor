@@ -10,7 +10,7 @@ class Estructurado {
     public:
         Estructurado();
         virtual ~Estructurado();
-        double comprimir(std::string &indices);
+        double comprimir(short* salida, unsigned int size);
         std::string& descomprimir(double nro_comprimido);
     protected:
         void emitirEscape(int nivel);

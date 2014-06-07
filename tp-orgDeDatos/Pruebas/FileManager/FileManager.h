@@ -67,15 +67,12 @@ class FileManager {
 
 		/*
 		 * Dado el nombre del archivo a procesar, ya sea a comprimir o descomprimir, se crea el archivo
-		 * en donde se guararan los resultados.
-		 * Precondiciones:
-		 *  -filename debe ser un nombre de archivo valido, ubicado en el mismo directorio del
-		 *   proyecto
+		 * y se guardan los resultados.
 		 * Postcondiciones:
 		 *  -devuelve un FILE* apuntando al archivo de salida creado
 		 */
-		FILE* createFileOut(char* filename){
-			return NULL;
+		void createFileOut(char* filename, double salida){
+			return;
 		}
 };
 
