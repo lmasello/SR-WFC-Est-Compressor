@@ -13,6 +13,9 @@ using namespace std;
 
 /*Compresor tendra la logica sobre la compresion y descompresion del archivo de entrada. */
 class Compresor{
+	private:
+		void calculoEntropia(char* buffer,unsigned int size);
+		void calculoEntropiaSalidaSR(short* salida,unsigned int size);
 	public:
 		Compresor();
 
