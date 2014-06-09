@@ -8,7 +8,7 @@ double Compresor::comprimir(char* buffer, unsigned int size){
 
 	calculoEntropia(buffer,size);
 
-	SymbolRanking sr (ORDEN);
+	SymbolRanking sr (7);
 
 	short *salida = (short*) malloc (sizeof(short) * size);
 
@@ -22,8 +22,9 @@ double Compresor::comprimir(char* buffer, unsigned int size){
 
 	calculoEntropiaSalidaSR(salida,size);
 
-	Estructurado estructurado;
-	return estructurado.comprimir(salida, size);
+	//Estructurado estructurado;
+	//return estructurado.comprimir(salida, size);
+	return 1;
 }
 
 void Compresor::descomprimir(unsigned short* entrada, unsigned int size){
@@ -86,7 +87,6 @@ void Compresor::calculoEntropiaSalidaSR(short* salida,unsigned int size){
 		else if((unsigned char) salida[i] < 256) fniveles[8]++;
 	}
 	int contador = 0;
-	contador = 0;
 	for(int i = 0; i<10; i++){
 		cout << "Nivel" << i << " - " << fniveles[i] << endl;
 		contador += fniveles[i];

@@ -35,7 +35,9 @@ int main(int argc,char *argv[]){
 
 		double salida = compresor.comprimir(buffer,size);
 
-		cout << endl << "Resultado final: " << std::setprecision(51) << salida << endl;
+		/* Luego de la instancia de compresion/descompresion se debe llamar al file
+		 * Manager para que guarde los resultados en el archivo de salida */
+		cout << endl << "Resultado final: " << std::setprecision(53) << salida << endl;
 	}
 	else if(*operacionARealizar=='d'){
 //		FileManager<unsigned short> fileManager;
@@ -53,10 +55,6 @@ int main(int argc,char *argv[]){
 	// Report result
 	printf("\n%s in %1.2f sec.\n",
 		 argv[2], double(clock()-start)/CLOCKS_PER_SEC);
-	/*
-	 * Luego de la instancia de compresion/descompresion se debe llamar al file
-	 * Manager para que guarde los resultados en el archivo de salida
-	 */
 
 	return 0;
 }

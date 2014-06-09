@@ -128,11 +128,11 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 	unsigned short cantidadDeNoOcurrencias = 0;
 	unsigned short offsetDelHash = 3;
 	tuple<bool, unsigned short> tupla;
-	list<unsigned int> listOfPositions = getListOfPositions(buffer, posCharToRank-3);
+	list<unsigned int>* listOfPositions = getListOfPositions(buffer, posCharToRank-3);
 
  //   cout<<"Se realiza la busqueda de contextos iguales de orden " << orden <<endl;
 
-	for (auto posDeMatch : listOfPositions){
+	for (auto posDeMatch : *listOfPositions){
 		bool hayMatch;
 		if (posDeMatch < unsigned (orden-offsetDelHash)) hayMatch = false;
 		else hayMatch = hashingIguales(hashingAComparar, posDeMatch+offsetDelHash-orden, buffer);
@@ -234,7 +234,7 @@ void SymbolRanking::resetHashMap(){
 	hashmap.reset();
 }
 
-list<unsigned int> SymbolRanking::getListOfPositions(char* buffer, unsigned int posFirst){
+list<unsigned int>* SymbolRanking::getListOfPositions(char* buffer, unsigned int posFirst){
 	return hashmap.get(buffer[posFirst], buffer[posFirst+1],buffer[posFirst+2]);
 }
 

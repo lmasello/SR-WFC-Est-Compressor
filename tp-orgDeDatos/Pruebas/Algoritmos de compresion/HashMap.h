@@ -9,25 +9,25 @@ using namespace std;
 
 class HashEntry {
 	private:
-		list<unsigned int> value;
+		list<unsigned int>* value;
 	public:
-		HashEntry(list<unsigned int> value) {
+		HashEntry(list<unsigned int>* value) {
 			this->value = value;
 		}
 
-		list<unsigned int> getValue() {
+		list<unsigned int>* getValue() {
 			return value;
 		}
 
-		void setValue(list<unsigned int> val){
+		void setValue(list<unsigned int>* val){
 			this->value = val;
 		}
 
 		void addValue(unsigned int value){
-			this->value.push_front(value);
+			this->value->push_front(value);
 			//Si la lista contiene 150 elementos, borra el ultimo y agrega uno al principio
-			unsigned short tamanioMaximo = 500;
-			if (this->value.size() == tamanioMaximo) this->value.pop_back();
+			unsigned short tamanioMaximo = 1500;
+			if (this->value->size() == tamanioMaximo) this->value->pop_back();
 		}
 };
 
@@ -46,7 +46,7 @@ class HashMap {
 		void reset();
 
 		/* Devuelve el valor asignado a la clave pasada por parametro. */
-		list<unsigned int> get(char first, char second, char third);
+		list<unsigned int>* get(char first, char second, char third);
 
 		/* Le asigna el valor value a la clave key */
 		void put(char first, char second, char third, unsigned int value);

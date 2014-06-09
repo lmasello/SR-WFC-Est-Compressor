@@ -64,7 +64,7 @@ class SymbolRanking{
 
 		/* Devuelve la lista correspondiente a la clave conformada por el string entre el caracter en
 		 * la posicion posFirst del buffer, y el siguiente. */
-		list<unsigned int> getListOfPositions(char* buffer, unsigned int posFirst);
+		list<unsigned int>* getListOfPositions(char* buffer, unsigned int posFirst);
 
 		/* Dado un vector con 3 char, lo hashea en el map (atributo).
 		 */

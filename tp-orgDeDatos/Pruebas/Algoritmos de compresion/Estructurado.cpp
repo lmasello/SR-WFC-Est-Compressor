@@ -80,7 +80,6 @@ void Estructurado::emitirEscape(int nivel){
 void Estructurado::emitirNro(int nro_nivel, int nro){
     nivel_t& nivel = niveles[nro_nivel];
     int cant_parcial = 0;
-    int ocurrencias = nivel.total_ocurrencias;
     list<par_t*>::iterator it = nivel.cant_por_nro.begin();
     for (; (*it)->numero != nro; it++){
         cant_parcial += (*it)->ocurrencias;
@@ -115,7 +114,10 @@ double buscar_potencia2_rango(double inicio, double fin){
 
 double Estructurado::comprimir(short* salida, unsigned int size){
     for (unsigned int i = 0; i < size; i++){
-        int indice = salida[i], nivel_indice = int(log2(indice)) + 1;
+    	int nivel_indice;
+        int indice = salida[i];
+        if(indice == 0) nivel_indice = 0;
+        else nivel_indice = int(log2(indice)) + 1;
         int nivel_act = NIVEL_INICIAL;
         for (; nivel_act < nivel_indice; nivel_act++){
             emitirEscape(nivel_act);
