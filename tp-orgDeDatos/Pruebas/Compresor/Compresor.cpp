@@ -8,7 +8,7 @@ pair<char*, unsigned int> Compresor::comprimir(char* buffer, unsigned int size){
 
 	calculoEntropia(buffer,size);
 
-	SymbolRanking sr (10);
+	SymbolRanking sr (ORDEN);
 
 	short *salida = (short*) malloc (sizeof(short) * size);
 

@@ -4,6 +4,14 @@
 #include <list>
 #include <string>
 #include <utility>
+#include <iostream>
+#include <cmath>
+
+#define CANT_NIVELES 10
+#define OCURRENCIAS_INICIAL 1
+#define NRO_ESCAPE -1
+#define NRO_EOF 256
+#define NIVEL_INICIAL 0
 
 using namespace std;
 
@@ -19,7 +27,7 @@ class Estructurado {
         /* Devuelve la frecuencia piso del numero pasado por parametro.
          * En caso que el numero sea mayor al numero maximo del nivel, se devuelve la cantidad de ocurrencias
          * de dicho nivel, contemplando que el intervalo del numero maximo se encuentra entre [techo(NumMax-1),cantTotalDeOcurrencias] */
-        int frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i);
+        unsigned int frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i);
 
         /* Incrementa la frecuencia del numero dentro del nivel, asi como tambien incrementa la cantidad de ocurrencias
          * de dicho nivel */

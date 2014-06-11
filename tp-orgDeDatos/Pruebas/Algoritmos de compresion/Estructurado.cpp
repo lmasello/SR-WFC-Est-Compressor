@@ -1,28 +1,12 @@
 #include "Estructurado.h"
 
-#include <iostream>
-#include <cmath>
-
-#define INICIO_SEGMENTO 0
-#define FIN_SEGMENTO 1
-#define CANT_NIVELES 9
-#define OCURRENCIAS_INICIAL 1
-#define NRO_ESCAPE -1
-#define NRO_EOF 256
-#define NIVEL_INICIAL 0
-
-using std::list;
-using std::string;
-
-using namespace std;
-
 typedef struct _par{
     int numero;
     int ocurrencias;
 } par_t;
 
 struct _nivel{
-    int total_ocurrencias;
+    unsigned long int total_ocurrencias;
     list<par_t*> cant_por_nro;
     unsigned short numeroMaximoDelNivel;
 };
@@ -38,7 +22,7 @@ nivel_t& nivel_crear(int nro_nivel){
     nivel_t* nivel = new nivel_t;
 
     nivel->cant_por_nro.push_back(par_crear(NRO_ESCAPE));
-    int total_ocurrencias = 1;
+    unsigned long int total_ocurrencias = 1;
 
     if (nro_nivel == 0){
         nivel->cant_por_nro.push_back(par_crear(0));
@@ -126,14 +110,12 @@ pair<char*, unsigned int> Estructurado::comprimir(short* aComprimir, unsigned in
 
 void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     nivel_t& nivel = niveles[nro_nivel];
-    int nro_sig = 1;
-    if (nro_nivel <= 2){
-    	if(nro == NRO_ESCAPE) nro_sig += nro_nivel;
-    }
-    else nro_sig = (nro == NRO_ESCAPE) ? (nro+pow(2, nro_nivel))+1 : nro+1;
-    unsigned short frecuenciaTechoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, i);
-    unsigned short frecuenciaTechoDelNumeroPrevioAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro, i); //Piso del numero a comprimir
-    unsigned short frecuenciaTotal = nivel.total_ocurrencias;
+    int nro_sig;
+    if ((nro_nivel <= 2)&&(nro == NRO_ESCAPE)) nro_sig = nro_nivel;
+    else nro_sig = (nro == NRO_ESCAPE) ? (pow(2, nro_nivel-1)) : nro+1;
+    unsigned int frecuenciaTechoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, i);
+    unsigned int frecuenciaTechoDelNumeroPrevioAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro, i); //Piso del numero a comprimir
+    unsigned int frecuenciaTotal = nivel.total_ocurrencias;
 
     unsigned int range = (high-low) + 1;
     high = low + ((range*frecuenciaTechoDelNumeroAComprimir)/frecuenciaTotal)-1;
@@ -174,8 +156,8 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     incrementarFrecuencias(nivel,nro);
 }
 
-int Estructurado::frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i){
-    int frecuenciaPisoDelNumero=0;
+unsigned int Estructurado::frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i){
+    unsigned long int frecuenciaPisoDelNumero=0;
 
     //Caso de que se pida la frec del max numero del nivel
     if(nro == (nivel.numeroMaximoDelNivel + 1)) return nivel.total_ocurrencias;
