@@ -12,6 +12,7 @@
 #define NRO_ESCAPE -1
 #define NRO_EOF 256
 #define NIVEL_INICIAL 0
+#define LIMITE_FRECUENCIAS 16384 // 2 ^14
 
 using namespace std;
 
@@ -26,8 +27,10 @@ class Estructurado {
     protected:
         /* Devuelve la frecuencia piso del numero pasado por parametro.
          * En caso que el numero sea mayor al numero maximo del nivel, se devuelve la cantidad de ocurrencias
-         * de dicho nivel, contemplando que el intervalo del numero maximo se encuentra entre [techo(NumMax-1),cantTotalDeOcurrencias] */
-        unsigned int frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i);
+         * de dicho nivel, contemplando que el intervalo del numero maximo se encuentra entre [techo(NumMax-1),cantTotalDeOcurrencias].
+         * DIcha frecuencia va a ser un numero que entre en 16 bits gracias al metodo verificarFrecuencias
+         *  */
+        unsigned short frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i);
 
         /* Incrementa la frecuencia del numero dentro del nivel, asi como tambien incrementa la cantidad de ocurrencias
          * de dicho nivel */
@@ -46,6 +49,15 @@ class Estructurado {
         int obtenerNro(int nro_nivel, double nro_comprimido, int i);
 
         void emitirBit(bool bit);
+
+        /*
+         * Metodo util para controlar la precision en la cual se realizaran las operacionse
+         * de compresion y descompresion usando aritmetica de enteros.
+         * Para no precisar mas de 16 bits, el total de nuestras frecuencias deberian
+         * ser inforiores a 16384 (2¹⁴). Si las probabilidades (ocurrencias) son mayores a este
+         * limite, se las divide por un factor de 2 o 4.
+         */
+        void verificarFrecuencias(nivel_t& nivel);
 
         pair<char*, unsigned int> generar_resultado();
     private:

@@ -113,9 +113,9 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     int nro_sig;
     if ((nro_nivel <= 2)&&(nro == NRO_ESCAPE)) nro_sig = nro_nivel;
     else nro_sig = (nro == NRO_ESCAPE) ? (pow(2, nro_nivel-1)) : nro+1;
-    unsigned int frecuenciaTechoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, i);
-    unsigned int frecuenciaTechoDelNumeroPrevioAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro, i); //Piso del numero a comprimir
-    unsigned int frecuenciaTotal = nivel.total_ocurrencias;
+    unsigned short frecuenciaTechoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, i);
+    unsigned short frecuenciaTechoDelNumeroPrevioAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro, i); //Piso del numero a comprimir
+    unsigned short frecuenciaTotal = nivel.total_ocurrencias;
 
     unsigned int range = (high-low) + 1;
     high = low + ((range*frecuenciaTechoDelNumeroAComprimir)/frecuenciaTotal)-1;
@@ -156,8 +156,8 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     incrementarFrecuencias(nivel,nro);
 }
 
-unsigned int Estructurado::frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i){
-    unsigned long int frecuenciaPisoDelNumero=0;
+unsigned short Estructurado::frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i){
+    unsigned short frecuenciaPisoDelNumero=0; //Con el verificarFrecuencias, nos aseguramos que no tendremos frecuencias mayores a 16 bits
 
     //Caso de que se pida la frec del max numero del nivel
     if(nro == (nivel.numeroMaximoDelNivel + 1)) return nivel.total_ocurrencias;
@@ -178,6 +178,7 @@ void Estructurado::incrementarFrecuencias(nivel_t& nivel, int nro){
     list<par_t*>::iterator it = nivel.cant_por_nro.begin();
     for (; (*it)->numero != nro; it++); // Hace que el iterator se posicione en la posicion del nro
     (*it)->ocurrencias++;
+    verificarFrecuencias(nivel);
 }
 
 void Estructurado::finalizarCompresion(unsigned short low){
@@ -198,6 +199,29 @@ void Estructurado::finalizarCompresion(unsigned short low){
         emitirBit(bit);
     }
 }
+
+void Estructurado::verificarFrecuencias(nivel_t& nivel){
+
+	//Si no se supera el limite de frecuencias, salimos del metodo
+	if (nivel.total_ocurrencias < LIMITE_FRECUENCIAS) return;
+
+	unsigned short frecuenciasTotales=0;
+
+	//Si se supera el limite, procedemos a normalizar las frecuencias del nivel, reduciendolas a la mitad
+    list<par_t*>::iterator numeroDelNivel = nivel.cant_por_nro.begin();
+    for (; numeroDelNivel != nivel.cant_por_nro.end(); numeroDelNivel++){
+
+    	(*numeroDelNivel)->ocurrencias/=2;
+    	//SI el numero normalizado queda en cero, lo seteamos a 1
+    	if ((*numeroDelNivel)->ocurrencias == 0) (*numeroDelNivel)->ocurrencias = 1;
+
+    	frecuenciasTotales+= (*numeroDelNivel)->ocurrencias;
+    }
+
+	//Actualiza las frecuencias totales del nivel
+	nivel.total_ocurrencias = frecuenciasTotales;
+}
+
 
 pair<unsigned short*, unsigned int> Estructurado::descomprimir(char* indices, unsigned int size){
 	pair <unsigned short*, unsigned int> par;
