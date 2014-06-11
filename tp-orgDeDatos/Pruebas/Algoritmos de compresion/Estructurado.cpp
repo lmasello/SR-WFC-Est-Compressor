@@ -1,5 +1,21 @@
 #include "Estructurado.h"
 
+#include <iostream>
+#include <cmath>
+
+#define INICIO_SEGMENTO 0
+#define FIN_SEGMENTO 1
+#define CANT_NIVELES 9
+#define OCURRENCIAS_INICIAL 1
+#define NRO_ESCAPE -1
+#define NRO_EOF 256
+#define NIVEL_INICIAL 0
+
+using std::list;
+using std::string;
+
+using namespace std;
+
 typedef struct _par{
     int numero;
     int ocurrencias;
@@ -45,7 +61,7 @@ void nivel_destruir(nivel_t& nivel){
 }
 
 Estructurado::Estructurado(){
-
+	resultado = new string;
     high = 0xffff; //16 bits
     low = 0x0000;  //16 bits
     underflow = 0;
@@ -63,7 +79,34 @@ Estructurado::~Estructurado(){
     delete[] niveles;
 }
 
-void Estructurado::comprimir(short* aComprimir, unsigned int size){
+void Estructurado::emitirEscape(int nivel, int i){
+    emitirNro(nivel, NRO_ESCAPE, i);
+}
+
+void Estructurado::emitirBit(bool bit){
+	*resultado += bit;
+}
+
+void Estructurado::emitirEOF(int j){
+    for (int i = 0; i < CANT_NIVELES; i++)
+        emitirEscape(i, j);
+}
+
+pair<char*, unsigned int> Estructurado::generar_resultado(){
+	char* salida = new char[resultado->length()/8];
+	for (unsigned int i=0; i<resultado->length()/8; ++i){
+		char aGuardar = 0x00;
+		for(int j = 0; j<8; j++, i++){
+			aGuardar |= salida[i];
+			aGuardar <<= 1;
+		}
+		salida[i/8] = aGuardar;
+	}
+	pair <char*, unsigned int> par (salida, resultado->length()/8);
+	return par;
+}
+
+pair<char*, unsigned int> Estructurado::comprimir(short* aComprimir, unsigned int size){
     for (unsigned int i = 0; i < size; i++){
         int nivel_indice;
         unsigned short numeroAComprimir = aComprimir[i];
@@ -73,28 +116,23 @@ void Estructurado::comprimir(short* aComprimir, unsigned int size){
 
         int nivel_act = NIVEL_INICIAL;
         for (; nivel_act < nivel_indice; nivel_act++){
-            emitirEscape(nivel_act);
+            emitirEscape(nivel_act, i);
         }
-        emitirNro(nivel_act, numeroAComprimir);
+        emitirNro(nivel_act, numeroAComprimir, i);
     }
-    emitirEOF();
+    emitirEOF(0);
+    return generar_resultado();
 }
 
-void Estructurado::emitirEscape(int nivel){
-    emitirNro(nivel, NRO_ESCAPE);
-}
-
-void Estructurado::emitirEOF(){
-    for (int i = 0; i < CANT_NIVELES; i++)
-        emitirEscape(i);
-}
-
-//Basado en: http://www.arturocampos.com/ac_arithmetic.html
-void Estructurado::emitirNro(int nro_nivel, int nro){
+void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     nivel_t& nivel = niveles[nro_nivel];
-
-    unsigned short frecuenciaTechoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro+1);
-    unsigned short frecuenciaTechoDelNumeroPrevioAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro); //Piso del numero a comprimir
+    int nro_sig = 1;
+    if (nro_nivel <= 2){
+    	if(nro == NRO_ESCAPE) nro_sig += nro_nivel;
+    }
+    else nro_sig = (nro == NRO_ESCAPE) ? (nro+pow(2, nro_nivel))+1 : nro+1;
+    unsigned short frecuenciaTechoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, i);
+    unsigned short frecuenciaTechoDelNumeroPrevioAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro, i); //Piso del numero a comprimir
     unsigned short frecuenciaTotal = nivel.total_ocurrencias;
 
     unsigned int range = (high-low) + 1;
@@ -136,7 +174,7 @@ void Estructurado::emitirNro(int nro_nivel, int nro){
     incrementarFrecuencias(nivel,nro);
 }
 
-int Estructurado::frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro){
+int Estructurado::frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i){
     int frecuenciaPisoDelNumero=0;
 
     //Caso de que se pida la frec del max numero del nivel
@@ -179,8 +217,18 @@ void Estructurado::finalizarCompresion(unsigned short low){
     }
 }
 
-void Estructurado::emitirBit(bool bitAEmitir){
-
+pair<unsigned short*, unsigned int> Estructurado::descomprimir(char* indices, unsigned int size){
+	pair <unsigned short*, unsigned int> par;
+//    int emitido = NRO_ESCAPE;
+//    while(true){
+//        int nivel_act = NIVEL_INICIAL;
+//        for (; emitido != NRO_ESCAPE; nivel_act++){
+//            emitido = obtenerNro(nivel_act, nro_comprimido);
+//        }
+//        if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
+//        indices += emitido;
+//    }
+    return par;
 }
 
 /*

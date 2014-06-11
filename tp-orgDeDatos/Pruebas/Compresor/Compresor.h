@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <cstdio>
 #include <cstddef>
+#include <utility>
 #define ORDEN 6
 using namespace std;
 
@@ -25,13 +26,13 @@ class Compresor{
 		 * Va a llamar a SymbolRanking comprimir. El resultado de esto se lo pasa a
 		 * Estructurado.comprimir y modifica/devuelve el archivo comprimido
 		 */
-		double comprimir(char* buffer, unsigned int size);
+		pair<char*, unsigned int> comprimir(char* buffer, unsigned int size);
 
 
 		/* A partir del buffer obtenido, se genera el archivo descomprimido siguiendo los pasos y logica inversa del
 		 * metodo comprimir.
 		 */
-		void descomprimir(unsigned short* entrada, unsigned int size);
+		pair<char*, unsigned int> descomprimir(char* entrada, unsigned int size);
 };
 
 #endif

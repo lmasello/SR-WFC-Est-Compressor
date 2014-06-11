@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <cstdio>
 #include <cstddef>
+#include <bitset>
 using namespace std;
 
 template <typename dato>
@@ -31,7 +32,7 @@ class FileManager {
 			dato* buffer;
 
 			fileIn = fopen(filename, "rb");
-			if (!fileIn){fputs ("File error",stderr); exit(1);}
+			if (!fileIn){fputs ("FileIn error",stderr); exit(1);}
 
 			//obtain file size:
 			fseek (fileIn , 0 , SEEK_END);
@@ -56,7 +57,7 @@ class FileManager {
 			unsigned int lSize;
 
 			fileIn = fopen(filename, "rb");
-			if (!fileIn){fputs ("File error",stderr); exit(1);}
+			if (!fileIn){fputs ("FileIn error",stderr); exit(1);}
 
 			//obtain file size:
 			fseek (fileIn , 0 , SEEK_END);
@@ -71,7 +72,12 @@ class FileManager {
 		 * Postcondiciones:
 		 *  -devuelve un FILE* apuntando al archivo de salida creado
 		 */
-		void createFileOut(char* filename, double salida){
+		void createFileOut(char* filename, char* salida, unsigned int lenght){
+			FILE* fileOut = fopen(filename, "wb");
+			if (!fileOut){fputs ("FileOut error",stderr); exit(1);}
+
+			fwrite(salida, sizeof(char), lenght, fileOut);
+			fclose(fileOut);
 			return;
 		}
 };

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <utility>
 #include "FileManager/FileManager.h"
 #include "Compresor/Compresor.h"
 
@@ -33,22 +34,35 @@ int main(int argc,char *argv[]){
 
 		cout << "El archivo ha sido abierto y colocado en memoria correctamente" << endl;
 
-		double salida = compresor.comprimir(buffer,size);
+		pair<char*, unsigned int> parSalida;
+		parSalida = compresor.comprimir(buffer,size);
 
-		/* Luego de la instancia de compresion/descompresion se debe llamar al file
-		 * Manager para que guarde los resultados en el archivo de salida */
-		cout << endl << "Resultado final: " << std::setprecision(53) << salida << endl;
+		/* Luego de la instancia de compresion se debe llamar al fileManager
+		 * para que guarde los resultados en el archivo de salida */
+		fileManager.createFileOut(fileOut, parSalida.first, parSalida.second);
+
+		cout << "El proceso de compresion a finalizado satisfactoriamente." << endl;
+		free(buffer);
 	}
 	else if(*operacionARealizar=='d'){
-//		FileManager<unsigned short> fileManager;
-//		unsigned short* buffer = fileManager.processFile(nombreDelArchivo);
-//		unsigned int size = fileManager.getSize(nombreDelArchivo);
+		FileManager<char> fileManager;
+		char* buffer = fileManager.processFile(fileIn);
+		unsigned int size = fileManager.getSize(fileIn);
 
 		cout << "El archivo ha sido abierto y colocado en memoria correctamente" << endl;
 
-		unsigned short buffer[24] = {97,98,99,100,101,0,0,4,0,0,4,0,112,1,0,2,0,0,0,1,0,0,0,0};
-		unsigned int size = 24;
-		compresor.descomprimir(buffer,size);
+		pair<char*, unsigned int> parSalida;
+		parSalida = compresor.descomprimir(buffer, size);
+
+//		unsigned short buffer[24] = {97,98,99,100,101,0,0,4,0,0,4,0,112,1,0,2,0,0,0,1,0,0,0,0};
+//		unsigned int size = 24;
+//		compresor.descomprimir(buffer,size);
+
+		cout << "El proceso de descompresion a finalizado satisfactoriamente." << endl;
+
+		/* Luego de la instancia de descompresion se debe llamar al fileManager
+		 * para que guarde los resultados en el archivo de salida */
+		fileManager.createFileOut(fileOut, parSalida.first, parSalida.second);
 //		free(buffer);
 	}
 
