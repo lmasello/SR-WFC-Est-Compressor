@@ -46,9 +46,11 @@ class Estructurado {
 
         void emitirEOF(int i);
 
-        int obtenerNro(int nro_nivel, double nro_comprimido, int i);
+        void obtenerNro(int nro_nivel);
 
         void emitirBit(bool bit);
+
+        bool leerBit();
 
         /*
          * Metodo util para controlar la precision en la cual se realizaran las operacionse
@@ -60,11 +62,18 @@ class Estructurado {
         void verificarFrecuencias(nivel_t& nivel);
 
         pair<char*, unsigned int> generar_resultado();
+
+        void prepararDescompresion();
+
+        void generarEntrada(char* entrada, unsigned int size);
     private:
+        string* strEntrada;
         string* resultado;
+    	unsigned int posEnStrEntrada;
         unsigned short low;
         unsigned short high;
         unsigned short underflow;
+        unsigned short code;
         nivel_t* niveles;
 };
 
