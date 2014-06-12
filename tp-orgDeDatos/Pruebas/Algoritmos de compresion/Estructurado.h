@@ -11,7 +11,7 @@
 #define NRO_ESCAPE -1
 #define NRO_EOF 256
 #define NIVEL_INICIAL 0
-#define LIMITE_FRECUENCIAS 16384 // 2 ^14
+#define LIMITE_FRECUENCIAS 16384 // 2 ^14. Ver la seccion 'Gathering the probabilities' de http://www.arturocampos.com/ac_arithmetic.html
 
 using namespace std;
 
@@ -41,14 +41,27 @@ class Estructurado {
 
         void emitirEscape(int nivel, int i);
 
-        void emitirNro(int nro_nivel, int nro, int i);
+        /*
+         * Va almacenando en el atributo resultado, los bits que representan la probabilidad con la cual se comprime el parametro nro, en el
+         * nro_nivel determinado.
+         * La logica de procesamiento se basa en http://www.arturocampos.com/ac_arithmetic.html
+         */
+        void emitirNro(int nro_nivel, int nro, int i); //Acordarse de quitar la variable i luego de debbugear
 
         void emitirEOF(int i);
 
-        void obtenerNro(int nro_nivel);
+        /*
+         * Devuelve el simbolo representado por una tira de bits del archivo a descomprimir.
+         * Se tiene en cuenta el proceso indicado en http://www.arturocampos.com/ac_arithmetic.html
+         * Realiza modificaciones a los atributos code, low y high de acuerdo a los bits que va procesando
+         */
+        unsigned short obtenerNro(int nro_nivel);
 
         void emitirBit(bool bit);
 
+        /*
+         * Lee el proximo bit del archivo a descomprimir
+         */
         bool leerBit();
 
         /*
@@ -62,6 +75,14 @@ class Estructurado {
 
         pair<char*, unsigned int> generar_resultado();
 
+        /*
+         * Setea variables que se utilizaran para inicializar el proceso de compresion
+         */
+        void prepararCompresion();
+
+        /*
+         * Setea variables que se utilizaran para inicializar el proceso de descompresion
+         */
         void prepararDescompresion();
 
         void generarEntrada(char* entrada, unsigned int size);

@@ -84,6 +84,8 @@ pair<unsigned short*, unsigned int> Estructurado::descomprimir(char* entrada, un
 }
 
 pair<char*, unsigned int> Estructurado::comprimir(short* aComprimir, unsigned int size){
+	prepararCompresion();
+
     for (unsigned int i = 0; i < size; i++){
         int nivel_indice;
         unsigned short numeroAComprimir = aComprimir[i];
@@ -126,16 +128,20 @@ pair<char*, unsigned int> Estructurado::generar_resultado(){
 
 void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     nivel_t& nivel = niveles[nro_nivel];
+    //Evaluamos el numero siguiente al numero a comprimir
     int nro_sig;
     if ((nro_nivel <= 2)&&(nro == NRO_ESCAPE)) nro_sig = nro_nivel;
     else nro_sig = (nro == NRO_ESCAPE) ? (pow(2, nro_nivel-1)) : nro+1;
+
+    //Calculamos las frecuencias
     unsigned short frecuenciaTechoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, i);
-    unsigned short frecuenciaTechoDelNumeroPrevioAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro, i); //Piso del numero a comprimir
+    unsigned short frecuenciaPisoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro, i);
     unsigned short frecuenciaTotal = nivel.total_ocurrencias;
 
+    //Calculamos los valores de frontera
     unsigned int range = (high-low) + 1;
     high = low + ((range*frecuenciaTechoDelNumeroAComprimir)/frecuenciaTotal)-1;
-    low = low + ((range*frecuenciaTechoDelNumeroPrevioAComprimir)/frecuenciaTotal);
+    low = low + ((range*frecuenciaPisoDelNumeroAComprimir)/frecuenciaTotal);
 
     //Caso de fin de archivo
     if ((nro_nivel == (CANT_NIVELES-1)) && (nro == NRO_ESCAPE)){
@@ -176,7 +182,7 @@ void Estructurado::emitirBit(bool bit){
 	*resultado += bit;
 }
 
-void Estructurado::obtenerNro(int nro_nivel){
+unsigned short Estructurado::obtenerNro(int nro_nivel){
     nivel_t& nivel = niveles[nro_nivel];
     //Vemos las frecuencias del nivel
     unsigned short frecuenciaTotal = nivel.total_ocurrencias;
@@ -186,6 +192,7 @@ void Estructurado::obtenerNro(int nro_nivel){
 	unsigned short temp =(((code - low)+ 1) * frecuenciaTotal-1)/range;
 
     //Vemos a que simbolo corresponde temp
+	unsigned short simbolo;
     unsigned short frecuenciaTechoDelSimbolo; //Simbolo es al que apunta temp. Es decir temp se encontrara entre [frecPisoDelSimbolo,frecTechoDelSimbolo)
     unsigned short frecuenciaPisoDelSimbolo;
     for (short numeroAEvaluar = NRO_ESCAPE; numeroAEvaluar<=nivel.numeroMaximoDelNivel; numeroAEvaluar++){
@@ -194,9 +201,10 @@ void Estructurado::obtenerNro(int nro_nivel){
         if ((nro_nivel <= 2)&&(numeroAEvaluar == NRO_ESCAPE)) nro_sig = nro_nivel;
         else nro_sig = (numeroAEvaluar == NRO_ESCAPE) ? (pow(2, nro_nivel-1)) : numeroAEvaluar+1;
 
-        // Esta en el rango del numeroAEvaluar?
-        unsigned short frecuenciaTechoDelNumero = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, posEnStrEntrada);
+        // temp esta en el rango del numeroAEvaluar?
+        unsigned short frecuenciaTechoDelNumero = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, posEnStrEntrada); //Luego de debbugear quitar posEnStrEntrada
         if (frecuenciaTechoDelNumero > temp) {
+        	simbolo = numeroAEvaluar;
             frecuenciaTechoDelSimbolo = frecuenciaTechoDelNumero;
             frecuenciaPisoDelSimbolo = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,numeroAEvaluar, posEnStrEntrada);
             break;
@@ -206,7 +214,8 @@ void Estructurado::obtenerNro(int nro_nivel){
     high = low + ((range * frecuenciaTechoDelSimbolo) / frecuenciaTotal) - 1;
     low = low + (range * frecuenciaPisoDelSimbolo)/frecuenciaTotal;
 
-    while(true){ //Itera hasta que no hayan mas simbolos posibles por decodificar
+    //Itera hasta que no hayan mas simbolos posibles por decodificar
+    while(true){
         bool msbOfHigh = ((high >> 15) != 0);   //Efectua la comparacion para convertir el short en un bool
         bool msbOfLow = ((low >> 15) != 0);
         bool secondMsbOfHigh = (((high & 0x4000) >> 14) != 0);
@@ -218,15 +227,17 @@ void Estructurado::obtenerNro(int nro_nivel){
                 low = low & 0x3fff;
                 high = high | 0x4000;
             }
+            else break;
         }
-        else break;
-
         //Shifts
         low = low << 1;
         high = (high << 1) | 0x0001;
         bool nextBit = leerBit();
         code = (code << 1) | nextBit;
     }
+    //Actualizar las frecuencias
+    incrementarFrecuencias(nivel,simbolo);
+    return simbolo;
 }
 
 bool Estructurado::leerBit(){
@@ -310,7 +321,17 @@ void Estructurado::generarEntrada(char* entrada, unsigned int size){
 	}
 }
 
+void Estructurado::prepararCompresion(){
+    high = 0xffff; //16 bits
+    low = 0x0000;  //16 bits
+    underflow = 0;
+}
+
 void Estructurado::prepararDescompresion(){
+    high = 0xffff; //16 bits
+    low = 0x0000;  //16 bits
+    code = 0;
+
     //Leemos los primeros 16bits del archivo
     for(register unsigned short i = 0; i<16; i++)
     	code = (code << 1) + leerBit();
