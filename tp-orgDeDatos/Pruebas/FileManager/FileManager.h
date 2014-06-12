@@ -73,6 +73,9 @@ class FileManager {
 		 *  -devuelve un FILE* apuntando al archivo de salida creado
 		 */
 		void createFileOut(char* filename, char* salida, unsigned int lenght){
+			for(int i = 0; i<lenght; i++){
+				cout << i << ": " << salida[i] << endl; //Solo para ir checkeando.
+			}
 			FILE* fileOut = fopen(filename, "wb");
 			if (!fileOut){fputs ("FileOut error",stderr); exit(1);}
 

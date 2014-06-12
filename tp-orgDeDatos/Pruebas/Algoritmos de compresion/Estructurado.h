@@ -55,7 +55,7 @@ class Estructurado {
          * Se tiene en cuenta el proceso indicado en http://www.arturocampos.com/ac_arithmetic.html
          * Realiza modificaciones a los atributos code, low y high de acuerdo a los bits que va procesando
          */
-        unsigned short obtenerNro(int nro_nivel);
+        int obtenerNro(int nro_nivel);
 
         void emitirBit(bool bit);
 

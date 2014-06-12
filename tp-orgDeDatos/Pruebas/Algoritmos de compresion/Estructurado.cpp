@@ -70,11 +70,13 @@ pair<unsigned short*, unsigned int> Estructurado::descomprimir(char* entrada, un
 	pair <unsigned short*, unsigned int> par;
 	generarEntrada(entrada, size);
 	prepararDescompresion();
-	int emitido = NRO_ESCAPE;
 	while(true){
 		int nivel_act = NIVEL_INICIAL;
-		for (; emitido != NRO_ESCAPE; nivel_act++){
-			//emitido = obtenerNro(nivel_act);
+		int emitido = NRO_ESCAPE;
+		while(emitido == NRO_ESCAPE){
+			emitido = obtenerNro(nivel_act);
+			nivel_act++;
+			if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
 		}
 		if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
 		*resultado += emitido;
@@ -113,13 +115,17 @@ void Estructurado::emitirEOF(int j){
 }
 
 pair<char*, unsigned int> Estructurado::generar_resultado_c(){
-	char* salida = new char[resultado->length()/8];
-	for (unsigned int i=0; i<resultado->length()/8; ++i){
+	size_t tam = resultado->length();
+	char* salida = new char[tam/8];
+	for (unsigned int i=0; i<tam; ++i){
 		char aGuardar = 0x00;
 		for(int j = 0; j<8; j++, i++){
-			aGuardar |= salida[i];
+			if(i == tam) break;
+			char actual = (*resultado)[i];
+			aGuardar += (*resultado)[i];
 			aGuardar <<= 1;
 		}
+		i--;
 		salida[i/8] = aGuardar;
 	}
 	pair <char*, unsigned int> par (salida, resultado->length()/8);
@@ -188,10 +194,10 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
 }
 
 void Estructurado::emitirBit(bool bit){
-	*resultado += bit;
+	resultado->push_back(bit);
 }
 
-unsigned short Estructurado::obtenerNro(int nro_nivel){
+int Estructurado::obtenerNro(int nro_nivel){
     nivel_t& nivel = niveles[nro_nivel];
     //Vemos las frecuencias del nivel
     unsigned short frecuenciaTotal = nivel.total_ocurrencias;
@@ -201,7 +207,7 @@ unsigned short Estructurado::obtenerNro(int nro_nivel){
 	unsigned short temp =(((code - low)+ 1) * frecuenciaTotal-1)/range;
 
     //Vemos a que simbolo corresponde temp
-	unsigned short simbolo;
+	int simbolo;
     unsigned short frecuenciaTechoDelSimbolo; //Simbolo es al que apunta temp. Es decir temp se encontrara entre [frecPisoDelSimbolo,frecTechoDelSimbolo)
     unsigned short frecuenciaPisoDelSimbolo;
     for (short numeroAEvaluar = NRO_ESCAPE; numeroAEvaluar<=nivel.numeroMaximoDelNivel; numeroAEvaluar++){
@@ -323,8 +329,9 @@ void Estructurado::verificarFrecuencias(nivel_t& nivel){
 void Estructurado::generarEntrada(char* entrada, unsigned int size){
 	for(unsigned int i = 0; i < size; i++){
 		for(int j = 0; j<8; j++){
-			char actual = entrada[i];
-			actual <<= j; actual >>= 7-j;
+			unsigned char actual = entrada[i];
+			actual <<= j;
+			actual >>= 7;
 			*strEntrada += (int) actual;
 		}
 	}
