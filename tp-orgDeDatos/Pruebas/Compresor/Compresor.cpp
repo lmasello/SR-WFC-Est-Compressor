@@ -11,6 +11,7 @@ pair<char*, unsigned int> Compresor::comprimir(char* buffer, unsigned int size){
 	SymbolRanking sr (ORDEN);
 
 	short *salida = (short*) malloc (sizeof(short) * size);
+	if (salida == NULL) {fputs ("Memory error",stderr); exit (2);}
 
 	cout<<"Comenzando proceso de compresion por SymbolRanking de orden: " << ORDEN << endl;
 
@@ -23,6 +24,7 @@ pair<char*, unsigned int> Compresor::comprimir(char* buffer, unsigned int size){
 	calculoEntropiaSalidaSR(salida,size);
 
 	Estructurado estructurado;
+	cout << "Comenzando el proceso de descompresion por Estructurado" << endl;
 	return estructurado.comprimir(salida, size);
 }
 
@@ -75,10 +77,10 @@ void Compresor::calculoEntropia(char* buffer,unsigned int size){
 void Compresor::calculoEntropiaSalidaSR(short* salida,unsigned int size){
 	float entropia = 0;
 	float Pi;
-	int fcaracteres[255];
+	int fcaracteres[512];
 	int fniveles[10];
 	for(int i = 0; i < 10; i++) fniveles[i] = 0;
-	for(int i = 0; i < 256; i++) fcaracteres[i] = 0;
+	for(int i = 0; i < 512; i++) fcaracteres[i] = 0;
 
 	for(unsigned int i = 0; i < size; i++){
 
@@ -93,6 +95,7 @@ void Compresor::calculoEntropiaSalidaSR(short* salida,unsigned int size){
 		else if((unsigned char) salida[i] < 64)  fniveles[6]++;
 		else if((unsigned char) salida[i] < 128) fniveles[7]++;
 		else if((unsigned char) salida[i] < 256) fniveles[8]++;
+		else (fniveles[9]++);
 	}
 	int contador = 0;
 	for(int i = 0; i<10; i++){
@@ -101,7 +104,7 @@ void Compresor::calculoEntropiaSalidaSR(short* salida,unsigned int size){
 	}
 	entropia = 0;
 	Pi = 0;
-	for(int i = 0; i < 255; i++){
+	for(int i = 0; i < 512; i++){
 		if(fcaracteres[i] == 0) continue;
 		Pi = fcaracteres[i]/(float)contador;
 		float elLog = (-(log(Pi)/log(2)));

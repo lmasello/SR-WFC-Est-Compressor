@@ -73,14 +73,16 @@ class Estructurado {
          */
         void verificarFrecuencias(nivel_t& nivel);
 
-        pair<char*, unsigned int> generar_resultado();
+        pair<char*, unsigned int> generar_resultado_c();
 
         /*
          * Setea variables que se utilizaran para inicializar el proceso de compresion
          */
         void prepararCompresion();
 
-        /*
+        pair<unsigned short*, unsigned int> generar_resultado_d();
+
+		/*
          * Setea variables que se utilizaran para inicializar el proceso de descompresion
          */
         void prepararDescompresion();

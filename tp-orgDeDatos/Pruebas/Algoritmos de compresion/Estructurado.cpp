@@ -79,7 +79,7 @@ pair<unsigned short*, unsigned int> Estructurado::descomprimir(char* entrada, un
 		if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
 		*resultado += emitido;
 	}
-	//par = generar_resultado();     //Generalizar generar_resultado() tanto para char* como para short*
+	par = generar_resultado_d();
     return par;
 }
 
@@ -100,7 +100,7 @@ pair<char*, unsigned int> Estructurado::comprimir(short* aComprimir, unsigned in
         emitirNro(nivel_act, numeroAComprimir, i);
     }
     emitirEOF(0);
-    return generar_resultado();
+    return generar_resultado_c();
 }
 
 void Estructurado::emitirEscape(int nivel, int i){
@@ -112,7 +112,7 @@ void Estructurado::emitirEOF(int j){
         emitirEscape(i, j);
 }
 
-pair<char*, unsigned int> Estructurado::generar_resultado(){
+pair<char*, unsigned int> Estructurado::generar_resultado_c(){
 	char* salida = new char[resultado->length()/8];
 	for (unsigned int i=0; i<resultado->length()/8; ++i){
 		char aGuardar = 0x00;
@@ -123,6 +123,15 @@ pair<char*, unsigned int> Estructurado::generar_resultado(){
 		salida[i/8] = aGuardar;
 	}
 	pair <char*, unsigned int> par (salida, resultado->length()/8);
+	return par;
+}
+
+pair<unsigned short*, unsigned int> Estructurado::generar_resultado_d(){
+	unsigned short* salida = new unsigned short[resultado->length()];
+	for(unsigned int i = 0; i < resultado->length(); i++){
+		salida[i] = (*resultado)[i];
+	}
+	pair <unsigned short*, unsigned int> par (salida, resultado->length());
 	return par;
 }
 
