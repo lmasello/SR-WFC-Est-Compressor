@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <bitset>
 
 #define CANT_NIVELES 10
 #define OCURRENCIAS_INICIAL 1
@@ -91,6 +92,8 @@ class Estructurado {
     private:
         string* strEntrada;
         string* resultado;
+        bitset<8>	byteBuffer;
+        unsigned short contadorBits_;
     	unsigned int posEnStrEntrada;
         unsigned short low;
         unsigned short high;

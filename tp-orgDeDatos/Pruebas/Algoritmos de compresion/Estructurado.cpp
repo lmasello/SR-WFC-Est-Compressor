@@ -52,6 +52,7 @@ Estructurado::Estructurado(){
     high = 0xffff; //16 bits
     low = 0x0000;  //16 bits
     underflow = 0;
+    contadorBits_=0;
 
     niveles = new nivel_t[CANT_NIVELES];
     for (int i = 0; i < CANT_NIVELES; i++){
@@ -75,8 +76,8 @@ pair<unsigned short*, unsigned int> Estructurado::descomprimir(char* entrada, un
 		int emitido = NRO_ESCAPE;
 		while(emitido == NRO_ESCAPE){
 			emitido = obtenerNro(nivel_act);
-			nivel_act++;
 			if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
+			nivel_act++;
 		}
 		if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
 		*resultado += emitido;
@@ -94,6 +95,8 @@ pair<char*, unsigned int> Estructurado::comprimir(short* aComprimir, unsigned in
 
         if(numeroAComprimir == 0) nivel_indice = 0;
         else nivel_indice = int(log2(numeroAComprimir)) + 1;
+
+        cout<<"Nro: "<<numeroAComprimir<<endl;
 
         int nivel_act = NIVEL_INICIAL;
         for (; nivel_act < nivel_indice; nivel_act++){
@@ -115,20 +118,16 @@ void Estructurado::emitirEOF(int j){
 }
 
 pair<char*, unsigned int> Estructurado::generar_resultado_c(){
+	cout<<"Resultado: "<<endl;
+	for(int i=0; i<resultado->length();i++) cout<<(int)(*resultado)[i]<<' '<<i+1<<endl;
+
 	size_t tam = resultado->length();
-	char* salida = new char[tam/8];
-	for (unsigned int i=0; i<tam; ++i){
-		char aGuardar = 0x00;
-		for(int j = 0; j<8; j++, i++){
-			if(i == tam) break;
-			char actual = (*resultado)[i];
-			aGuardar += (*resultado)[i];
-			aGuardar <<= 1;
-		}
-		i--;
-		salida[i/8] = aGuardar;
+	char* salida = new char[tam];
+	for (unsigned int i=0; i<tam; i++){
+		char aGuardar = (*resultado)[i];
+		salida[i] = aGuardar;
 	}
-	pair <char*, unsigned int> par (salida, resultado->length()/8);
+	pair <char*, unsigned int> par (salida, resultado->length());
 	return par;
 }
 
@@ -158,6 +157,12 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     high = low + ((range*frecuenciaTechoDelNumeroAComprimir)/frecuenciaTotal)-1;
     low = low + ((range*frecuenciaPisoDelNumeroAComprimir)/frecuenciaTotal);
 
+    cout<<endl<<"Para nro: "<<nro<<endl;
+    cout<<"Frec techo:"<<frecuenciaTechoDelNumeroAComprimir<<endl;
+    cout<<"Rango: "<<range<<endl;
+    cout<<"HIgh: "<<high<<endl;
+    cout<<"LOw: "<<low<<endl;
+
     //Caso de fin de archivo
     if ((nro_nivel == (CANT_NIVELES-1)) && (nro == NRO_ESCAPE)){
         finalizarCompresion(low);
@@ -171,8 +176,10 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
         bool secondMsbOfLow = (((low & 0x4000) >> 14) != 0);
 
         if (msbOfHigh == msbOfLow){
+        	cout<<"EMite: "<<(short)msbOfLow<<endl<<endl;
             emitirBit(msbOfLow);
             while(underflow>0){
+            	cout<<"EMite: "<<(short)~msbOfLow<<endl<<endl;
                 emitirBit(~msbOfLow);
                 underflow--;
             }
@@ -194,7 +201,18 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
 }
 
 void Estructurado::emitirBit(bool bit){
-	resultado->push_back(bit);
+	contadorBits_++;
+
+	//Almacenamos el nuevo bit en el byteBuffer
+	byteBuffer[8-contadorBits_] = (bit)?1:0;
+
+	//En caso de completar un byte entero, lo guardamos en el archivo
+	if(contadorBits_ == 8){
+		contadorBits_ = 0;
+		unsigned long i = byteBuffer.to_ulong();
+		unsigned char byteAGuardar = static_cast<unsigned char>( i );
+		resultado->push_back(byteAGuardar);
+	}
 }
 
 int Estructurado::obtenerNro(int nro_nivel){
@@ -210,9 +228,9 @@ int Estructurado::obtenerNro(int nro_nivel){
 	int simbolo;
     unsigned short frecuenciaTechoDelSimbolo; //Simbolo es al que apunta temp. Es decir temp se encontrara entre [frecPisoDelSimbolo,frecTechoDelSimbolo)
     unsigned short frecuenciaPisoDelSimbolo;
-    for (short numeroAEvaluar = NRO_ESCAPE; numeroAEvaluar<=nivel.numeroMaximoDelNivel; numeroAEvaluar++){
+    short nro_sig;
+    for (short numeroAEvaluar = NRO_ESCAPE; numeroAEvaluar<=nivel.numeroMaximoDelNivel; numeroAEvaluar=nro_sig){
         //Logica para obtener el numero siguiente al numeroAEvaluar
-        short nro_sig;
         if ((nro_nivel <= 2)&&(numeroAEvaluar == NRO_ESCAPE)) nro_sig = nro_nivel;
         else nro_sig = (numeroAEvaluar == NRO_ESCAPE) ? (pow(2, nro_nivel-1)) : numeroAEvaluar+1;
 
@@ -335,6 +353,8 @@ void Estructurado::generarEntrada(char* entrada, unsigned int size){
 			*strEntrada += (int) actual;
 		}
 	}
+	cout<<"strEntrada: "<<endl;
+	for(int i=0; i<strEntrada->length();i++) cout<<(int)(*strEntrada)[i]<<' '<<i+1<<endl;
 }
 
 void Estructurado::prepararCompresion(){
