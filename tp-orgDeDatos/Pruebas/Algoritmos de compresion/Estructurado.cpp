@@ -67,23 +67,10 @@ Estructurado::~Estructurado(){
     delete[] niveles;
 }
 
-pair<unsigned short*, unsigned int> Estructurado::descomprimir(char* entrada, unsigned int size){
-	pair <unsigned short*, unsigned int> par;
-	generarEntrada(entrada, size);
-	prepararDescompresion();
-	while(true){
-		int nivel_act = NIVEL_INICIAL;
-		int emitido = NRO_ESCAPE;
-		while(emitido == NRO_ESCAPE){
-			emitido = obtenerNro(nivel_act);
-			if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
-			nivel_act++;
-		}
-		if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
-		*resultado += emitido;
-	}
-	par = generar_resultado_d();
-    return par;
+void Estructurado::prepararCompresion(){
+    high = 0xffff; //16 bits
+    low = 0x0000;  //16 bits
+    underflow = 0;
 }
 
 pair<char*, unsigned int> Estructurado::comprimir(short* aComprimir, unsigned int size){
@@ -106,57 +93,6 @@ pair<char*, unsigned int> Estructurado::comprimir(short* aComprimir, unsigned in
     }
     emitirEOF(0);
     return generar_resultado_c();
-}
-
-void Estructurado::emitirEscape(int nivel, int i){
-    emitirNro(nivel, NRO_ESCAPE, i);
-}
-
-void Estructurado::emitirEOF(int j){
-    for (int i = 0; i < CANT_NIVELES; i++)
-        emitirEscape(i, j);
-}
-
-pair<char*, unsigned int> Estructurado::generar_resultado_c(){
-	cout<<"Resultado: "<<endl;
-	for(int i=0; i<resultado->length();i++) cout<<(int)(*resultado)[i]<<' '<<i+1<<endl;
-
-	flushByteBuffer();
-
-	size_t tam = resultado->length();
-	char* salida = new char[tam];
-	for (unsigned int i=0; i<tam; i++){
-		char aGuardar = (*resultado)[i];
-		salida[i] = aGuardar;
-	}
-	pair <char*, unsigned int> par (salida, resultado->length());
-	return par;
-}
-
-void Estructurado::flushByteBuffer(){
-    while(contadorBits_ != 0){
-        contadorBits_++;
-
-        //Seteamos en 0 todos los bits no utilizados del byte
-        byteBuffer[8-contadorBits_] = 0;
-
-        //En caso de completar un byte entero, lo guardamos en el archivo
-        if(contadorBits_ == 8){
-            contadorBits_ = 0;
-    		unsigned long i = byteBuffer.to_ulong();
-    		unsigned char byteAGuardar = static_cast<unsigned char>( i );
-    		resultado->push_back(byteAGuardar);
-        }
-    }
-}
-
-pair<unsigned short*, unsigned int> Estructurado::generar_resultado_d(){
-	unsigned short* salida = new unsigned short[resultado->length()];
-	for(unsigned int i = 0; i < resultado->length(); i++){
-		salida[i] = (*resultado)[i];
-	}
-	pair <unsigned short*, unsigned int> par (salida, resultado->length());
-	return par;
 }
 
 void Estructurado::emitirNro(int nro_nivel, int nro, int i){
@@ -211,6 +147,15 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     incrementarFrecuencias(nivel,nro);
 }
 
+void Estructurado::emitirEscape(int nivel, int i){
+    emitirNro(nivel, NRO_ESCAPE, i);
+}
+
+void Estructurado::emitirEOF(int j){
+    for (int i = 0; i < CANT_NIVELES; i++)
+        emitirEscape(i, j);
+}
+
 void Estructurado::emitirBit(bool bit){
 	contadorBits_++;
 
@@ -224,6 +169,99 @@ void Estructurado::emitirBit(bool bit){
 		unsigned char byteAGuardar = static_cast<unsigned char>( i );
 		resultado->push_back(byteAGuardar);
 	}
+}
+
+void Estructurado::finalizarCompresion(unsigned short low){
+    //Emite msb de Low
+    bool msbOfLow = ((low >> 15) != 0);
+    emitirBit(msbOfLow);
+
+    //Emite underflows
+    while(underflow>0){
+        emitirBit(~msbOfLow);
+        underflow--;
+    }
+
+    //Emite los demas bits del low
+    for(short shift = 14;shift<0;shift--){
+        unsigned short mask = (2^(shift+1))-1;
+        bool bit = (bool) (low & mask) >> shift;
+        emitirBit(bit);
+    }
+}
+pair<char*, unsigned int> Estructurado::generar_resultado_c(){
+	cout<<"Resultado: "<<endl;
+	for(int i=0; i<resultado->length();i++) cout<<(int)(*resultado)[i]<<' '<<i+1<<endl;
+
+	flushByteBuffer();
+
+	size_t tam = resultado->length();
+	char* salida = new char[tam];
+	for (unsigned int i=0; i<tam; i++){
+		char aGuardar = (*resultado)[i];
+		salida[i] = aGuardar;
+	}
+	pair <char*, unsigned int> par (salida, resultado->length());
+	return par;
+}
+
+void Estructurado::flushByteBuffer(){
+    while(contadorBits_ != 0){
+        contadorBits_++;
+
+        //Seteamos en 0 todos los bits no utilizados del byte
+        byteBuffer[8-contadorBits_] = 0;
+
+        //En caso de completar un byte entero, lo guardamos en el archivo
+        if(contadorBits_ == 8){
+            contadorBits_ = 0;
+    		unsigned long i = byteBuffer.to_ulong();
+    		unsigned char byteAGuardar = static_cast<unsigned char>( i );
+    		resultado->push_back(byteAGuardar);
+        }
+    }
+}
+
+void Estructurado::prepararDescompresion(){
+    high = 0xffff; //16 bits
+    low = 0x0000;  //16 bits
+    code = 0;
+
+    //Leemos los primeros 16bits del archivo
+    for(register unsigned short i = 0; i<16; i++)
+    	code = (code << 1) + leerBit();
+}
+
+void Estructurado::generarEntrada(char* entrada, unsigned int size){
+	for(unsigned int i = 0; i < size; i++){
+		for(int j = 0; j<8; j++){
+			unsigned char actual = entrada[i];
+			actual <<= j;
+			actual >>= 7;
+			*strEntrada += (int) actual;
+		}
+	}
+	cout<<"strEntrada: "<<endl;
+	for(int i=0; i<strEntrada->length();i++) cout<<(int)(*strEntrada)[i]<<' '<<i+1<<endl;
+}
+
+pair<unsigned short*, unsigned int> Estructurado::descomprimir(char* entrada, unsigned int size){
+	pair <unsigned short*, unsigned int> par;
+	generarEntrada(entrada, size);
+	prepararDescompresion();
+	while(true){
+		int nivel_act = NIVEL_INICIAL;
+		int emitido = NRO_ESCAPE;
+		while(emitido == NRO_ESCAPE){
+			emitido = obtenerNro(nivel_act);
+			if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
+			nivel_act++;
+		}
+		if ((nivel_act == CANT_NIVELES -1) && (emitido == NRO_ESCAPE)) break;
+		*resultado += emitido;
+	}
+	par = generar_resultado_d();
+    return par;
 }
 
 int Estructurado::obtenerNro(int nro_nivel){
@@ -267,9 +305,9 @@ int Estructurado::obtenerNro(int nro_nivel){
 
         if (msbOfHigh != msbOfLow){
             if((secondMsbOfLow==1)&&(secondMsbOfHigh==0)){
-                code = code ^ 0x4000;
-                low = low & 0x3fff;
-                high = high | 0x4000;
+            	code = code ^ 0x4000;
+				low = low & 0x3fff;
+				high = high | 0x4000;
             }
             else break;
         }
@@ -277,7 +315,8 @@ int Estructurado::obtenerNro(int nro_nivel){
         low = low << 1;
         high = (high << 1) | 0x0001;
         bool nextBit = leerBit();
-        code = (code << 1) | nextBit;
+        code = (code << 1) + nextBit;
+
     }
     //Actualizar las frecuencias
     incrementarFrecuencias(nivel,simbolo);
@@ -314,25 +353,6 @@ void Estructurado::incrementarFrecuencias(nivel_t& nivel, int nro){
     verificarFrecuencias(nivel);
 }
 
-void Estructurado::finalizarCompresion(unsigned short low){
-    //Emite msb de Low
-    bool msbOfLow = ((low >> 15) != 0);
-    emitirBit(msbOfLow);
-
-    //Emite underflows
-    while(underflow>0){
-        emitirBit(~msbOfLow);
-        underflow--;
-    }
-
-    //Emite los demas bits del low
-    for(short shift = 14;shift<0;shift--){
-        unsigned short mask = (2^(shift+1))-1;
-        bool bit = (bool) (low & mask) >> shift;
-        emitirBit(bit);
-    }
-}
-
 void Estructurado::verificarFrecuencias(nivel_t& nivel){
 
 	//Si no se supera el limite de frecuencias, salimos del metodo
@@ -355,31 +375,11 @@ void Estructurado::verificarFrecuencias(nivel_t& nivel){
 	nivel.total_ocurrencias = frecuenciasTotales;
 }
 
-void Estructurado::generarEntrada(char* entrada, unsigned int size){
-	for(unsigned int i = 0; i < size; i++){
-		for(int j = 0; j<8; j++){
-			unsigned char actual = entrada[i];
-			actual <<= j;
-			actual >>= 7;
-			*strEntrada += (int) actual;
-		}
+pair<unsigned short*, unsigned int> Estructurado::generar_resultado_d(){
+	unsigned short* salida = new unsigned short[resultado->length()];
+	for(unsigned int i = 0; i < resultado->length(); i++){
+		salida[i] = (*resultado)[i];
 	}
-	cout<<"strEntrada: "<<endl;
-	for(int i=0; i<strEntrada->length();i++) cout<<(int)(*strEntrada)[i]<<' '<<i+1<<endl;
-}
-
-void Estructurado::prepararCompresion(){
-    high = 0xffff; //16 bits
-    low = 0x0000;  //16 bits
-    underflow = 0;
-}
-
-void Estructurado::prepararDescompresion(){
-    high = 0xffff; //16 bits
-    low = 0x0000;  //16 bits
-    code = 0;
-
-    //Leemos los primeros 16bits del archivo
-    for(register unsigned short i = 0; i<16; i++)
-    	code = (code << 1) + leerBit();
+	pair <unsigned short*, unsigned int> par (salida, resultado->length());
+	return par;
 }
