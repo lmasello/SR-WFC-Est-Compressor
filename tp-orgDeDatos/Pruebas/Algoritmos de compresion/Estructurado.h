@@ -89,6 +89,8 @@ class Estructurado {
         void prepararDescompresion();
 
         void generarEntrada(char* entrada, unsigned int size);
+
+        void flushByteBuffer();
     private:
         string* strEntrada;
         string* resultado;

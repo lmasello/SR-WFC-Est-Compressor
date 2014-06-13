@@ -121,6 +121,8 @@ pair<char*, unsigned int> Estructurado::generar_resultado_c(){
 	cout<<"Resultado: "<<endl;
 	for(int i=0; i<resultado->length();i++) cout<<(int)(*resultado)[i]<<' '<<i+1<<endl;
 
+	flushByteBuffer();
+
 	size_t tam = resultado->length();
 	char* salida = new char[tam];
 	for (unsigned int i=0; i<tam; i++){
@@ -129,6 +131,23 @@ pair<char*, unsigned int> Estructurado::generar_resultado_c(){
 	}
 	pair <char*, unsigned int> par (salida, resultado->length());
 	return par;
+}
+
+void Estructurado::flushByteBuffer(){
+    while(contadorBits_ != 0){
+        contadorBits_++;
+
+        //Seteamos en 0 todos los bits no utilizados del byte
+        byteBuffer[8-contadorBits_] = 0;
+
+        //En caso de completar un byte entero, lo guardamos en el archivo
+        if(contadorBits_ == 8){
+            contadorBits_ = 0;
+    		unsigned long i = byteBuffer.to_ulong();
+    		unsigned char byteAGuardar = static_cast<unsigned char>( i );
+    		resultado->push_back(byteAGuardar);
+        }
+    }
 }
 
 pair<unsigned short*, unsigned int> Estructurado::generar_resultado_d(){
@@ -157,12 +176,6 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     high = low + ((range*frecuenciaTechoDelNumeroAComprimir)/frecuenciaTotal)-1;
     low = low + ((range*frecuenciaPisoDelNumeroAComprimir)/frecuenciaTotal);
 
-    cout<<endl<<"Para nro: "<<nro<<endl;
-    cout<<"Frec techo:"<<frecuenciaTechoDelNumeroAComprimir<<endl;
-    cout<<"Rango: "<<range<<endl;
-    cout<<"HIgh: "<<high<<endl;
-    cout<<"LOw: "<<low<<endl;
-
     //Caso de fin de archivo
     if ((nro_nivel == (CANT_NIVELES-1)) && (nro == NRO_ESCAPE)){
         finalizarCompresion(low);
@@ -176,10 +189,8 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
         bool secondMsbOfLow = (((low & 0x4000) >> 14) != 0);
 
         if (msbOfHigh == msbOfLow){
-        	cout<<"EMite: "<<(short)msbOfLow<<endl<<endl;
             emitirBit(msbOfLow);
             while(underflow>0){
-            	cout<<"EMite: "<<(short)~msbOfLow<<endl<<endl;
                 emitirBit(~msbOfLow);
                 underflow--;
             }
