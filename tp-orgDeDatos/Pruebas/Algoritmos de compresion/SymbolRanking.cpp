@@ -70,17 +70,18 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 	unsigned short posicionMinimaParaHashear = 3;
 	unsigned short rankToChar;
 	tuple<bool,unsigned short> tupla;
-
+//	cout<<size<<endl;
 //	cout<<"Comienza el proceso de descompresion por Symbol Ranking de orden " << ordenMaximo << endl;
 
 	//Primeros rankings [0,orden-1]
 	for(unsigned int posRankToChar = 0; posRankToChar < ordenMaximo; posRankToChar++){
+		if (posRankToChar == size) break;
 		if (posRankToChar > 2){
 			hashear(salida[posRankToChar-3], salida[posRankToChar-2],salida[posRankToChar-1], posRankToChar-3);
 		}
-		unsigned short rankToChar = aDescomprimir[posRankToChar];
+		rankToChar = aDescomprimir[posRankToChar];
 		salida[posRankToChar] = wfc.descomprimir(rankToChar);
-
+//		cout << salida[posRankToChar] << endl;
 //		cout<<"El rank " << rankToChar << " lo procesa como el caracter: " << salida[posRankToChar] << endl;
 	}
 
@@ -119,6 +120,7 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 		}
 		if(posRankToChar >= posicionMinimaParaHashear)hashear(salida[posRankToChar-3], salida[posRankToChar-2],salida[posRankToChar-1], posRankToChar-3);
 		ctxActual = ordenMaximo;
+		//cout << salida[posRankToChar] << endl;
 	}
 }
 
