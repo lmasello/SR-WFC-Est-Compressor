@@ -18,8 +18,6 @@ pair<char*, unsigned int> Compresor::comprimir(char* buffer, unsigned int size){
 	sr.comprimir(buffer, salida, size);
 
 	cout<<"SymbolRanking ha finalizado el proceso de compresion correctamente" << endl << "Salida:" <<endl;
-	//for(unsigned int i = 0; i < size; i++)cout<<salida[i]<<' ';
-//	cout<<endl;
 
 	calculoEntropiaSalidaSR(salida,size);
 
@@ -47,10 +45,6 @@ pair<char*, unsigned int> Compresor::descomprimir(char* entrada, unsigned int si
 	sr.descomprimir(aDescomprimir.first, salida, aDescomprimir.second);
 
 	cout << "SymbolRanking ha finalizado el proceso de descompresion correctamente"<<endl;
-//	cout << "Salida:"<<endl;
-//	for(unsigned int i = 0; i < size; i++){
-//		cout<< salida[i] << ' ';
-//	}
 	pair<char*, unsigned int> parSalida;
 	parSalida.first = salida;
 	parSalida.second = aDescomprimir.second;

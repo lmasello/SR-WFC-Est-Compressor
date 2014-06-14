@@ -16,8 +16,6 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 	unsigned short cantidadDeNoOcurrencias; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
 	tuple<bool,unsigned short> tupla;
 
-//	cout<<"Comienza el proceso de compresion por Symbol Ranking de orden " << ordenMaximo << endl;
-
 	//Primeros caracteres [0,orden-1]
 	for(int posCharToRank = 0; posCharToRank < ordenMaximo; posCharToRank++){
 		if (posCharToRank > 2){
@@ -26,13 +24,12 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 		char charAProcesar = aComprimir[posCharToRank];
 		salida[posCharToRank] = wfc.comprimir(charAProcesar);
 
-//		cout<<"El caracter " << charAProcesar << " lo procesa como " << salida[posCharToRank] << endl;
 	}
 	//Siguientes caracteres
 	for (unsigned int posCharToRank = ordenMaximo; posCharToRank< size; posCharToRank++){
 
 		charToRank = aComprimir[posCharToRank];
-		exclusionList.clear(); 		//Deberia ser lo suficientemente eficiente, si pasa algo malo, referirse a la pagina 6 del paper 132.
+		exclusionList.clear();
 		cantidadDeNoOcurrencias = 0;
 
 		while(ctxActual > 2){
@@ -50,7 +47,6 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 			tupla = busquedaLinealEnContexto(posCharToRank,ctxActual, aComprimir,'c',0); //El ultimo parametro (ranking) no se utiliza para el compresor, por lo tanto se lo pone en 0
 			cantidadDeNoOcurrencias += get<1> (tupla);
 			if (!get<0> (tupla)){
-//				cout << "EL numero total de ofertas negativas fue de: "<<cantidadDeNoOcurrencias << endl;
 				cantidadDeNoOcurrencias += wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
 			}
 		}
@@ -59,7 +55,6 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 			hashear(aComprimir[posCharToRank-3], aComprimir[posCharToRank-2],aComprimir[posCharToRank-1], posCharToRank-3);
 		}
 		salida[posCharToRank] = cantidadDeNoOcurrencias;
-//		cout<<"Salida: " << salida[posCharToRank] << endl<<endl;
 		ctxActual = ordenMaximo;
 	}
 }
@@ -70,8 +65,6 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 	unsigned short posicionMinimaParaHashear = 3;
 	unsigned short rankToChar;
 	tuple<bool,unsigned short> tupla;
-//	cout<<size<<endl;
-//	cout<<"Comienza el proceso de descompresion por Symbol Ranking de orden " << ordenMaximo << endl;
 
 	//Primeros rankings [0,orden-1]
 	for(unsigned int posRankToChar = 0; posRankToChar < ordenMaximo; posRankToChar++){
@@ -81,8 +74,6 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 		}
 		rankToChar = aDescomprimir[posRankToChar];
 		salida[posRankToChar] = wfc.descomprimir(rankToChar);
-//		cout << salida[posRankToChar] << endl;
-//		cout<<"El rank " << rankToChar << " lo procesa como el caracter: " << salida[posRankToChar] << endl;
 	}
 
 	//Siguientes caracteres
@@ -108,7 +99,6 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 			if (!get<0> (tupla)){
 				rankToChar -= get<1> (tupla);
 				salida[posRankToChar] = wfc.descomprimir(rankToChar);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
-				//cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
 			}
 		}
 		//Nota: cuando la tupla me devuelve True, quiere decir que el segundo elemento es el caracter ofrecido por un contexto
@@ -116,11 +106,9 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 		if(get<0>(tupla)){
 			salida[posRankToChar] = (char) get<1>(tupla);
 			wfc.incrementarFrecuencia(salida[posRankToChar]);
-//			cout<<"El rank " << rankToChar << " lo procesa como el caracter " << salida[posRankToChar] << endl<<endl;
 		}
 		if(posRankToChar >= posicionMinimaParaHashear)hashear(salida[posRankToChar-3], salida[posRankToChar-2],salida[posRankToChar-1], posRankToChar-3);
 		ctxActual = ordenMaximo;
-		//cout << salida[posRankToChar] << endl;
 	}
 }
 
