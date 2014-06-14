@@ -6,14 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include <bitset>
-
-#define CANT_NIVELES 10
-#define OCURRENCIAS_INICIAL 1
-#define NRO_ESCAPE -1
-#define NRO_EOF 256
-#define NIVEL_INICIAL 0
-#define LIMITE_FRECUENCIAS 16384 // 2 ^14. Ver la seccion 'Gathering the probabilities' de http://www.arturocampos.com/ac_arithmetic.html
-
+#include "constantes.h"
 using namespace std;
 
 typedef struct _nivel nivel_t;
@@ -23,14 +16,14 @@ class Estructurado {
         Estructurado();
         virtual ~Estructurado();
         pair<char*, unsigned int> comprimir(short* aComprimir, unsigned int size);
-        pair<unsigned short*, unsigned int> descomprimir(char* indices, unsigned int size);
+        pair<unsigned short*, unsigned int> descomprimir(char* entrada, unsigned int size);
     protected:
         /* Devuelve la frecuencia piso del numero pasado por parametro.
          * En caso que el numero sea mayor al numero maximo del nivel, se devuelve la cantidad de ocurrencias
          * de dicho nivel, contemplando que el intervalo del numero maximo se encuentra entre [techo(NumMax-1),cantTotalDeOcurrencias].
          * DIcha frecuencia va a ser un numero que entre en 16 bits gracias al metodo verificarFrecuencias
          *  */
-        unsigned short frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i);
+        unsigned short frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,short nro_nivel,short nro);
 
         /* Incrementa la frecuencia del numero dentro del nivel, asi como tambien incrementa la cantidad de ocurrencias
          * de dicho nivel */
@@ -56,7 +49,7 @@ class Estructurado {
          * Se tiene en cuenta el proceso indicado en http://www.arturocampos.com/ac_arithmetic.html
          * Realiza modificaciones a los atributos code, low y high de acuerdo a los bits que va procesando
          */
-        int obtenerNro(int nro_nivel);
+        short decodeSymbol(int nro_nivel);
 
         void emitirBit(bool bit);
 
@@ -86,22 +79,26 @@ class Estructurado {
 		/*
          * Setea variables que se utilizaran para inicializar el proceso de descompresion
          */
-        void prepararDescompresion();
+        void start_decoding();
 
         void generarEntrada(char* entrada, unsigned int size);
 
         void flushByteBuffer();
+
+        short getNumeroSiguiente(short numeroAEvaluar,int nro_nivel);
     private:
         string* strEntrada;
         string* resultado;
         bitset<8>	byteBuffer;
         unsigned short contadorBits_;
     	unsigned int posEnStrEntrada;
-        unsigned short low;
-        unsigned short high;
         unsigned short underflow;
-        unsigned short code;
         nivel_t* niveles;
+
+        /***************** ENCODING AND DECODING **********************/
+        code_value value;			//Currently-seen code value
+        code_value low;
+        code_value high;				//Ends of current code region
 };
 
 #endif // ESTRUCTURADO_H
