@@ -39,11 +39,10 @@ class HashMap {
 		HashMap();
 		~HashMap();
 
-		void imprimir();
-
+		/*
+		 * Funcion de hash utilizada.
+		 */
 		unsigned int fhash(char primero, char segundo, char tercero);
-
-		void reset();
 
 		/* Devuelve el valor asignado a la clave pasada por parametro. */
 		list<unsigned int>* get(char first, char second, char third);

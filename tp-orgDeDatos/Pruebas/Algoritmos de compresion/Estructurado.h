@@ -22,7 +22,7 @@ typedef struct _nivel nivel_t;
 class Estructurado {
     public:
         Estructurado();
-        virtual ~Estructurado();
+        ~Estructurado();
         pair<char*, unsigned int> comprimir(short* aComprimir, unsigned int size);
         pair<unsigned short*, unsigned int> descomprimir(char* indices, unsigned int size);
     protected:
@@ -84,6 +84,9 @@ class Estructurado {
          */
         void verificarFrecuencias(nivel_t& nivel);
 
+        /*
+         * Genera el resultado en un char* que sera escrito en el archivo comprimido
+         */
         pair<char*, unsigned int> generar_resultado_c();
 
         /*
@@ -91,6 +94,9 @@ class Estructurado {
          */
         void prepararCompresion();
 
+        /*
+         * Genera el resultado en un short* que sera utilizado por el SR para su descompresion
+         */
         pair<unsigned short*, unsigned int> generar_resultado_d();
 
         /*
@@ -98,8 +104,14 @@ class Estructurado {
          */
         void prepararDescompresion();
 
+        /*
+         *
+         */
         void generarEntrada(char* entrada, unsigned int size);
 
+        /*
+         *
+         */
         void flushByteBuffer();
 
     private:

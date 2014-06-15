@@ -56,6 +56,9 @@ public:
 	 */
 	char descomprimir(unsigned short numberToTransform);
 
+	/*
+	 * Incrementa la frecuencia del caracter en la lista de frecuencias.
+	 */
 	void incrementarFrecuencia(char charToIncrement);
 };
 

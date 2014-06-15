@@ -12,9 +12,10 @@ using namespace std;
 template <typename dato>
 class FileManager {
 	public:
-		FileManager(){
+		FileManager(){}
 
-		}
+		~FileManager(){}
+
 		/* Dado un filename, lo abre y vuelca su contenido en el buffer.
 		 * Precondiciones:
 		 *  -fileIn debe ser un nombre de archivo valido, ubicado en el mismo directorio del
@@ -25,41 +26,37 @@ class FileManager {
 		 *   el tipo de dato del buffer va a depender del tipo de datos que contenga el file a cargar en memoria.
 		 *   char si se trata del compresor o unsigned short si se trata del descompresor
 		*/
-		dato* processFile(char* filename){
+		char* processFile(const char* filename){
 			FILE* fileIn;
 			unsigned int lSize;
 			unsigned int result;
-			dato* buffer;
+			char* buffer;
 
 			fileIn = fopen(filename, "rb");
 			if (!fileIn){fputs ("FileIn error",stderr); exit(1);}
 
-			//obtain file size:
+			//Obtenemos el tamaño del archivo:
 			fseek (fileIn , 0 , SEEK_END);
 			lSize = ftell (fileIn);
 			rewind (fileIn);
 
-			// allocate memory to contain the whole file:
-			buffer = (dato*) malloc (lSize);
+			buffer = new char[lSize];
 			if (buffer == NULL) {fputs ("Memory error",stderr); exit (2);}
 
-			// copy the file into the buffer:
 			result = fread (buffer,1,lSize,fileIn);
 			if (result != lSize) {fputs ("Reading error",stderr); exit (3);}
 
-			/* the whole file is now loaded in the memory buffer. */
 			fclose (fileIn);
 			return buffer;
 		}
 
-		unsigned int getSize(char* filename){
+		unsigned int getSize(const char* filename){
 			FILE* fileIn;
 			unsigned int lSize;
 
 			fileIn = fopen(filename, "rb");
 			if (!fileIn){fputs ("FileIn error",stderr); exit(1);}
 
-			//obtain file size:
 			fseek (fileIn , 0 , SEEK_END);
 			lSize = ftell (fileIn);
 
@@ -72,7 +69,7 @@ class FileManager {
 		 * Postcondiciones:
 		 *  -devuelve un FILE* apuntando al archivo de salida creado
 		 */
-		void createFileOut(char* filename, char* salida, unsigned int lenght){
+		void createFileOut(const char* filename, char* salida, unsigned int lenght){
 			FILE* fileOut = fopen(filename, "wb");
 			if (!fileOut){fputs ("FileOut error",stderr); exit(1);}
 

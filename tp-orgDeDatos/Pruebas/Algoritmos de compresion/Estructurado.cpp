@@ -28,7 +28,8 @@ nivel_t& nivel_crear(int nro_nivel){
         nivel->cant_por_nro.push_back(par_crear(0));
         nivel->numeroMaximoDelNivel = 0;
         total_ocurrencias++;
-    } else {
+    }
+    else{
         for (int i = pow(2, nro_nivel-1); i < pow(2, nro_nivel); i++){
             nivel->cant_por_nro.push_back(par_crear(i));
             nivel->numeroMaximoDelNivel = pow(2, nro_nivel)-1;
@@ -41,7 +42,6 @@ nivel_t& nivel_crear(int nro_nivel){
 
 void nivel_destruir(nivel_t& nivel){
     nivel.cant_por_nro.clear();
-    delete &nivel;
 }
 
 Estructurado::Estructurado(){
@@ -62,8 +62,9 @@ Estructurado::Estructurado(){
 }
 
 Estructurado::~Estructurado(){
-//    for (int i = 0; i < CANT_NIVELES; i++)
-//        nivel_destruir(niveles[i]);
+    for (int i = 0; i < CANT_NIVELES; i++){
+        nivel_destruir(niveles[i]);
+    }
     delete[] niveles;
 }
 
@@ -295,23 +296,23 @@ int Estructurado::obtenerNro(int nro_nivel){
     //Itera hasta que no hayan mas simbolos posibles por decodificar
     for(;;){
         if(high<Half){
-                //Nothing                       //Expand low half
+        	//Nothing                       //Expand low half
         }
-        else if(low>=Half){             //Expand high half
+        else if(low>=Half){            		//Expand high half
                 value -=Half;
-                low -=Half;                     //Subtract offset to top
+                low -=Half;                 //Subtract offset to top
                 high -=Half;
         }
         else if((low>=First_qtr)&&(high<Third_qtr)){    //Expand middle half
                 value -=First_qtr;
-                low -=First_qtr;                //SUbtract offset to middle
+                low -=First_qtr;            //Subtract offset to middle
                 high -=First_qtr;
         }
-        else break;                             //Otherwise exit loop
+        else break;                         //Otherwise exit loop
 
         low = 2*low;
-        high = 2*high+1;                        //Scale up code range
-        value = 2*value+leerBit();      //Move in next input bit
+        high = 2*high+1;                    //Scale up code range
+        value = 2*value+leerBit();     		//Move in next input bit
     }
     //Actualizar las frecuencias
     incrementarFrecuencias(nivel,simbolo);
@@ -349,25 +350,21 @@ void Estructurado::incrementarFrecuencias(nivel_t& nivel, int nro){
 }
 
 void Estructurado::verificarFrecuencias(nivel_t& nivel){
+	//Si no se supera el limite de frecuencias, salimos del metodo
+	if (nivel.total_ocurrencias < LIMITE_FRECUENCIAS) return;
 
-        //Si no se supera el limite de frecuencias, salimos del metodo
-        if (nivel.total_ocurrencias < LIMITE_FRECUENCIAS) return;
+	unsigned short frecuenciasTotales=0;
 
-        unsigned short frecuenciasTotales=0;
-
-        //Si se supera el limite, procedemos a normalizar las frecuencias del nivel, reduciendolas a la mitad
-    list<par_t*>::iterator numeroDelNivel = nivel.cant_por_nro.begin();
-    for (; numeroDelNivel != nivel.cant_por_nro.end(); numeroDelNivel++){
-
-        (*numeroDelNivel)->ocurrencias/=2;
-        //SI el numero normalizado queda en cero, lo seteamos a 1
-        if ((*numeroDelNivel)->ocurrencias == 0) (*numeroDelNivel)->ocurrencias = 1;
-
-        frecuenciasTotales+= (*numeroDelNivel)->ocurrencias;
-    }
-
-        //Actualiza las frecuencias totales del nivel
-        nivel.total_ocurrencias = frecuenciasTotales;
+	//Si se supera el limite, procedemos a normalizar las frecuencias del nivel, reduciendolas a la mitad
+	list<par_t*>::iterator numeroDelNivel = nivel.cant_por_nro.begin();
+	for (; numeroDelNivel != nivel.cant_por_nro.end(); numeroDelNivel++){
+		(*numeroDelNivel)->ocurrencias/=2;
+		//SI el numero normalizado queda en cero, lo seteamos a 1
+		if ((*numeroDelNivel)->ocurrencias == 0) (*numeroDelNivel)->ocurrencias = 1;
+		frecuenciasTotales+= (*numeroDelNivel)->ocurrencias;
+	}
+	//Actualiza las frecuencias totales del nivel
+	nivel.total_ocurrencias = frecuenciasTotales;
 }
 
 pair<unsigned short*, unsigned int> Estructurado::generar_resultado_d(){

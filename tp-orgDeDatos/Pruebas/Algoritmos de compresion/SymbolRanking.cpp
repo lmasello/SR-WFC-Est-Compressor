@@ -38,17 +38,15 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 			if (get<0> (tupla)) break;
 			ctxActual--;
 		}
-		if (ctxActual == 2){
-			tupla = busquedaLinealEnContexto(posCharToRank,ctxActual, aComprimir,'c',0); //El ultimo parametro (ranking) no se utiliza para el compresor, por lo tanto se lo pone en 0
-			cantidadDeNoOcurrencias += get<1> (tupla);
-			if (!get<0> (tupla)) ctxActual--;
-		}
-		if (ctxActual == 1){
+		while (ctxActual <= 2 && ctxActual > 0){
 			tupla = busquedaLinealEnContexto(posCharToRank,ctxActual, aComprimir,'c',0); //El ultimo parametro (ranking) no se utiliza para el compresor, por lo tanto se lo pone en 0
 			cantidadDeNoOcurrencias += get<1> (tupla);
 			if (!get<0> (tupla)){
-				cantidadDeNoOcurrencias += wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+				if(ctxActual == 1)
+					cantidadDeNoOcurrencias += wfc.comprimir(charToRank);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+				ctxActual--;
 			}
+			else break;
 		}
 		if(get<0>(tupla)) wfc.incrementarFrecuencia(charToRank);
 		if(posCharToRank >= posicionMinimaParaHashear){
@@ -87,19 +85,15 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 			rankToChar -= get<1> (tupla);
 			ctxActual--;
 		}
-		if (ctxActual == 2){
+		while (ctxActual <= 2 && ctxActual > 0){
 			tupla = busquedaLinealEnContexto(posRankToChar, ctxActual, salida, 'd', rankToChar);
 			if (!get<0> (tupla)){
 				rankToChar -= get<1> (tupla);
+				if(ctxActual == 1)
+					salida[posRankToChar] = wfc.descomprimir(rankToChar);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
 				ctxActual--;
 			}
-		}
-		if (ctxActual == 1){
-			tupla = busquedaLinealEnContexto(posRankToChar,ctxActual, salida, 'd', rankToChar); //Debe checkear en su implementacion que charToRank - NoOcurrencias sea 0. Si es 0, devuelve True, y el char siguiente al contexto. Si no es 0, sigue buscando y repite. Si se termino, devuelve False, y las NoOcurrencias.
-			if (!get<0> (tupla)){
-				rankToChar -= get<1> (tupla);
-				salida[posRankToChar] = wfc.descomprimir(rankToChar);	  // Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
-			}
+			else break;
 		}
 		//Nota: cuando la tupla me devuelve True, quiere decir que el segundo elemento es el caracter ofrecido por un contexto
 		// existente que matcheo. Por lo tanto, esto siempre va a ser un char
@@ -165,7 +159,6 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 		bool hayMatch=contextosIguales(contextAComparar,contextCharToRank,buffer,contexto);
 		if (hayMatch){
 			if(charNoExcluido(buffer[contextAComparar+contexto])){
-
 				if(operacion=='c'){
 					bool esElBuscado = charsIguales(contextAComparar+contexto, buffer[posCharToRank], buffer);
 					if(esElBuscado){
@@ -192,10 +185,6 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 	get<0> (tupla) = false;
 	get<1> (tupla) = cantidadDeNoOcurrencias;
 	return tupla;
-}
-
-void SymbolRanking::resetHashMap(){
-	hashmap.reset();
 }
 
 list<unsigned int>* SymbolRanking::getListOfPositions(char* buffer, unsigned int posFirst){

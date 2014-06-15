@@ -59,9 +59,6 @@ class SymbolRanking{
 		 */
 		tuple<bool,unsigned short> busquedaLinealEnContexto(unsigned int posCharToRank,unsigned short orden, char* buffer, char operacion,unsigned short ranking);
 
-		/* Resetea los hashmaps */
-		void resetHashMap();
-
 		/* Devuelve la lista correspondiente a la clave conformada por el string entre el caracter en
 		 * la posicion posFirst del buffer, y el siguiente. */
 		list<unsigned int>* getListOfPositions(char* buffer, unsigned int posFirst);
