@@ -83,8 +83,6 @@ pair<char*, unsigned int> Estructurado::comprimir(short* aComprimir, unsigned in
         if(numeroAComprimir == 0) nivel_indice = 0;
         else nivel_indice = int(log2(numeroAComprimir)) + 1;
 
-        //cout<<"Nro: "<<numeroAComprimir<<endl;
-
         int nivel_act = NIVEL_INICIAL;
         for (; nivel_act < nivel_indice; nivel_act++){
             emitirEscape(nivel_act, i);
@@ -190,9 +188,6 @@ void Estructurado::finalizarCompresion(unsigned short low){
     }
 }
 pair<char*, unsigned int> Estructurado::generar_resultado_c(){
-        //cout<<"Resultado: "<<endl;
-        //for(int i=0; i<resultado->length();i++) cout<<(int)(*resultado)[i]<<' '<<i+1<<endl;
-
         flushByteBuffer();
 
         size_t tam = resultado->length();

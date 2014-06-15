@@ -120,33 +120,22 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 	tuple<bool, unsigned short> tupla;
 	list<unsigned int>* listOfPositions = getListOfPositions(buffer, posCharToRank-3);
 
- //   cout<<"Se realiza la busqueda de contextos iguales de orden " << orden <<endl;
-
 	for (auto posDeMatch : *listOfPositions){
 		bool hayMatch;
 		if (posDeMatch < unsigned (orden-offsetDelHash)) hayMatch = false;
 		else hayMatch = hashingIguales(hashingAComparar, posDeMatch+offsetDelHash-orden, buffer);
 
 		if (hayMatch){
-
-//			cout<<"Hay match de orden " << orden << " entre las posiciones: " << *posDeMatch+(offsetDelHash-orden) << " y " << *posDeMatch+2 << endl;
-
 			if(charNoExcluido(buffer[posDeMatch+offsetDelHash])){
 				if(operacion=='c'){
-//					cout<<"Char a rankear: "<<buffer[posCharToRank]<<endl;
 					bool esElBuscado = charsIguales(posDeMatch + offsetDelHash, buffer[posCharToRank], buffer);
 					if (esElBuscado){
 						get<0> (tupla) = true;
 						get<1> (tupla) = cantidadDeNoOcurrencias;
-
-//						cout<<"El caracter ofrecido del contexto " << *posDeMatch << " matchea con el caracter a rankear" << endl;
-//						cout<<"El numero de no ocurrencias hasta encontrar el match fue de: " << cantidadDeNoOcurrencias << endl;
-
 						return tupla;
 					}
 				}
 				else if(operacion=='d'){
-//					cout<<"ranking: "<<ranking<<endl;
 					if(ranking==0){ //El char ofrecido es el descomprimido!
 						unsigned short charDelRanking = (unsigned short) buffer[posDeMatch+offsetDelHash];
 						get<0> (tupla) = true;
@@ -156,13 +145,9 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 					ranking--;
 				}
 				else throw ErrorDeParametro();
-
-//				cout<<"El caracter ofrecido no es el buscado, por lo tanto se agrega "<<buffer[*posDeMatch+offsetDelHash]<< " a la lista de exclusion" << endl;
-
 				exclusionList.push_front(buffer[posDeMatch+offsetDelHash]);
 				cantidadDeNoOcurrencias++;
 			}
-//			else cout<<"char excluido"<<endl;
 		}
 	}
 	get<0> (tupla) = false;
@@ -175,32 +160,23 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 	unsigned int contextCharToRank = posCharToRank-contexto;
 	unsigned short cantidadDeNoOcurrencias = 0;
 
-//	cout<<"Realiza busqueda lineal en ctx "<<contexto<<endl;
-
 	for(unsigned int i = contexto+1; i <= posCharToRank; i++){
 		unsigned int contextAComparar = posCharToRank-i;
 		bool hayMatch=contextosIguales(contextAComparar,contextCharToRank,buffer,contexto);
 		if (hayMatch){
-
-//			cout<<"Hay match en posicion "<<contextAComparar<<endl;
-
 			if(charNoExcluido(buffer[contextAComparar+contexto])){
 
 				if(operacion=='c'){
 					bool esElBuscado = charsIguales(contextAComparar+contexto, buffer[posCharToRank], buffer);
 					if(esElBuscado){
-//						cout<<"Devuelve: (true,"<<cantidadDeNoOcurrencias<<");"<<endl;
-
 						get<0> (tupla) = true;
 						get<1> (tupla) = cantidadDeNoOcurrencias;
 						return tupla;
 					}
 				}
 				else if(operacion=='d'){
-//					cout<<"ranking: "<<ranking<<endl;
 					if(ranking==0){ //El char ofrecido es el que hay que descomprimir
 						unsigned short charDelRanking = (unsigned short) buffer[contextAComparar+contexto];
-//						cout<< "char del ranking: "<< buffer[contextAComparar+contexto]<<" pos: "<< contextAComparar+contexto<< " casteado: "<<charDelRanking<<endl;
 						get<0> (tupla) = true;
 						get<1> (tupla) = charDelRanking;
 						return tupla;
@@ -211,12 +187,10 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 				exclusionList.push_front(buffer[contextAComparar+contexto]);
 				cantidadDeNoOcurrencias++;
 			}
-//			else cout<<"char excluido"<<endl;
 		}
 	}
 	get<0> (tupla) = false;
 	get<1> (tupla) = cantidadDeNoOcurrencias;
-//	cout<<"Devuelve: (false,"<<cantidadDeNoOcurrencias<<");"<<endl;
 	return tupla;
 }
 

@@ -17,12 +17,12 @@ pair<char*, unsigned int> Compresor::comprimir(char* buffer, unsigned int size){
 
 	sr.comprimir(buffer, salida, size);
 
-	cout<<"SymbolRanking ha finalizado el proceso de compresion correctamente" << endl << "Salida:" <<endl;
+	cout<<"SymbolRanking ha finalizado el proceso de compresion correctamente" << endl;
 
 	calculoEntropiaSalidaSR(salida,size);
 
 	Estructurado estructurado;
-	cout << "Comenzando el proceso de descompresion por Estructurado" << endl;
+	cout << "Comenzando el proceso de compresion por Estructurado" << endl;
 	return estructurado.comprimir(salida, size);
 }
 
@@ -32,6 +32,7 @@ pair<char*, unsigned int> Compresor::descomprimir(char* entrada, unsigned int si
 	Estructurado estructurado;
 	cout << "Comenzando el proceso de descompresion por Estructurado" << endl;
 	pair<unsigned short*, unsigned int> aDescomprimir = estructurado.descomprimir(entrada, size);
+	cout<<"Estructurado ha finalizado el proceso de descompresion correctamente" << endl;
 
 	char* salida = new char[aDescomprimir.second];
 	if (salida == NULL) {fputs ("Memory error",stderr); exit (2);}
@@ -41,10 +42,9 @@ pair<char*, unsigned int> Compresor::descomprimir(char* entrada, unsigned int si
 	SymbolRanking sr(ORDEN);
 
 	cout << "Comenzando el proceso de descompresion por SymbolRanking" << endl;
-
 	sr.descomprimir(aDescomprimir.first, salida, aDescomprimir.second);
-
 	cout << "SymbolRanking ha finalizado el proceso de descompresion correctamente"<<endl;
+
 	pair<char*, unsigned int> parSalida;
 	parSalida.first = salida;
 	parSalida.second = aDescomprimir.second;
