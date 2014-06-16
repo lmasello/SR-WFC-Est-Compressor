@@ -18,6 +18,9 @@ par_t* par_crear(int nro){
     return par_nro;
 }
 
+void par_destruir(par_t* par){
+}
+
 nivel_t& nivel_crear(int nro_nivel){
     nivel_t* nivel = new nivel_t;
 
@@ -40,8 +43,15 @@ nivel_t& nivel_crear(int nro_nivel){
     return *nivel;
 }
 
-void nivel_destruir(nivel_t& nivel){
-    nivel.cant_por_nro.clear();
+void nivel_destruir(nivel_t* nivel){
+	list<par_t*>::iterator iter;
+	iter = nivel->cant_por_nro.begin();
+	while(iter != nivel->cant_por_nro.end()){
+		par_destruir(*iter);
+		delete *iter;
+		iter++;
+	}
+    nivel->cant_por_nro.clear();
 }
 
 Estructurado::Estructurado(){
@@ -63,7 +73,7 @@ Estructurado::Estructurado(){
 
 Estructurado::~Estructurado(){
     for (int i = 0; i < CANT_NIVELES; i++){
-        nivel_destruir(niveles[i]);
+        nivel_destruir(&(niveles[i]));
     }
     delete[] niveles;
     delete strEntrada;

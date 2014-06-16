@@ -9,9 +9,10 @@ HashMap::HashMap(){
 }
 
 HashMap::~HashMap(){
-	for (int i = 0; i < TABLE_SIZE; i++)
+	for (int i = 0; i < TABLE_SIZE; i++){
 		if (table[i])
 			delete table[i];
+	}
 	delete[] table;
 }
 

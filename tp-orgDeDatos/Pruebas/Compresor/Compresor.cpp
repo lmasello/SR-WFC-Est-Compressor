@@ -57,14 +57,14 @@ pair<char*, unsigned int> Compresor::descomprimir(char* entrada, unsigned int si
 
 void Compresor::calculoEntropia(char* buffer,unsigned int size){
 	float entropia = 0;
-	float Pi;
-	int fcaracteres[255];
-	for(unsigned int i = 0; i<256;i++) fcaracteres[i] = 0;
-	for(unsigned int j = 0; j < size; j++) fcaracteres[(int)buffer[j]]++;
+	float Pi = 0;  //Probabilidad de i.
+	int fcaracteres[256];
+	for(int i = 0; i < 256; i++) fcaracteres[i] = 0;
 
-	entropia = 0;
-	Pi = 0;
-	for(int i = 0; i < 255; i++){
+	for(unsigned int i = 0; i < size; i++)
+		fcaracteres[(unsigned) buffer[i]]++;
+
+	for(int i = 0; i < 256; i++){
 		if(fcaracteres[i] == 0) continue;
 		Pi = fcaracteres[i]/(float)size;
 		float elLog = (-(log(Pi)/log(2)));
@@ -73,19 +73,40 @@ void Compresor::calculoEntropia(char* buffer,unsigned int size){
 	cout << "Entropia de entrada: H = " << entropia << endl;
 }
 void Compresor::calculoEntropiaSalidaSR(short* salida,unsigned int size){
-	float entropia = 0;
-	float Pi = 0;  //Probabilidad de i.
-	int fcaracteres[512];
-	for(int i = 0; i < 512; i++) fcaracteres[i] = 0;
+    float entropia = 0;
+    float Pi;
+    int fcaracteres[1024];
+    int fniveles[10];
+    for(int i = 0; i < 10; i++) fniveles[i] = 0;
+    for(int i = 0; i < 1024; i++) fcaracteres[i] = 0;
 
-	for(unsigned int i = 0; i < size; i++)
-		fcaracteres[(unsigned char) salida[i]]++;
+    for(unsigned int i = 0; i < size; i++){
 
-	for(int i = 0; i < 512; i++){
+            fcaracteres[salida[i]]++;
+
+            if     (salida[i] == 0)  fniveles[0]++;
+            else if(salida[i] == 1)  fniveles[1]++;
+            else if(salida[i] < 4)   fniveles[2]++;
+            else if(salida[i] < 8)   fniveles[3]++;
+            else if(salida[i] < 16)  fniveles[4]++;
+            else if(salida[i] < 32)  fniveles[5]++;
+            else if(salida[i] < 64)  fniveles[6]++;
+            else if(salida[i] < 128) fniveles[7]++;
+            else if(salida[i] < 256) fniveles[8]++;
+            else 					 fniveles[9]++;
+    }
+    int contador = 0;
+    for(int i = 0; i<10; i++){
+            cout << "Nivel" << i << " - " << fniveles[i] << endl;
+            contador += fniveles[i];
+    }
+    entropia = 0;
+    Pi = 0;
+    for(int i = 0; i < 1024; i++){
 		if(fcaracteres[i] == 0) continue;
-		Pi = fcaracteres[i]/(float)size;
+		Pi = fcaracteres[i]/(float)contador;
 		float elLog = (-(log(Pi)/log(2)));
 		entropia += Pi*elLog;
-	}
+    }
 	cout << "Entropia de salida: H = " << entropia << endl;
 }

@@ -8,7 +8,7 @@ using namespace std;
 
 const char* crearFileOutC(const char* fileIn){
 	string strFileOut(fileIn);
-	strFileOut += ".11";
+	strFileOut += GRP_NUMBER;
 	return &strFileOut[0];
 }
 
