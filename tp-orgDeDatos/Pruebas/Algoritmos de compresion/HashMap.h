@@ -15,6 +15,10 @@ class HashEntry {
 			this->value = value;
 		}
 
+		~HashEntry(){
+			this->value->clear();
+		}
+
 		list<unsigned int>* getValue() {
 			return value;
 		}

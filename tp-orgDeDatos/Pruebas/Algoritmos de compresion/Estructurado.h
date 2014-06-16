@@ -31,7 +31,7 @@ class Estructurado {
          * de dicho nivel, contemplando que el intervalo del numero maximo se encuentra entre [techo(NumMax-1),cantTotalDeOcurrencias].
          * DIcha frecuencia va a ser un numero que entre en 16 bits gracias al metodo verificarFrecuencias
          *  */
-        unsigned short frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i);
+        unsigned short frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro);
 
         /* Incrementa la frecuencia del numero dentro del nivel, asi como tambien incrementa la cantidad de ocurrencias
          * de dicho nivel */
@@ -44,19 +44,19 @@ class Estructurado {
         /*
          * Emite un ESC
          */
-        void emitirEscape(int nivel, int i);
+        void emitirEscape(int nivel);
 
         /*
          * Va almacenando en el atributo resultado, los bits que representan la probabilidad con la cual se comprime el parametro nro, en el
          * nro_nivel determinado.
          * La logica de procesamiento se basa en http://www.arturocampos.com/ac_arithmetic.html
          */
-        void emitirNro(int nro_nivel, int nro, int i); //Acordarse de quitar la variable i luego de debbugear
+        void emitirNro(int nro_nivel, int nro); //Acordarse de quitar la variable i luego de debbugear
 
         /*
          * Emite un EOF.
          */
-        void emitirEOF(int i);
+        void emitirEOF();
 
         /*
          * Devuelve el simbolo representado por una tira de bits del archivo a descomprimir.

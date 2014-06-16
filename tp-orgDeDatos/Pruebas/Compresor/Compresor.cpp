@@ -1,37 +1,43 @@
 #include "Compresor.h"
-#include "../Algoritmos de compresion/SymbolRanking.h"
-#include "../Algoritmos de compresion/Estructurado.h"
 
-Compresor::Compresor(){}
+Compresor::Compresor(){
+	sr = new SymbolRanking(ORDEN);
+	estructurado = new Estructurado();
+}
+
+Compresor::~Compresor(){
+	delete sr;
+	delete estructurado;
+}
 
 pair<char*, unsigned int> Compresor::comprimir(char* buffer, unsigned int size){
 
 	calculoEntropia(buffer,size);
 
-	SymbolRanking sr (ORDEN);
-
-	short *salida = (short*) malloc (sizeof(short) * size);
+	short* salida = new short[size];
 	if (salida == NULL) {fputs ("Memory error",stderr); exit (2);}
 
 	cout<<"Comenzando proceso de compresion por SymbolRanking de orden: " << ORDEN << endl;
 
-	sr.comprimir(buffer, salida, size);
+	//Comprimimos con SR.
+	sr->comprimir(buffer, salida, size);
 
 	cout<<"SymbolRanking ha finalizado el proceso de compresion correctamente" << endl;
 
 	calculoEntropiaSalidaSR(salida,size);
 
-	Estructurado estructurado;
 	cout << "Comenzando el proceso de compresion por Estructurado" << endl;
-	return estructurado.comprimir(salida, size);
+
+	//Comprimimos con Estructurado y retornamos.
+	return estructurado->comprimir(salida, size);
 }
 
 pair<char*, unsigned int> Compresor::descomprimir(char* entrada, unsigned int size){
-//Deberia ser una sucesion de pasos inversa a la de comprimir
 
-	Estructurado estructurado;
 	cout << "Comenzando el proceso de descompresion por Estructurado" << endl;
-	pair<unsigned short*, unsigned int> aDescomprimir = estructurado.descomprimir(entrada, size);
+
+	//Descomprimimos con Estructurado
+	pair<unsigned short*, unsigned int> aDescomprimir = estructurado->descomprimir(entrada, size);
 	cout<<"Estructurado ha finalizado el proceso de descompresion correctamente" << endl;
 
 	char* salida = new char[aDescomprimir.second];
@@ -39,15 +45,13 @@ pair<char*, unsigned int> Compresor::descomprimir(char* entrada, unsigned int si
 
 	calculoEntropiaSalidaSR((short*) aDescomprimir.first, aDescomprimir.second);
 
-	SymbolRanking sr(ORDEN);
-
 	cout << "Comenzando el proceso de descompresion por SymbolRanking" << endl;
-	sr.descomprimir(aDescomprimir.first, salida, aDescomprimir.second);
+	//Descomprimimos con SR.
+
+	sr->descomprimir(aDescomprimir.first, salida, aDescomprimir.second);
 	cout << "SymbolRanking ha finalizado el proceso de descompresion correctamente"<<endl;
 
-	pair<char*, unsigned int> parSalida;
-	parSalida.first = salida;
-	parSalida.second = aDescomprimir.second;
+	pair<char*, unsigned int> parSalida (salida, aDescomprimir.second);
 	return parSalida;
 }
 

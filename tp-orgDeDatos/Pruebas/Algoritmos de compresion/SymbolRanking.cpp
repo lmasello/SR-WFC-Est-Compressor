@@ -4,6 +4,8 @@ SymbolRanking::SymbolRanking(unsigned short ctxorden){
 	ordenMaximo = ctxorden;
 }
 
+SymbolRanking::~SymbolRanking(){}
+
 void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size){
 	/* Busca el contexto con un orden maximo. Si devuelve (true,x) almacenamos x en el
 	* vector y avanzamos. Si devuelve (false,x) se busca contexto de orden n-1.

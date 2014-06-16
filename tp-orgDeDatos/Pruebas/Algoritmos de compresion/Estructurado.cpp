@@ -66,6 +66,8 @@ Estructurado::~Estructurado(){
         nivel_destruir(niveles[i]);
     }
     delete[] niveles;
+    delete strEntrada;
+    delete resultado;
 }
 
 void Estructurado::prepararCompresion(){
@@ -86,15 +88,15 @@ pair<char*, unsigned int> Estructurado::comprimir(short* aComprimir, unsigned in
 
         int nivel_act = NIVEL_INICIAL;
         for (; nivel_act < nivel_indice; nivel_act++){
-            emitirEscape(nivel_act, i);
+            emitirEscape(nivel_act);
         }
-        emitirNro(nivel_act, numeroAComprimir, i);
+        emitirNro(nivel_act, numeroAComprimir);
     }
-    emitirEOF(0);
+    emitirEOF();
     return generar_resultado_c();
 }
 
-void Estructurado::emitirNro(int nro_nivel, int nro, int i){
+void Estructurado::emitirNro(int nro_nivel, int nro){
     nivel_t& nivel = niveles[nro_nivel];
     //Evaluamos el numero siguiente al numero a comprimir
     int nro_sig;
@@ -102,8 +104,8 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     else nro_sig = (nro == NRO_ESCAPE) ? (pow(2, nro_nivel-1)) : nro+1;
 
     //Calculamos las frecuencias
-    unsigned short frecuenciaTechoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, i);
-    unsigned short frecuenciaPisoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro, i);
+    unsigned short frecuenciaTechoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro_sig);
+    unsigned short frecuenciaPisoDelNumeroAComprimir = frecuenciaAcumuladaHastaElNumero(nivel,nro);
     unsigned short frecuenciaTotal = nivel.total_ocurrencias;
 
     //Calculamos los valores de frontera
@@ -146,13 +148,13 @@ void Estructurado::emitirNro(int nro_nivel, int nro, int i){
     incrementarFrecuencias(nivel,nro);
 }
 
-void Estructurado::emitirEscape(int nivel, int i){
-    emitirNro(nivel, NRO_ESCAPE, i);
+void Estructurado::emitirEscape(int nivel){
+    emitirNro(nivel, NRO_ESCAPE);
 }
 
-void Estructurado::emitirEOF(int j){
+void Estructurado::emitirEOF(){
     for (int i = 0; i < CANT_NIVELES; i++)
-        emitirEscape(i, j);
+        emitirEscape(i);
 }
 
 void Estructurado::emitirBit(bool bit){
@@ -281,11 +283,11 @@ int Estructurado::obtenerNro(int nro_nivel){
         else nro_sig = (numeroAEvaluar == NRO_ESCAPE) ? (pow(2, nro_nivel-1)) : numeroAEvaluar+1;
 
         // temp esta en el rango del numeroAEvaluar?
-        unsigned short frecuenciaTechoDelNumero = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,nro_sig, posEnStrEntrada); //Luego de debbugear quitar posEnStrEntrada
+        unsigned short frecuenciaTechoDelNumero = frecuenciaAcumuladaHastaElNumero(nivel,nro_sig);
         if (frecuenciaTechoDelNumero > temp) {
 			simbolo = numeroAEvaluar;
             frecuenciaTechoDelSimbolo = frecuenciaTechoDelNumero;
-            frecuenciaPisoDelSimbolo = frecuenciaAcumuladaHastaElNumero(nivel,nro_nivel,numeroAEvaluar, posEnStrEntrada);
+            frecuenciaPisoDelSimbolo = frecuenciaAcumuladaHastaElNumero(nivel,numeroAEvaluar);
             break;
         }
     }
@@ -324,7 +326,7 @@ bool Estructurado::leerBit(){
         return (bool)(*strEntrada)[posEnStrEntrada-1];
 }
 
-unsigned short Estructurado::frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro_nivel,int nro, int i){
+unsigned short Estructurado::frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro){
     unsigned short frecuenciaPisoDelNumero=0; //Con el verificarFrecuencias, nos aseguramos que no tendremos frecuencias mayores a 16 bits
 
     //Caso de que se pida la frec del max numero del nivel

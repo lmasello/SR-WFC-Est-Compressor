@@ -47,11 +47,11 @@ int main(int argc,char *argv[]){
 
 	pair<char*, unsigned int> parSalida;
 
-	Compresor compresor;
+	Compresor *compresor = new Compresor();
 
 	if (*operacionARealizar == 'c'){
 
-		parSalida = compresor.comprimir(buffer,size);
+		parSalida = compresor->comprimir(buffer,size);
 
 		fileOut = crearFileOutC(fileIn);
 
@@ -64,7 +64,7 @@ int main(int argc,char *argv[]){
 
 	else if(*operacionARealizar=='d'){
 
-		parSalida = compresor.descomprimir(buffer, size);
+		parSalida = compresor->descomprimir(buffer, size);
 
 		fileOut = crearFileOutD(fileIn);
 
@@ -78,6 +78,8 @@ int main(int argc,char *argv[]){
 	else help();
 
 	delete[] buffer;
+	delete[] parSalida.first;
+	delete compresor;
 
 	// Report result
 	printf("\n%s to %s in %1.2f sec.\n",
