@@ -32,6 +32,8 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 	//Siguientes caracteres
 	for (unsigned int posCharToRank = ordenMaximo; posCharToRank< size; posCharToRank++){
 
+		if (posCharToRank%100000 == 0) cout << posCharToRank/1000 << endl;
+
 		charToRank = aComprimir[posCharToRank];
 		exclusionList.clear();
 		cantidadDeNoOcurrencias = 0;
@@ -158,7 +160,10 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 	unsigned int contextCharToRank = posCharToRank-contexto;
 	unsigned short cantidadDeNoOcurrencias = 0;
 
-	for(unsigned int i = contexto+1; i <= posCharToRank; i++){
+	unsigned int maximo = 100000;
+	if(posCharToRank < maximo) maximo = posCharToRank;
+
+	for(unsigned int i = contexto+1; i <= maximo; i++){
 		unsigned int contextAComparar = posCharToRank-i;
 		bool hayMatch=contextosIguales(contextAComparar,contextCharToRank,buffer,contexto);
 		if (hayMatch){

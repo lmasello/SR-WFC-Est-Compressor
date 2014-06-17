@@ -24,10 +24,9 @@
 typedef std::bitset<8> Byte;
 
 /* Variables del estructurado */
-#define CANT_NIVELES 10
+#define CANT_NIVELES 11
 #define OCURRENCIAS_INICIAL 1
 #define NRO_ESCAPE -1
-#define NRO_EOF 256
 #define NIVEL_INICIAL 0
 
 

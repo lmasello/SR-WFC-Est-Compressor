@@ -76,7 +76,7 @@ void Compresor::calculoEntropiaSalidaSR(short* salida,unsigned int size){
     float entropia = 0;
     float Pi;
     int fcaracteres[1024];
-    int fniveles[10];
+    int fniveles[11];
     for(int i = 0; i < 10; i++) fniveles[i] = 0;
     for(int i = 0; i < 1024; i++) fcaracteres[i] = 0;
 
@@ -93,10 +93,11 @@ void Compresor::calculoEntropiaSalidaSR(short* salida,unsigned int size){
             else if(salida[i] < 64)  fniveles[6]++;
             else if(salida[i] < 128) fniveles[7]++;
             else if(salida[i] < 256) fniveles[8]++;
-            else 					 fniveles[9]++;
+            else if(salida[i] < 512) fniveles[9]++;
+            else 					 fniveles[10]++;
     }
     int contador = 0;
-    for(int i = 0; i<10; i++){
+    for(int i = 0; i<11; i++){
             cout << "Nivel" << i << " - " << fniveles[i] << endl;
             contador += fniveles[i];
     }

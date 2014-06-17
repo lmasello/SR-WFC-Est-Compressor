@@ -19,7 +19,7 @@ const char* crearFileOutD(const char* fileIn){
 }
 
 void help(){
-	cout << "Parametros: TpGrupo11 c/d FileIn" << endl;
+	cout << "Parametros: TpGrupo11 -c/-d FileIn" << endl;
 	fputs ("Parameter error\n",stderr); exit(1);
 }
 
@@ -49,7 +49,8 @@ int main(int argc,char *argv[]){
 
 	Compresor *compresor = new Compresor();
 
-	if (*operacionARealizar == 'c'){
+	if(!operacionARealizar[0] == '-') help();
+	if (operacionARealizar[1] == 'c'){
 
 		parSalida = compresor->comprimir(buffer,size);
 
@@ -62,7 +63,7 @@ int main(int argc,char *argv[]){
 		cout << "El proceso de compresion a finalizado satisfactoriamente." << endl;
 	}
 
-	else if(*operacionARealizar=='d'){
+	else if(operacionARealizar[1] == 'd'){
 
 		parSalida = compresor->descomprimir(buffer, size);
 

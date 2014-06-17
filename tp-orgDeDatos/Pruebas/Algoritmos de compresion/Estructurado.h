@@ -8,11 +8,7 @@
 #include <bitset>
 #include "constantes.h"
 
-#define CANT_NIVELES 10
 #define OCURRENCIAS_INICIAL 1
-#define NRO_ESCAPE -1
-#define NRO_EOF 256
-#define NIVEL_INICIAL 0
 #define LIMITE_FRECUENCIAS Max_frequency // 2 ^14. Ver la seccion 'Gathering the probabilities' de http://www.arturocampos.com/ac_arithmetic.html
 
 using namespace std;

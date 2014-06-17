@@ -8,7 +8,7 @@
 #include <cstddef>
 #include "../Algoritmos de compresion/SymbolRanking.h"
 #include "../Algoritmos de compresion/Estructurado.h"
-#define ORDEN 6
+#define ORDEN 1
 using namespace std;
 
 
