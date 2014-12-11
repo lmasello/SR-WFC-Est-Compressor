@@ -112,7 +112,7 @@ class Estructurado {
 
     private:
         string strEntrada;
-        string* resultado;
+        string resultado;
         list<unsigned short>* resultado_d;
         bitset<8> byteBuffer;
         unsigned short contadorBits_;

@@ -57,7 +57,6 @@ void nivel_destruir(nivel_t* nivel){
 Estructurado::Estructurado(){
 	value = 0;
 	posEnStrEntrada = 0;
-	resultado = new string;
     high = 0xffff; //16 bits
     low = 0x0000;  //16 bits
     underflow = 0;
@@ -75,7 +74,6 @@ Estructurado::~Estructurado(){
         nivel_destruir(&(niveles[i]));
     }
     delete[] niveles;
-    delete resultado;
 }
 
 void Estructurado::prepararCompresion(){
@@ -176,7 +174,7 @@ void Estructurado::emitirBit(bool bit){
 			contadorBits_ = 0;
 			unsigned long i = byteBuffer.to_ulong();
 			unsigned char byteAGuardar = static_cast<unsigned char>( i );
-			resultado->push_back(byteAGuardar);
+			resultado.push_back(byteAGuardar);
         }
 }
 
@@ -201,13 +199,13 @@ void Estructurado::finalizarCompresion(unsigned short low){
 pair<char*, unsigned int> Estructurado::generar_resultado_c(){
         flushByteBuffer();
 
-        size_t tam = resultado->length();
+        size_t tam = resultado.length();
         char* salida = new char[tam];
         for (unsigned int i=0; i<tam; i++){
-			char aGuardar = (*resultado)[i];
+			char aGuardar = resultado[i];
 			salida[i] = aGuardar;
         }
-        pair <char*, unsigned int> par (salida, resultado->length());
+        pair <char*, unsigned int> par (salida, resultado.length());
         return par;
 }
 
@@ -223,7 +221,7 @@ void Estructurado::flushByteBuffer(){
             contadorBits_ = 0;
 			unsigned long i = byteBuffer.to_ulong();
 			unsigned char byteAGuardar = static_cast<unsigned char>( i );
-			resultado->push_back(byteAGuardar);
+			resultado.push_back(byteAGuardar);
         }
     }
 }
