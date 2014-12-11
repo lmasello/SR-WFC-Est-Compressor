@@ -111,7 +111,7 @@ class Estructurado {
         void flushByteBuffer();
 
     private:
-        string* strEntrada;
+        string strEntrada;
         string* resultado;
         list<unsigned short>* resultado_d;
         bitset<8> byteBuffer;

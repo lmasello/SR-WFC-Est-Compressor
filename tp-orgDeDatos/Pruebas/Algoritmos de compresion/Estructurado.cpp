@@ -58,7 +58,6 @@ Estructurado::Estructurado(){
 	value = 0;
 	posEnStrEntrada = 0;
 	resultado = new string;
-	strEntrada = new string; //Se usa solo para la descompresion.
     high = 0xffff; //16 bits
     low = 0x0000;  //16 bits
     underflow = 0;
@@ -76,7 +75,6 @@ Estructurado::~Estructurado(){
         nivel_destruir(&(niveles[i]));
     }
     delete[] niveles;
-    delete strEntrada;
     delete resultado;
 }
 
@@ -247,7 +245,7 @@ void Estructurado::generarEntrada(char* entrada, unsigned int size){
 				unsigned char actual = entrada[i];
 				actual <<= j;
 				actual >>= 7;
-				*strEntrada += (int) actual;
+				strEntrada += (int) actual;
 			}
         }
 }
@@ -333,7 +331,7 @@ int Estructurado::obtenerNro(int nro_nivel){
 
 bool Estructurado::leerBit(){
         posEnStrEntrada++;
-        return (bool)(*strEntrada)[posEnStrEntrada-1];
+        return (bool)strEntrada[posEnStrEntrada-1];
 }
 
 unsigned short Estructurado::frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro){
