@@ -120,33 +120,35 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden,
 	tuple<bool, unsigned short> tupla;
 	list<unsigned int>* listOfPositions = getListOfPositions(buffer, posCharToRank-3);
 
-	for (auto posDeMatch : *listOfPositions){
-		bool hayMatch;
-		if (posDeMatch < unsigned (orden-offsetDelHash)) hayMatch = false;
-		else hayMatch = hashingIguales(hashingAComparar, posDeMatch+offsetDelHash-orden, buffer);
+	if(listOfPositions) {
+		for (auto posDeMatch : *listOfPositions){
+			bool hayMatch;
+			if (posDeMatch < unsigned (orden-offsetDelHash)) hayMatch = false;
+			else hayMatch = hashingIguales(hashingAComparar, posDeMatch+offsetDelHash-orden, buffer);
 
-		if (hayMatch){
-			if(charNoExcluido(buffer[posDeMatch+offsetDelHash])){
-				if(operacion=='c'){
-					bool esElBuscado = charsIguales(posDeMatch + offsetDelHash, buffer[posCharToRank], buffer);
-					if (esElBuscado){
-						get<0> (tupla) = true;
-						get<1> (tupla) = cantidadDeNoOcurrencias;
-						return tupla;
+			if (hayMatch){
+				if(charNoExcluido(buffer[posDeMatch+offsetDelHash])){
+					if(operacion=='c'){
+						bool esElBuscado = charsIguales(posDeMatch + offsetDelHash, buffer[posCharToRank], buffer);
+						if (esElBuscado){
+							get<0> (tupla) = true;
+							get<1> (tupla) = cantidadDeNoOcurrencias;
+							return tupla;
+						}
 					}
-				}
-				else if(operacion=='d'){
-					if(ranking==0){ //El char ofrecido es el descomprimido!
-						unsigned short charDelRanking = (unsigned short) buffer[posDeMatch+offsetDelHash];
-						get<0> (tupla) = true;
-						get<1> (tupla) = charDelRanking;
-						return tupla;
+					else if(operacion=='d'){
+						if(ranking==0){ //El char ofrecido es el descomprimido!
+							unsigned short charDelRanking = (unsigned short) buffer[posDeMatch+offsetDelHash];
+							get<0> (tupla) = true;
+							get<1> (tupla) = charDelRanking;
+							return tupla;
+						}
+						ranking--;
 					}
-					ranking--;
+					else throw ErrorDeParametro();
+					exclusionList.push_front(buffer[posDeMatch+offsetDelHash]);
+					cantidadDeNoOcurrencias++;
 				}
-				else throw ErrorDeParametro();
-				exclusionList.push_front(buffer[posDeMatch+offsetDelHash]);
-				cantidadDeNoOcurrencias++;
 			}
 		}
 	}
@@ -160,7 +162,7 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 	unsigned int contextCharToRank = posCharToRank-contexto;
 	unsigned short cantidadDeNoOcurrencias = 0;
 
-	unsigned int maximo = 100000;
+	unsigned int maximo = 204800;
 	if(posCharToRank < maximo) maximo = posCharToRank;
 
 	for(unsigned int i = contexto+1; i <= maximo; i++){

@@ -2,24 +2,12 @@
 #include <iomanip>
 #include "FileManager/FileManager.h"
 #include "Compresor/Compresor.h"
-#define GRP_NUMBER ".11"
+#include <string.h>
 
 using namespace std;
 
-const char* crearFileOutC(const char* fileIn){
-	string strFileOut(fileIn);
-	strFileOut += GRP_NUMBER;
-	return &strFileOut[0];
-}
-
-const char* crearFileOutD(const char* fileIn){
-	string strFileOut(fileIn);
-	strFileOut.erase(strFileOut.end()-3, strFileOut.end());
-	return &strFileOut[0];
-}
-
 void help(){
-	cout << "Parametros: TpGrupo11 -c/-d FileIn" << endl;
+	cout << "Parametros: executable c/d FileIn FileOut" << endl;
 	fputs ("Parameter error\n",stderr); exit(1);
 }
 
@@ -28,13 +16,13 @@ int main(int argc,char *argv[]){
 	//Variables de argv--> comprime/descomprime, archivo entrada, archivo salida
 	//Ver opcion de que el usuario indique el orden del contexto maximo.
 
-	if(argc != 3){
+	if(argc != 4){
 		help();
 	}
 
 	const char* operacionARealizar = argv[1];
 	const char* fileIn = argv[2];
-	const char* fileOut;
+	const char* fileOut = argv[3];
 
 	// Get start time
 	clock_t start=clock();
@@ -49,12 +37,9 @@ int main(int argc,char *argv[]){
 
 	Compresor *compresor = new Compresor();
 
-	if(!operacionARealizar[0] == '-') help();
-	if (operacionARealizar[1] == 'c'){
+	if (strcmp(operacionARealizar,"c") == 0){
 
 		parSalida = compresor->comprimir(buffer,size);
-
-		fileOut = crearFileOutC(fileIn);
 
 		/* Luego de la instancia de compresion se debe llamar al fileManager
 		 * para que guarde los resultados en el archivo de salida */
@@ -63,11 +48,9 @@ int main(int argc,char *argv[]){
 		cout << "El proceso de compresion a finalizado satisfactoriamente." << endl;
 	}
 
-	else if(operacionARealizar[1] == 'd'){
+	else if(strcmp(operacionARealizar,"d") == 0){
 
 		parSalida = compresor->descomprimir(buffer, size);
-
-		fileOut = crearFileOutD(fileIn);
 
 		/* Luego de la instancia de descompresion se debe llamar al fileManager
 		 * para que guarde los resultados en el archivo de salida */

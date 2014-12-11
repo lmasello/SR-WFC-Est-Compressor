@@ -23,8 +23,7 @@ unsigned int HashMap::fhash(char primero, char segundo, char tercero){
 list<unsigned int>* HashMap::get(char first, char second, char third){
 	unsigned int hash = fhash(first, second, third);
 	if (!table[hash]){
-		list <unsigned int>* lista = new list <unsigned int>;
-		return lista;
+		return nullptr;
 	}
 	return (table[hash]->getValue());
 }

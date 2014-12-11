@@ -30,8 +30,8 @@ class HashEntry {
 		void addValue(unsigned int value){
 			this->value->push_front(value);
 			//Si la lista contiene 150 elementos, borra el ultimo y agrega uno al principio
-			unsigned short tamanioMaximo = 500;
-			if (this->value->size() == tamanioMaximo) this->value->pop_back();
+			//unsigned short tamanioMaximo = 500;
+			//if (this->value->size() == tamanioMaximo) this->value->pop_back();
 		}
 };
 

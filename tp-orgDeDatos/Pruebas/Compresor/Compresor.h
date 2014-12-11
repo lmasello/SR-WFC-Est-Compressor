@@ -8,7 +8,10 @@
 #include <cstddef>
 #include "../Algoritmos de compresion/SymbolRanking.h"
 #include "../Algoritmos de compresion/Estructurado.h"
-#define ORDEN 1
+
+#define ORDEN 6
+#define MAX_LEVELS 11
+#define MAX_NUMBER 1024
 using namespace std;
 
 

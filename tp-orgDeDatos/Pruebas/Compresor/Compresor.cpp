@@ -17,12 +17,12 @@ pair<char*, unsigned int> Compresor::comprimir(char* buffer, unsigned int size){
 	short* salida = new short[size];
 	if (salida == NULL) {fputs ("Memory error",stderr); exit (2);}
 
-	cout<<"Comenzando proceso de compresion por SymbolRanking de orden: " << ORDEN << endl;
+	cout << "Comenzando proceso de compresion por SymbolRanking de orden: " << ORDEN << endl;
 
 	//Comprimimos con SR.
 	sr->comprimir(buffer, salida, size);
 
-	cout<<"SymbolRanking ha finalizado el proceso de compresion correctamente" << endl;
+	cout << "SymbolRanking ha finalizado el proceso de compresion correctamente" << endl;
 
 	calculoEntropiaSalidaSR(salida,size);
 
@@ -38,6 +38,7 @@ pair<char*, unsigned int> Compresor::descomprimir(char* entrada, unsigned int si
 
 	//Descomprimimos con Estructurado
 	pair<unsigned short*, unsigned int> aDescomprimir = estructurado->descomprimir(entrada, size);
+
 	cout<<"Estructurado ha finalizado el proceso de descompresion correctamente" << endl;
 
 	char* salida = new char[aDescomprimir.second];
@@ -46,10 +47,9 @@ pair<char*, unsigned int> Compresor::descomprimir(char* entrada, unsigned int si
 	calculoEntropiaSalidaSR((short*) aDescomprimir.first, aDescomprimir.second);
 
 	cout << "Comenzando el proceso de descompresion por SymbolRanking" << endl;
-	//Descomprimimos con SR.
 
+	//Descomprimimos con SR.
 	sr->descomprimir(aDescomprimir.first, salida, aDescomprimir.second);
-	cout << "SymbolRanking ha finalizado el proceso de descompresion correctamente"<<endl;
 
 	pair<char*, unsigned int> parSalida (salida, aDescomprimir.second);
 	return parSalida;
@@ -62,7 +62,7 @@ void Compresor::calculoEntropia(char* buffer,unsigned int size){
 	for(int i = 0; i < 256; i++) fcaracteres[i] = 0;
 
 	for(unsigned int i = 0; i < size; i++)
-		fcaracteres[(unsigned) buffer[i]]++;
+		fcaracteres[(unsigned char) buffer[i]]++;
 
 	for(int i = 0; i < 256; i++){
 		if(fcaracteres[i] == 0) continue;
@@ -75,10 +75,10 @@ void Compresor::calculoEntropia(char* buffer,unsigned int size){
 void Compresor::calculoEntropiaSalidaSR(short* salida,unsigned int size){
     float entropia = 0;
     float Pi;
-    int fcaracteres[1024];
-    int fniveles[11];
-    for(int i = 0; i < 10; i++) fniveles[i] = 0;
-    for(int i = 0; i < 1024; i++) fcaracteres[i] = 0;
+    int fcaracteres[MAX_NUMBER];
+    int fniveles[MAX_LEVELS];
+    for(int i = 0; i < MAX_LEVELS; i++) fniveles[i] = 0;
+    for(int i = 0; i < MAX_NUMBER; i++) fcaracteres[i] = 0;
 
     for(unsigned int i = 0; i < size; i++){
 
@@ -97,13 +97,13 @@ void Compresor::calculoEntropiaSalidaSR(short* salida,unsigned int size){
             else 					 fniveles[10]++;
     }
     int contador = 0;
-    for(int i = 0; i<11; i++){
+    for(int i = 0; i < MAX_LEVELS; i++){
             cout << "Nivel" << i << " - " << fniveles[i] << endl;
             contador += fniveles[i];
     }
     entropia = 0;
     Pi = 0;
-    for(int i = 0; i < 1024; i++){
+    for(int i = 0; i < MAX_NUMBER; i++){
 		if(fcaracteres[i] == 0) continue;
 		Pi = fcaracteres[i]/(float)contador;
 		float elLog = (-(log(Pi)/log(2)));
