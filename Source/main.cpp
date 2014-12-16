@@ -28,8 +28,8 @@ int main(int argc,char *argv[]){
 	clock_t start=clock();
 
 	FileManager<char> fileManager;
-	char* buffer = fileManager.processFile(fileIn);
-	unsigned int size = fileManager.getSize(fileIn);
+	size_t size;
+	char* buffer = fileManager.processFile(fileIn, &size);
 
 	cout << "El archivo ha sido abierto y colocado en memoria correctamente" << endl;
 

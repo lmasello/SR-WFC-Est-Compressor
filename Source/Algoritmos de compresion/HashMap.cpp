@@ -16,10 +16,6 @@ HashMap::~HashMap(){
 	delete[] table;
 }
 
-unsigned int HashMap::fhash(unsigned char primero, unsigned char segundo, unsigned char tercero){
-	return primero * 256 * 256 + segundo * 256 + tercero;
-}
-
 list<unsigned int>* HashMap::get(char first, char second, char third){
 	unsigned int hash = FHASH(first, second, third);
 	if (!table[hash]){

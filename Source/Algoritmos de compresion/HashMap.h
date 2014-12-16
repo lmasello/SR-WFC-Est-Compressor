@@ -42,11 +42,6 @@ class HashMap {
 		HashMap();
 		~HashMap();
 
-		/*
-		 * Funcion de hash utilizada.
-		 */
-		unsigned int fhash(unsigned char primero, unsigned char segundo, unsigned char tercero);
-
 		/* Devuelve el valor asignado a la clave pasada por parametro. */
 		list<unsigned int>* get(char first, char second, char third);
 

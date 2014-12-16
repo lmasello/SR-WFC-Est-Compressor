@@ -26,7 +26,7 @@ class FileManager {
 		 *   el tipo de dato del buffer va a depender del tipo de datos que contenga el file a cargar en memoria.
 		 *   char si se trata del compresor o unsigned short si se trata del descompresor
 		*/
-		char* processFile(const char* filename){
+		char* processFile(const char* filename, size_t* size){
 			FILE* fileIn;
 			unsigned int lSize;
 			unsigned int result;
@@ -47,20 +47,8 @@ class FileManager {
 			if (result != lSize) {fputs ("Reading error",stderr); exit (3);}
 
 			fclose (fileIn);
+			(*size) = lSize;
 			return buffer;
-		}
-
-		unsigned int getSize(const char* filename){
-			FILE* fileIn;
-			unsigned int lSize;
-
-			fileIn = fopen(filename, "rb");
-			if (!fileIn){fputs ("FileIn error",stderr); exit(1);}
-
-			fseek (fileIn , 0 , SEEK_END);
-			lSize = ftell (fileIn);
-
-			return lSize;
 		}
 
 		/*
