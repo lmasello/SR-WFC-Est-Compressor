@@ -4,6 +4,8 @@
 #include <iostream>
 using namespace std;
 
+#define FHASH(a, b, c) (a * 256*256 + b*256 + c)
+
 #ifndef HASHMAP_H_
 #define HASHMAP_H_
 
@@ -43,7 +45,7 @@ class HashMap {
 		/*
 		 * Funcion de hash utilizada.
 		 */
-		unsigned int fhash(char primero, char segundo, char tercero);
+		unsigned int fhash(unsigned char primero, unsigned char segundo, unsigned char tercero);
 
 		/* Devuelve el valor asignado a la clave pasada por parametro. */
 		list<unsigned int>* get(char first, char second, char third);

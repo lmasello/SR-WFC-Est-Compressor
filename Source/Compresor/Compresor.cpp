@@ -45,14 +45,16 @@ pair<char*, unsigned int> Compresor::descomprimir(char* entrada, unsigned int si
 	cout<<"Estructurado ha finalizado el proceso de descompresion correctamente" << endl;
 
 	char* salida = new char[aDescomprimir.second];
-	if (salida == NULL) {fputs ("Memory error",stderr); exit (2);}
+	if (salida == nullptr) {fputs ("Memory error",stderr); exit (2);}
 
-	calculoEntropiaSalidaSR((short*) aDescomprimir.first, aDescomprimir.second);
+	calculoEntropiaSalidaSR((short*)aDescomprimir.first, aDescomprimir.second);
 
 	cout << "Comenzando el proceso de descompresion por SymbolRanking" << endl;
 
 	//Descomprimimos con SR.
 	sr->descomprimir(aDescomprimir.first, salida, aDescomprimir.second);
+
+	delete[] aDescomprimir.first;
 
 	pair<char*, unsigned int> parSalida (salida, aDescomprimir.second);
 	return parSalida;

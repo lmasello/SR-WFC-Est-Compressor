@@ -31,7 +31,7 @@ void SymbolRanking::comprimir(char* aComprimir, short* salida, unsigned int size
 	//Siguientes caracteres
 	for (unsigned int posCharToRank = ordenMaximo; posCharToRank< size; posCharToRank++){
 
-		if (posCharToRank%102400 == 0) cout << posCharToRank/1000 << "K" << endl;
+		if (posCharToRank%102400 == 0) cout << posCharToRank/1024 << "K" << endl;
 
 		charToRank = aComprimir[posCharToRank];
 		exclusionList.clear();
@@ -81,6 +81,8 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 
 	//Siguientes caracteres
 	for (unsigned int posRankToChar = ordenMaximo; posRankToChar< size; posRankToChar++){
+
+		if (posRankToChar%102400 == 0) cout << posRankToChar/1024 << "Kb" << endl;
 		rankToChar = aDescomprimir[posRankToChar];
 		exclusionList.clear();
 
@@ -113,7 +115,7 @@ void SymbolRanking::descomprimir(unsigned short* aDescomprimir, char* salida, un
 
 tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short orden, unsigned int posCharToRank, char* buffer, char operacion,unsigned short ranking){
 	unsigned int indexFirstChar = posCharToRank-orden;
-	unsigned int hashingAComparar = hashmap.fhash(buffer[indexFirstChar], buffer[indexFirstChar+1], buffer[indexFirstChar+2]);
+	unsigned int hashingAComparar = FHASH(buffer[indexFirstChar], buffer[indexFirstChar+1], buffer[indexFirstChar+2]);
 	unsigned short cantidadDeNoOcurrencias = 0;
 	unsigned short offsetDelHash = 3;
 	tuple<bool, unsigned short> tupla;
@@ -206,7 +208,7 @@ void SymbolRanking::hashear(char symbol1, char symbol2,char symbol3, unsigned in
 }
 
 bool SymbolRanking::hashingIguales(unsigned int hashing1, unsigned int pos, char* buffer){
-	return (hashing1 == hashmap.fhash(buffer[pos], buffer[pos+1], buffer[pos+2]));
+	return (hashing1 == FHASH(buffer[pos], buffer[pos+1], buffer[pos+2]));
 }
 
 bool SymbolRanking::contextosIguales(unsigned int indexA, unsigned int indexB, char* buffer,unsigned short orden){

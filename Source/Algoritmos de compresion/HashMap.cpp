@@ -16,12 +16,12 @@ HashMap::~HashMap(){
 	delete[] table;
 }
 
-unsigned int HashMap::fhash(char primero, char segundo, char tercero){
-	return (unsigned char)primero * 256 * 256 + (unsigned char) segundo * 256 + (unsigned char) tercero;
+unsigned int HashMap::fhash(unsigned char primero, unsigned char segundo, unsigned char tercero){
+	return primero * 256 * 256 + segundo * 256 + tercero;
 }
 
 list<unsigned int>* HashMap::get(char first, char second, char third){
-	unsigned int hash = fhash(first, second, third);
+	unsigned int hash = FHASH(first, second, third);
 	if (!table[hash]){
 		return nullptr;
 	}
@@ -29,7 +29,7 @@ list<unsigned int>* HashMap::get(char first, char second, char third){
 }
 
 void HashMap::put(char first, char second, char third, unsigned int value){
-	unsigned int hash = fhash(first, second, third);
+	unsigned int hash = FHASH(first, second, third);
 	if(!table[hash]){
 		list <unsigned int>* lista = new list <unsigned int>;
 		lista->push_front(value);
