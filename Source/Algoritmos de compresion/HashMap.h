@@ -1,53 +1,66 @@
+
 #include <cstddef>
 #include <stdlib.h>
 #include <list>
 #include <iostream>
-using namespace std;
 
+using namespace std;
 #define FHASH(a, b, c) (a * 256*256 + b*256 + c)
 
 #ifndef HASHMAP_H_
 #define HASHMAP_H_
+class HashEntry
+{
+    private:
+        list<unsigned int> * value;
 
-class HashEntry {
-	private:
-		list<unsigned int>* value;
-	public:
-		HashEntry(list<unsigned int>* value) {
-			this->value = value;
-		}
+    public:
+        HashEntry(list<unsigned int> * value)
+        {
+            this -> value = value;
+        }
 
-		~HashEntry(){
-			delete value;
-		}
+        ~HashEntry()
+        {
+            delete value;
+        }
 
-		list<unsigned int>* getValue() {
-			return value;
-		}
+        list<unsigned int> * getValue()
+        {
+            return value;
+        }
 
-		void setValue(list<unsigned int>* val){
-			this->value = val;
-		}
+        void setValue(list<unsigned int> * val)
+        {
+            this -> value = val;
+        }
 
-		void addValue(unsigned int value){
-			this->value->push_front(value);
-		}
+        void addValue(unsigned int value)
+        {
+            this -> value -> push_front(value);
+        }
 };
 
-class HashMap {
-	private:
-		HashEntry **table;
 
-	public:
-		HashMap();
-		~HashMap();
+class HashMap
+{
+    private:
+        HashEntry ** table;
 
-		/* Devuelve el valor asignado a la clave pasada por parametro. */
-		list<unsigned int>* get(char first, char second, char third);
+    public:
+        HashMap();
 
-		/* Le asigna el valor value a la clave key */
-		void put(char first, char second, char third, unsigned int value);
+        ~HashMap();
 
+        /* Devuelve el valor asignado a la clave pasada por parametro. */
+        list<unsigned int> * get(char first,
+                                 char second,
+                                 char third);
+
+        /* Le asigna el valor value a la clave key */
+        void put(char         first,
+                 char         second,
+                 char         third,
+                 unsigned int value);
 };
-
 #endif /* HASHMAP_H_ */

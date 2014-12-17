@@ -1,3 +1,4 @@
+
 #ifndef ESTRUCTURADO_H
 #define ESTRUCTURADO_H
 
@@ -9,32 +10,50 @@
 #include "constantes.h"
 
 #define OCURRENCIAS_INICIAL 1
-#define LIMITE_FRECUENCIAS Max_frequency // 2 ^14. Ver la seccion 'Gathering the probabilities' de http://www.arturocampos.com/ac_arithmetic.html
+#define LIMITE_FRECUENCIAS Max_frequency // 2 ^14. Ver la seccion 'Gathering the probabilities'
 
+// de http://www.arturocampos.com/ac_arithmetic.html
 using namespace std;
 
 typedef struct _nivel nivel_t;
 
-class Estructurado {
+
+class Estructurado
+{
     public:
         Estructurado();
+
         ~Estructurado();
-        pair<char*, unsigned int> comprimir(short* aComprimir, unsigned int size);
-        pair<unsigned short*, unsigned int> descomprimir(char* indices, unsigned int size);
+
+        pair<char *, unsigned int> comprimir(short *      entrada,
+                							 unsigned int size);
+
+        pair<unsigned short *, unsigned int> descomprimir(char *       indices,
+                										  unsigned int size);
+
     protected:
-        /* Devuelve la frecuencia piso del numero pasado por parametro.
-         * En caso que el numero sea mayor al numero maximo del nivel, se devuelve la cantidad de ocurrencias
-         * de dicho nivel, contemplando que el intervalo del numero maximo se encuentra entre [techo(NumMax-1),cantTotalDeOcurrencias].
-         * DIcha frecuencia va a ser un numero que entre en 16 bits gracias al metodo verificarFrecuencias
-         *  */
-        unsigned short frecuenciaAcumuladaHastaElNumero(nivel_t& nivel,int nro);
 
-        /* Incrementa la frecuencia del numero dentro del nivel, asi como tambien incrementa la cantidad de ocurrencias
-         * de dicho nivel */
-        void incrementarFrecuencias(nivel_t& nivel, int nro);
+        /*
+         *  Devuelve la frecuencia piso del numero pasado por parametro.
+         * En caso que el numero sea mayor al numero maximo del nivel, se devuelve la cantidad de
+         * ocurrencias de dicho nivel, contemplando que el intervalo del numero maximo se encuentra
+         * entre [techo(NumMax-1), cantTotalDeOcurrencias].
+         * Dicha frecuencia va a ser un numero que entre en 16 bits gracias al metodo verificarFrecuencias
+         */
+        unsigned short frecuenciaAcumuladaHastaElNumero(nivel_t & nivel,
+                										int       nro);
 
-        /* Caso especial que se produce en emitirNro cuando se llega a la compresion del EOF.
-         * Realiza la logica de emision de los ultimos bits del archivo comprimido */
+        /*
+         *  Incrementa la frecuencia del numero dentro del nivel, asi como tambien incrementa la cantidad de ocurrencias
+         * de dicho nivel
+         */
+        void incrementarFrecuencias(nivel_t & nivel,
+                                    int       nro);
+
+        /*
+         *  Caso especial que se produce en emitirNro cuando se llega a la compresion del EOF.
+         * Realiza la logica de emision de los ultimos bits del archivo comprimido
+         */
         void finalizarCompresion(unsigned short low);
 
         /*
@@ -43,11 +62,12 @@ class Estructurado {
         void emitirEscape(int nivel);
 
         /*
-         * Va almacenando en el atributo resultado, los bits que representan la probabilidad con la cual se comprime el parametro nro, en el
-         * nro_nivel determinado.
+         * Va almacenando en el atributo resultado, los bits que representan la probabilidad con la cual se comprime
+         * el parametro nro, en el nro_nivel determinado.
          * La logica de procesamiento se basa en http://www.arturocampos.com/ac_arithmetic.html
          */
-        void emitirNro(int nro_nivel, int nro); //Acordarse de quitar la variable i luego de debbugear
+        void emitirNro(int nro_nivel,
+                       int nro);    // Acordarse de quitar la variable i luego de debbugear
 
         /*
          * Emite un EOF.
@@ -78,12 +98,12 @@ class Estructurado {
          * ser inforiores a 16384 (2¹⁴). Si las probabilidades (ocurrencias) son mayores a este
          * limite, se las divide por un factor de 2 o 4.
          */
-        void verificarFrecuencias(nivel_t& nivel);
+        void verificarFrecuencias(nivel_t & nivel);
 
         /*
          * Genera el resultado en un char* que sera escrito en el archivo comprimido
          */
-        pair<char*, unsigned int> generar_resultado_c();
+        pair<char *, unsigned int> generar_resultado_c();
 
         /*
          * Setea variables que se utilizaran para inicializar el proceso de compresion
@@ -93,7 +113,7 @@ class Estructurado {
         /*
          * Genera el resultado en un short* que sera utilizado por el SR para su descompresion
          */
-        pair<unsigned short*, unsigned int> generar_resultado_d();
+        pair<unsigned short *, unsigned int> generar_resultado_d();
 
         /*
          * Setea variables que se utilizaran para inicializar el proceso de descompresion
@@ -103,7 +123,8 @@ class Estructurado {
         /*
          *
          */
-        void generarEntrada(char* entrada, unsigned int size);
+        void generarEntrada(char *       entrada,
+                            unsigned int size);
 
         /*
          *
@@ -111,17 +132,16 @@ class Estructurado {
         void flushByteBuffer();
 
     private:
-        string strEntrada;
-        string resultado;
-        list<unsigned short>* resultado_d;
-        bitset<8> byteBuffer;
-        unsigned short contadorBits_;
-        unsigned int posEnStrEntrada;
-        unsigned short low;
-        unsigned short high;
-        unsigned short underflow;
-        unsigned short value;
-        nivel_t* niveles;
+        string                 strEntrada;
+        string                 resultado;
+        list<unsigned short> * resultado_d;
+        bitset<8>              byteBuffer;
+        unsigned short         contadorBits_;
+        unsigned int           posEnStrEntrada;
+        unsigned short         low;
+        unsigned short         high;
+        unsigned short         underflow;
+        unsigned short         value;
+        nivel_t *              niveles;
 };
-
 #endif // ESTRUCTURADO_H

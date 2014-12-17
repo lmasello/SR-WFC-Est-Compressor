@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <iomanip>
 #include "FileManager/FileManager.h"
@@ -6,68 +7,75 @@
 
 using namespace std;
 
-void help(){
-	cout << "Parametros: executable c/d FileIn FileOut" << endl;
-	fputs ("Parameter error\n",stderr); exit(1);
+void help()
+{
+    cout << "Parametros: executable c/d FileIn FileOut" << endl;
+
+    fputs("Parameter error\n", stderr);
+    exit(1);
 }
 
-int main(int argc,char *argv[]){
+int main(int    argc,
+         char * argv[])
+{
+    // Variables de argv--> comprime/descomprime, archivo entrada, archivo salida
+    // Ver opcion de que el usuario indique el orden del contexto maximo.
+    if (argc != 4)
+    {
+        help();
+    }
 
-	//Variables de argv--> comprime/descomprime, archivo entrada, archivo salida
-	//Ver opcion de que el usuario indique el orden del contexto maximo.
+    const char * operacionARealizar = argv[1];
+    const char * fileIn             = argv[2];
+    const char * fileOut            = argv[3];
 
-	if(argc != 4){
-		help();
-	}
+    // Get start time
+    clock_t           start = clock();
+    FileManager<char> fileManager;
+    size_t            size;
+    char *            buffer = fileManager.processFile(fileIn, &size);
 
-	const char* operacionARealizar = argv[1];
-	const char* fileIn = argv[2];
-	const char* fileOut = argv[3];
+    cout << "El archivo ha sido abierto y colocado en memoria correctamente" << endl;
 
-	// Get start time
-	clock_t start=clock();
+    pair<char *, unsigned int> parSalida;
+    Compresor *                compresor = new Compresor();
 
-	FileManager<char> fileManager;
-	size_t size;
-	char* buffer = fileManager.processFile(fileIn, &size);
+    if (strcmp(operacionARealizar, "c") == 0)
+    {
+        parSalida = compresor -> comprimir(buffer, size);
 
-	cout << "El archivo ha sido abierto y colocado en memoria correctamente" << endl;
+        /*
+         *  Luego de la instancia de compresion se debe llamar al fileManager
+         * para que guarde los resultados en el archivo de salida
+         */
+        fileManager.createFileOut(fileOut, parSalida.first, parSalida.second);
 
-	pair<char*, unsigned int> parSalida;
+        cout << "El proceso de compresion a finalizado satisfactoriamente." << endl;
+    }
+    else if (strcmp(operacionARealizar, "d") == 0)
+    {
+        parSalida = compresor -> descomprimir(buffer, size);
 
-	Compresor *compresor = new Compresor();
+        /*
+         *  Luego de la instancia de descompresion se debe llamar al fileManager
+         * para que guarde los resultados en el archivo de salida
+         */
+        fileManager.createFileOut(fileOut, parSalida.first, parSalida.second);
 
-	if (strcmp(operacionARealizar,"c") == 0){
+        cout << "El proceso de descompresion a finalizado satisfactoriamente." << endl;
+    }
+    else
+    {
+        help();
+    }
 
-		parSalida = compresor->comprimir(buffer,size);
+    delete[] buffer;
+    delete[] parSalida.first;
+    delete compresor;
 
-		/* Luego de la instancia de compresion se debe llamar al fileManager
-		 * para que guarde los resultados en el archivo de salida */
-		fileManager.createFileOut(fileOut, parSalida.first, parSalida.second);
+    // Report result
+    printf("\n%s to %s in %1.2f sec.\n", argv[2], fileOut, double(clock() - start) / CLOCKS_PER_SEC);
 
-		cout << "El proceso de compresion a finalizado satisfactoriamente." << endl;
-	}
-
-	else if(strcmp(operacionARealizar,"d") == 0){
-
-		parSalida = compresor->descomprimir(buffer, size);
-
-		/* Luego de la instancia de descompresion se debe llamar al fileManager
-		 * para que guarde los resultados en el archivo de salida */
-		fileManager.createFileOut(fileOut, parSalida.first, parSalida.second);
-
-		cout << "El proceso de descompresion a finalizado satisfactoriamente." << endl;
-	}
-
-	else help();
-
-	delete[] buffer;
-	delete[] parSalida.first;
-	delete compresor;
-
-	// Report result
-	printf("\n%s to %s in %1.2f sec.\n",
-		 argv[2], fileOut, double(clock()-start)/CLOCKS_PER_SEC);
-
-	return 0;
+    return 0;
 }
+
