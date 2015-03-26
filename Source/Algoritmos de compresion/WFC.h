@@ -17,9 +17,9 @@ class WFC
         unordered_map<char, unsigned short> charFrequencies;
 
         /*
-         * Devuelve la posicion de un char de la weightedList
+         * Returns the position of some element in the weightedList.
          */
-        unsigned short getIndex(char charToTransform);
+        unsigned short getIndex(char element);
 
         /*
          * Reordena la weithedList en base a las frecuencias. EL criterio de ordenamiento
@@ -30,7 +30,7 @@ class WFC
          * -indexDelCharActualizado debe ser un numero entre 0 y 255. Si es 0, no corresponden actualizaciones de la
          * lista ya que el mismo es el mayor
          */
-        void updateWeightedList(unsigned short indexDelCharActualizado);
+        void updateWeightedList(unsigned short newIndex);
 
         /*
          * Metodo que evalua si el peso del caracter que se encuentra en pos 1 es mayor estricto al peso del
@@ -60,7 +60,7 @@ class WFC
         char descomprimir(unsigned short numberToTransform);
 
         /*
-         * Incrementa la frecuencia del caracter en la lista de frecuencias.
+         * Increases the frequency of the char in the frequency list.
          */
         void incrementarFrecuencia(char charToIncrement);
 };

@@ -12,7 +12,7 @@
 
 using namespace std;
 
-template<typename dato>
+template<typename data>
 class FileManager
 {
     public:
@@ -25,15 +25,14 @@ class FileManager
         }
 
         /*
-         *  Dado un filename, lo abre y vuelca su contenido en el buffer.
-         * Precondiciones:
-         *  -fileIn debe ser un nombre de archivo valido, ubicado en el mismo directorio del
-         *   proyecto
-         *  -buffer todavia no contemplo la cantidad de memoria necesaria
-         *  Postcondiciones:
-         *  -El metodo modifica el array buffer, agregando el total del contenido del archivo a procesar.
-         *   el tipo de dato del buffer va a depender del tipo de datos que contenga el file a cargar en memoria.
-         *   char si se trata del compresor o unsigned short si se trata del descompresor
+         * Given a filename, the file is open and its content put in a buffer.
+         * To take into account: buffer might exceed physical memory and its not contemplated.
+         * Preconditions:
+         *  -fileIn must be a valid file name
+         *  Postconditions:
+         *   -The method modifies the buffer array, addding the totality of the file to process to it. The
+         *   data type of the buffer will change depending on the data typy of the file to load on memory. It
+         *   will be char if it is to compress, or unsigned short if it is to decompress.
          */
         char * processFile(const char * filename,
                            size_t *     size)
@@ -51,7 +50,7 @@ class FileManager
                 exit(1);
             }
 
-            // Obtenemos el tamaño del archivo:
+            // The file size if obtained:
             fseek(fileIn, 0, SEEK_END);
 
             lSize = ftell(fileIn);
@@ -82,13 +81,13 @@ class FileManager
         }
 
         /*
-         * Dado el nombre del archivo a procesar, ya sea a comprimir o descomprimir, se crea el archivo
-         * y se guardan los resultados.
-         * Postcondiciones:
-         *  -devuelve un FILE* apuntando al archivo de salida creado
+         * Given the file name to process, either to compress or decompress, the file is created and
+         * the results are stores into it.
+         * Postconditions:
+         * 	-returns a FILE* poiting to the output file created.
          */
         void createFileOut(const char * filename,
-                           char *       salida,
+                           char *       output,
                            unsigned int lenght)
         {
             FILE * fileOut = fopen(filename, "wb");
@@ -99,7 +98,7 @@ class FileManager
                 exit(1);
             }
 
-            fwrite(salida, sizeof(char), lenght, fileOut);
+            fwrite(output, sizeof(char), lenght, fileOut);
             fclose(fileOut);
 
             return;

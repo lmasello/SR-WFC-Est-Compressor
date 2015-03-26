@@ -19,7 +19,7 @@ class SymbolRanking
     private:
         WFC            wfc;
         list<char>     exclusionList;
-        unsigned short ordenMaximo;
+        unsigned short maxOrder;
 
         /*
          * Hash (tambien llamado map) con 255*255 claves que son combinacion de dos char. Sus valores
@@ -45,10 +45,10 @@ class SymbolRanking
          *  -tuple[1]: Si tuple[0]==true y la operacion es 'd' --> es el caracter ofrecido casteado a unsigned short
          * Si tuple[0]==false, indica la cantidad de ofertas negativas.
          */
-        tuple<bool, unsigned short> buscarEnContexto(unsigned short orden,
+        tuple<bool, unsigned short> buscarEnContexto(unsigned short order,
 													 unsigned int   posCharToRank,
 												 	 char *         buffer,
-													 char           operacion,
+													 char           operation,
 													 unsigned short ranking);
 
         /*
@@ -68,9 +68,9 @@ class SymbolRanking
          * Si tuple[0]==false, indica la cantidad de ofertas negativas.
          */
         tuple<bool, unsigned short> busquedaLinealEnContexto(unsigned int   posCharToRank,
-															 unsigned short contexto,
+															 unsigned short context,
 														  	 char *         buffer,
-														 	 char           operacion,
+														 	 char           operation,
 															 unsigned short ranking);
 
         /*
@@ -99,7 +99,7 @@ class SymbolRanking
         bool contextosIguales(unsigned int   indexA,
                               unsigned int   indexB,
                               char *         buffer,
-                              unsigned short ordenDelContexto);
+                              unsigned short contextOrder);
 
         /*
          * Checkea si el contexto actual tiene el mismo hashing que el contexto con el cual se quiere
@@ -130,7 +130,7 @@ class SymbolRanking
     public:
         SymbolRanking();
 
-        SymbolRanking(unsigned short orden);
+        SymbolRanking(unsigned short order);
 
         ~SymbolRanking();
 
@@ -138,15 +138,15 @@ class SymbolRanking
          * Recibe un vector de char a comprimir. El resultado se almacenara en un vector de short
          * (necesito mas de 256 caracteres por lo que no se puede guardar en un vector de char.
          */
-        void comprimir(char *       aComprimir,
-                       short *      salida,
+        void comprimir(char *       toCompress,
+                       short *      output,
                        unsigned int size);
 
         /*
          * Recibe un vector de shorts y genera un vector de chars descomprimidos.
          */
-        void descomprimir(unsigned short * aDescomprimir,
-                          char *           salida,
+        void descomprimir(unsigned short * toDecompress,
+                          char *           output,
                           unsigned int     size);
 };
 

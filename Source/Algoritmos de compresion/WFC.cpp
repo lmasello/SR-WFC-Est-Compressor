@@ -6,7 +6,7 @@ WFC::WFC()
     for (unsigned short i = 0; i < 256; i++)
     {
         weightedList[i]           = ((char) i);
-        charFrequencies[(char) i] = (unsigned short) 1;    // Iniciailza las frecuencias en uno
+        charFrequencies[(char) i] = (unsigned short) 1;    // Initialices the frecuencies to 1.
     }
 }
 
@@ -22,7 +22,7 @@ unsigned short WFC::comprimir(char charToTransform)
 
 unsigned short WFC::getIndex(char charToTransform)
 {
-    unsigned short index;
+    unsigned short index = 0;
     unsigned short size = 256;
 
     for (unsigned short i = 0; i < size; i++)
@@ -40,47 +40,47 @@ unsigned short WFC::getIndex(char charToTransform)
 
 void WFC::incrementarFrecuencia(char charToTransform)
 {
-    unsigned short indexDelCharActualizado = getIndex(charToTransform);
+    unsigned short newIndex = getIndex(charToTransform);
 
     charFrequencies[charToTransform] += 1;
 
-    updateWeightedList(indexDelCharActualizado);
+    updateWeightedList(newIndex);
 }
 
-void WFC::updateWeightedList(unsigned short indexDelCharActualizado)
+void WFC::updateWeightedList(unsigned short newIndex)
 {
-    if (indexDelCharActualizado >= 256)
+    if (newIndex >= 256)
     {
         throw IndexError();
     }
 
-    while (indexDelCharActualizado > 0)
+    while (newIndex > 0)
     {
-        bool pesoMayor = elPesoDeLaPosicionEsMayor(indexDelCharActualizado, indexDelCharActualizado - 1);
+        bool pesoMayor = elPesoDeLaPosicionEsMayor(newIndex, newIndex - 1);
 
         if (pesoMayor)
         {
-            char temp = weightedList[indexDelCharActualizado - 1];
+            char temp = weightedList[newIndex - 1];
 
-            weightedList[indexDelCharActualizado - 1] = weightedList[indexDelCharActualizado];
-            weightedList[indexDelCharActualizado]     = temp;
+            weightedList[newIndex - 1] = weightedList[newIndex];
+            weightedList[newIndex]     = temp;
         }
         else
         {
-            break;    // Si el peso es < o = no hay que realizar intercambios.
+            break;    // If the weight is < or = no exchange is needed.
         }
 
-        indexDelCharActualizado--;
+        newIndex--;
     }
 }
 
 bool WFC::elPesoDeLaPosicionEsMayor(unsigned short pos1,
         unsigned short                             pos2)
 {
-    unsigned short pesoDelCharActualizado = charFrequencies[weightedList[pos1]];
-    unsigned short pesoDelCharAnterior    = charFrequencies[weightedList[pos2]];
+    unsigned short newCharWeight = charFrequencies[weightedList[pos1]];
+    unsigned short previosCharWeight    = charFrequencies[weightedList[pos2]];
 
-    if (pesoDelCharActualizado > pesoDelCharAnterior)
+    if (newCharWeight > previosCharWeight)
     {
         return true;
     }
@@ -90,12 +90,12 @@ bool WFC::elPesoDeLaPosicionEsMayor(unsigned short pos1,
 
 char WFC::descomprimir(unsigned short numberToTransform)
 {
-    char charDeSalida = weightedList[numberToTransform];
+    char outputChar = weightedList[numberToTransform];
 
-    incrementarFrecuencia(charDeSalida);
+    incrementarFrecuencia(outputChar);
     updateWeightedList(numberToTransform);
 
-    return charDeSalida;
+    return outputChar;
 }
 
 

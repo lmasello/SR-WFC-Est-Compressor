@@ -15,7 +15,7 @@
 // de http://www.arturocampos.com/ac_arithmetic.html
 using namespace std;
 
-typedef struct _nivel nivel_t;
+typedef struct _level level_t;
 
 
 class Estructurado
@@ -40,14 +40,14 @@ class Estructurado
          * entre [techo(NumMax-1), cantTotalDeOcurrencias].
          * Dicha frecuencia va a ser un numero que entre en 16 bits gracias al metodo verificarFrecuencias
          */
-        unsigned short frecuenciaAcumuladaHastaElNumero(nivel_t & nivel,
+        unsigned short frecuenciaAcumuladaHastaElNumero(level_t & nivel,
                 										int       nro);
 
         /*
          *  Incrementa la frecuencia del numero dentro del nivel, asi como tambien incrementa la cantidad de ocurrencias
          * de dicho nivel
          */
-        void incrementarFrecuencias(nivel_t & nivel,
+        void incrementarFrecuencias(level_t & nivel,
                                     int       nro);
 
         /*
@@ -98,7 +98,7 @@ class Estructurado
          * ser inforiores a 16384 (2¹⁴). Si las probabilidades (ocurrencias) son mayores a este
          * limite, se las divide por un factor de 2 o 4.
          */
-        void verificarFrecuencias(nivel_t & nivel);
+        void verificarFrecuencias(level_t & nivel);
 
         /*
          * Genera el resultado en un char* que sera escrito en el archivo comprimido
@@ -142,6 +142,6 @@ class Estructurado
         unsigned short         high;
         unsigned short         underflow;
         unsigned short         value;
-        nivel_t *              niveles;
+        level_t *              niveles;
 };
 #endif // ESTRUCTURADO_H
