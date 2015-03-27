@@ -1,5 +1,5 @@
 
-#include "Compresor.h"
+#include "Compressor.h"
 
 Compressor::Compressor()
 {
