@@ -1,209 +1,209 @@
 
 #include "Compresor.h"
 
-Compresor::Compresor()
+Compressor::Compressor()
 {
-    sr           = new SymbolRanking(ORDEN);
-    estructurado = new Estructurado();
+    sr          = new SymbolRanking(ORDER);
+    estructured = new Estructurado();
 }
 
-Compresor::~Compresor()
+Compressor::~Compressor()
 {
     delete sr;
-    delete estructurado;
+    delete estructured;
 }
 
-pair<char *, unsigned int> Compresor::comprimir(char * buffer,
+pair<char *, unsigned int> Compressor::compress(char * buffer,
         unsigned int                                   size)
 {
-    calculoEntropia(buffer, size);
+	calculateEntropy(buffer, size);
 
-    short * salida = new short[size];
+    short * output = new short[size];
 
-    if (salida == NULL)
+    if (output == NULL)
     {
         fputs("Memory error", stderr);
         exit(2);
     }
 
-    cout << "Comenzando proceso de compresion por SymbolRanking de orden: " << ORDEN << endl;
+    cout << "Beginning the process of compression with SymbolRanking of order " << ORDER << endl;
 
-    // Comprimimos con SR.
-    sr -> comprimir(buffer, salida, size);
+    // The compress stage with SR begins.
+    sr -> comprimir(buffer, output, size);
 
-    cout << "SymbolRanking ha finalizado el proceso de compresion correctamente" << endl;
+    cout << "SymbolRanking has ended the compression process succesfully." << endl;
 
-    calculoEntropiaSalidaSR(salida, size);
+    calculateEntropySROutput(output, size);
 
-    cout << "Comenzando el proceso de compresion por Estructurado" << endl;
+    cout << "Beginning the process of decompression with Estructured." << endl;
 
-    // Comprimimos con Estructurado y retornamos.
-    pair<char *, unsigned int> resultado = estructurado -> comprimir(salida, size);
+    // The compress stage with Estructured begins.
+    pair<char *, unsigned int> result = estructured -> comprimir(output, size);
 
-    delete[] salida;
+    delete[] output;
 
-    return resultado;
+    return result;
 }
 
-pair<char *, unsigned int> Compresor::descomprimir(char * entrada,
+pair<char *, unsigned int> Compressor::decompress(char * input,
         unsigned int                                      size)
 {
-    cout << "Comenzando el proceso de descompresion por Estructurado" << endl;
+    cout << "Beginning the process of decompression with Estructured." << endl;
 
-    // Descomprimimos con Estructurado
-    pair<unsigned short *, unsigned int> aDescomprimir = estructurado -> descomprimir(entrada, size);
+    // The decompress stage with Estructured begins.
+    pair<unsigned short *, unsigned int> toDecompress = estructured -> descomprimir(input, size);
 
-    cout << "Estructurado ha finalizado el proceso de descompresion correctamente" << endl;
+    cout << "The Estructured method has ended succesfully." << endl;
 
-    char * salida = new char[aDescomprimir.second];
+    char * output = new char[toDecompress.second];
 
-    if (salida == nullptr)
+    if (output == nullptr)
     {
         fputs("Memory error", stderr);
         exit(2);
     }
 
-    calculoEntropiaSalidaSR((short *) aDescomprimir.first, aDescomprimir.second);
+    calculateEntropySROutput((short *) toDecompress.first, toDecompress.second);
 
-    cout << "Comenzando el proceso de descompresion por SymbolRanking" << endl;
+    cout << "Beginning the process of decompression with SymbolRanking." << endl;
 
-    // Descomprimimos con SR.
-    sr -> descomprimir(aDescomprimir.first, salida, aDescomprimir.second);
+    // The decompress stage with SR begins.
+    sr -> descomprimir(toDecompress.first, output, toDecompress.second);
 
-    delete[] aDescomprimir.first;
+    delete[] toDecompress.first;
 
-    pair<char *, unsigned int> parSalida(salida, aDescomprimir.second);
+    pair<char *, unsigned int> parSalida(output, toDecompress.second);
 
     return parSalida;
 }
 
-void Compresor::calculoEntropia(char *       buffer,
+void Compressor::calculateEntropy(char *       buffer,
                                 unsigned int size)
 {
-    float entropia = 0;
-    float Pi       = 0;    // Probabilidad de i.
-    int   fcaracteres[256];
+    float entropy = 0;
+    float Pi      = 0;    // Probability of i.
+    int   fcharacters[256];
 
     for (int i = 0; i < 256; i++)
     {
-        fcaracteres[i] = 0;
+        fcharacters[i] = 0;
     }
 
     for (unsigned int i = 0; i < size; i++)
     {
-        fcaracteres[(unsigned char) buffer[i]]++;
+        fcharacters[(unsigned char) buffer[i]]++;
     }
 
     for (int i = 0; i < 256; i++)
     {
-        if (fcaracteres[i] == 0)
+        if (fcharacters[i] == 0)
         {
             continue;
         }
 
-        Pi = fcaracteres[i] / (float) size;
+        Pi = fcharacters[i] / (float) size;
 
         float elLog = (-(log(Pi) / log(2)));
 
-        entropia += Pi * elLog;
+        entropy += Pi * elLog;
     }
 
-    cout << "Entropia de entrada: H = " << entropia << endl;
+    cout << "Input entropy: H = " << entropy << endl;
 }
 
-void Compresor::calculoEntropiaSalidaSR(short * salida,
+void Compressor::calculateEntropySROutput(short * output,
         unsigned int                            size)
 {
-    float entropia = 0;
+    float entropy = 0;
     float Pi;
-    int   fcaracteres[MAX_NUMBER];
-    int   fniveles[MAX_LEVELS];
+    int   fcharacters[MAX_NUMBER];
+    int   flevels[MAX_LEVELS];
 
     for (int i = 0; i < MAX_LEVELS; i++)
     {
-        fniveles[i] = 0;
+        flevels[i] = 0;
     }
 
     for (int i = 0; i < MAX_NUMBER; i++)
     {
-        fcaracteres[i] = 0;
+        fcharacters[i] = 0;
     }
 
     for (unsigned int i = 0; i < size; i++)
     {
-        fcaracteres[salida[i]]++;
+        fcharacters[output[i]]++;
 
-        if (salida[i] == 0)
+        if (output[i] == 0)
         {
-            fniveles[0]++;
+            flevels[0]++;
         }
-        else if (salida[i] == 1)
+        else if (output[i] == 1)
         {
-            fniveles[1]++;
+            flevels[1]++;
         }
-        else if (salida[i] < 4)
+        else if (output[i] < 4)
         {
-            fniveles[2]++;
+            flevels[2]++;
         }
-        else if (salida[i] < 8)
+        else if (output[i] < 8)
         {
-            fniveles[3]++;
+            flevels[3]++;
         }
-        else if (salida[i] < 16)
+        else if (output[i] < 16)
         {
-            fniveles[4]++;
+            flevels[4]++;
         }
-        else if (salida[i] < 32)
+        else if (output[i] < 32)
         {
-            fniveles[5]++;
+            flevels[5]++;
         }
-        else if (salida[i] < 64)
+        else if (output[i] < 64)
         {
-            fniveles[6]++;
+            flevels[6]++;
         }
-        else if (salida[i] < 128)
+        else if (output[i] < 128)
         {
-            fniveles[7]++;
+            flevels[7]++;
         }
-        else if (salida[i] < 256)
+        else if (output[i] < 256)
         {
-            fniveles[8]++;
+            flevels[8]++;
         }
-        else if (salida[i] < 512)
+        else if (output[i] < 512)
         {
-            fniveles[9]++;
+            flevels[9]++;
         }
         else
         {
-            fniveles[10]++;
+            flevels[10]++;
         }
     }
 
-    int contador = 0;
+    int counter = 0;
 
     for (int i = 0; i < MAX_LEVELS; i++)
     {
-        cout << "Nivel" << i << " - " << fniveles[i] << endl;
+        cout << "Level" << i << " - " << flevels[i] << endl;
 
-        contador += fniveles[i];
+        counter += flevels[i];
     }
 
-    entropia = 0;
-    Pi       = 0;
+    entropy = 0;
+    Pi      = 0;
 
     for (int i = 0; i < MAX_NUMBER; i++)
     {
-        if (fcaracteres[i] == 0)
+        if (fcharacters[i] == 0)
         {
             continue;
         }
 
-        Pi = fcaracteres[i] / (float) contador;
+        Pi = fcharacters[i] / (float) counter;
 
         float elLog = (-(log(Pi) / log(2)));
 
-        entropia += Pi * elLog;
+        entropy += Pi * elLog;
     }
 
-    cout << "Entropia de salida: H = " << entropia << endl;
+    cout << "Output entropy: H = " << entropy << endl;
 }

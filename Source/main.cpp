@@ -40,11 +40,11 @@ int main(int    argc,
     cout << "The file has been opened and put to memory correctly" << endl;
 
     pair<char *, unsigned int> pairOut;
-    Compresor *                compressor = new Compresor();
+    Compressor *                compressor = new Compressor();
 
     if (strcmp(operationToDo, "c") == 0)
     {
-        pairOut = compressor -> comprimir(buffer, size);
+        pairOut = compressor -> compress(buffer, size);
 
         /*
          * After the compression the fileManager is called in order to
@@ -56,7 +56,7 @@ int main(int    argc,
     }
     else if (strcmp(operationToDo, "d") == 0)
     {
-        pairOut = compressor -> descomprimir(buffer, size);
+        pairOut = compressor -> decompress(buffer, size);
 
         /*
          * After the decompression the fileManager is called in order to
