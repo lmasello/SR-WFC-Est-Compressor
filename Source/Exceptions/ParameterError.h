@@ -1,12 +1,6 @@
-/*
- * ErrorDeParametro.h
- *
- *  Created on: May 28, 2014
- *      Author: leandro
- */
 
-#ifndef ERRORDEPARAMETRO_H_
-#define ERRORDEPARAMETRO_H_
+#ifndef PARAMETERERROR_H_
+#define PARAMETERERROR_H_
 
 // using standard exceptions
 
@@ -15,7 +9,7 @@
 
 using namespace std;
 
-class ErrorDeParametro:
+class ParameterError:
     public exception
 {
     public:

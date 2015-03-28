@@ -10,7 +10,7 @@ SymbolRanking::~SymbolRanking()
 
 }
 
-void SymbolRanking::comprimir(char *       input,
+void SymbolRanking::compress(char *       input,
 							  short *      output,
 							  unsigned int size)
 {
@@ -22,25 +22,25 @@ void SymbolRanking::comprimir(char *       input,
 	unsigned short ctxActual = maxOrder;
 	unsigned short minPosToHash = 3;
 	char charToRank;
-	unsigned short amountOfNonOcurrencies; //Sera el numero de no ocurrencias hasta que se encuentre el simbolo.
+	unsigned short amountOfNonOcurrencies; //Number of non-ocurrencies till the symbol is found.
 	tuple<bool,unsigned short> tup;
 
-	//Primeros caracteres [0,orden-1]
+	//First characters [0,order-1]
 	for(int posCharToRank = 0; posCharToRank < maxOrder; posCharToRank++){
 		if (posCharToRank > 2)
 		{
-			hashear(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
+			hash(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
 		}
 		char charToProcess = input[posCharToRank];
 		output[posCharToRank] = wfc.comprimir(charToProcess);
 	}
 
-	//Siguientes caracteres
+	//Following characters
 	for (unsigned int posCharToRank = maxOrder; posCharToRank< size; posCharToRank++)
 	{
 		if (posCharToRank%102400 == 0)
 		{
-			cout << posCharToRank/1024 << "K" << endl;
+			cout << posCharToRank/1024 << "Kb" << endl;
 		}
 
 		charToRank = input[posCharToRank];
@@ -49,8 +49,8 @@ void SymbolRanking::comprimir(char *       input,
 
 		while(ctxActual > 2)
 		{
-			//El ultimo parametro (ranking) no se utiliza para el compresor, por lo tanto se lo pone en 0
-			tup = buscarEnContexto(ctxActual,posCharToRank, input,'c',0);
+			//The last parameters is not used for compressing, so a 0 is passed.
+			tup = seekInContext(ctxActual,posCharToRank, input,'c',0);
 			amountOfNonOcurrencies += get<1> (tup);
 			if (get<0> (tup))
 			{
@@ -60,7 +60,7 @@ void SymbolRanking::comprimir(char *       input,
 		}
 		while (ctxActual <= 2 && ctxActual > 0)
 		{
-			tup = busquedaLinealEnContexto(posCharToRank,ctxActual, input,'c',0);
+			tup = linearSearchInContext(posCharToRank,ctxActual, input,'c',0);
 			amountOfNonOcurrencies += get<1> (tup);
 			if (!get<0> (tup))
 			{
@@ -79,7 +79,7 @@ void SymbolRanking::comprimir(char *       input,
 		}
 		if(posCharToRank >= minPosToHash)
 		{
-			hashear(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
+			hash(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
 		}
 		output[posCharToRank] = amountOfNonOcurrencies;
 		ctxActual = maxOrder;
@@ -104,7 +104,7 @@ void SymbolRanking::descomprimir(unsigned short * toDecompress,
 		}
 		if (posRankToChar > 2)
 		{
-			hashear(output[posRankToChar-3], output[posRankToChar-2],output[posRankToChar-1], posRankToChar-3);
+			hash(output[posRankToChar-3], output[posRankToChar-2],output[posRankToChar-1], posRankToChar-3);
 		}
 		rankToChar = toDecompress[posRankToChar];
 		output[posRankToChar] = wfc.descomprimir(rankToChar);
@@ -122,7 +122,7 @@ void SymbolRanking::descomprimir(unsigned short * toDecompress,
 
 		while(ctxActual > 2)
 		{
-			tup = buscarEnContexto(ctxActual, posRankToChar, output, 'd', rankToChar);
+			tup = seekInContext(ctxActual, posRankToChar, output, 'd', rankToChar);
 			if (get<0> (tup))
 			{
 				break;
@@ -132,7 +132,7 @@ void SymbolRanking::descomprimir(unsigned short * toDecompress,
 		}
 		while (ctxActual <= 2 && ctxActual > 0)
 		{
-			tup = busquedaLinealEnContexto(posRankToChar, ctxActual, output, 'd', rankToChar);
+			tup = linearSearchInContext(posRankToChar, ctxActual, output, 'd', rankToChar);
 			if (!get<0> (tup))
 			{
 				rankToChar -= get<1> (tup);
@@ -154,13 +154,13 @@ void SymbolRanking::descomprimir(unsigned short * toDecompress,
 		}
 		if(posRankToChar >= minPosToHash)
 		{
-			hashear(output[posRankToChar-3], output[posRankToChar-2],output[posRankToChar-1], posRankToChar-3);
+			hash(output[posRankToChar-3], output[posRankToChar-2],output[posRankToChar-1], posRankToChar-3);
 		}
 		ctxActual = maxOrder;
 	}
 }
 
-tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short order,
+tuple<bool,unsigned short> SymbolRanking::seekInContext(unsigned short order,
 														   unsigned int   posCharToRank,
 														   char *         buffer,
 														   char           operation,
@@ -184,16 +184,16 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short order,
 			}
 			else
 			{
-				match = hashingIguales(hashingAComparar, posDeMatch+offsetDelHash-order, buffer);
+				match = sameHashing(hashingAComparar, posDeMatch+offsetDelHash-order, buffer);
 			}
 
 			if (match)
 			{
-				if(charNoExcluido(buffer[posDeMatch+offsetDelHash]))
+				if(charNotExcluded(buffer[posDeMatch+offsetDelHash]))
 				{
 					if(operation=='c')
 					{
-						bool esElBuscado = charsIguales(posDeMatch + offsetDelHash, buffer[posCharToRank], buffer);
+						bool esElBuscado = sameChars(posDeMatch + offsetDelHash, buffer[posCharToRank], buffer);
 						if (esElBuscado)
 						{
 							get<0> (tup) = true;
@@ -204,7 +204,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short order,
 					else if(operation=='d')
 					{
 						if(ranking==0)
-						{ //El char ofrecido es el descomprimido!
+						{ //The offered char if the decompressed one!
 							unsigned short charDelRanking = (unsigned short) buffer[posDeMatch+offsetDelHash];
 							get<0> (tup) = true;
 							get<1> (tup) = charDelRanking;
@@ -212,7 +212,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short order,
 						}
 						ranking--;
 					}
-					else throw ErrorDeParametro();
+					else throw ParameterError();
 					exclusionList.push_front(buffer[posDeMatch+offsetDelHash]);
 					amountOfNonOcurrencies++;
 				}
@@ -224,7 +224,7 @@ tuple<bool,unsigned short> SymbolRanking::buscarEnContexto(unsigned short order,
 	return tup;
 }
 
-tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int   posCharToRank,
+tuple<bool,unsigned short> SymbolRanking::linearSearchInContext(unsigned int   posCharToRank,
 																   unsigned short context,
 																   char *         buffer,
 																   char           operation,
@@ -240,14 +240,14 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 	for(unsigned int i = context+1; i <= max; i++)
 	{
 		unsigned int contextAComparar = posCharToRank-i;
-		bool match=contextosIguales(contextAComparar,contextCharToRank,buffer,context);
+		bool match=sameContext(contextAComparar,contextCharToRank,buffer,context);
 		if (match)
 		{
-			if(charNoExcluido(buffer[contextAComparar+context]))
+			if(charNotExcluded(buffer[contextAComparar+context]))
 			{
 				if(operation=='c')
 				{
-					bool esElBuscado = charsIguales(contextAComparar+context, buffer[posCharToRank], buffer);
+					bool esElBuscado = sameChars(contextAComparar+context, buffer[posCharToRank], buffer);
 					if(esElBuscado)
 					{
 						get<0> (tup) = true;
@@ -258,7 +258,7 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 				else if(operation=='d')
 				{
 					if(ranking==0)
-					{ //El char ofrecido es el que hay que descomprimir
+					{ //The offered char is to be decompressed.
 						unsigned short charDelRanking = (unsigned short) buffer[contextAComparar+context];
 						get<0> (tup) = true;
 						get<1> (tup) = charDelRanking;
@@ -266,7 +266,7 @@ tuple<bool,unsigned short> SymbolRanking::busquedaLinealEnContexto(unsigned int 
 					}
 					ranking--;
 				}
-				else throw ErrorDeParametro();
+				else throw ParameterError();
 				exclusionList.push_front(buffer[contextAComparar+context]);
 				amountOfNonOcurrencies++;
 			}
@@ -283,22 +283,22 @@ list<unsigned int>* SymbolRanking::getListOfPositions(char *       buffer,
 	return hashmap.get(buffer[posFirst], buffer[posFirst+1],buffer[posFirst+2]);
 }
 
-void SymbolRanking::hashear(char         symbol1,
-							char         symbol2,
-							char         symbol3,
-							unsigned int indexFirstChar)
+void SymbolRanking::hash(char         symbol1,
+						 char         symbol2,
+						 char         symbol3,
+						 unsigned int indexFirstChar)
 {
 	hashmap.put(symbol1, symbol2,symbol3, indexFirstChar);
 }
 
-bool SymbolRanking::hashingIguales(unsigned int hashing1,
+bool SymbolRanking::sameHashing(unsigned int hashing1,
 								   unsigned int pos,
 								   char *       buffer)
 {
 	return (hashing1 == FHASH(buffer[pos], buffer[pos+1], buffer[pos+2]));
 }
 
-bool SymbolRanking::contextosIguales(unsigned int   indexA,
+bool SymbolRanking::sameContext(unsigned int   indexA,
 									 unsigned int   indexB,
 									 char *         buffer,
 									 unsigned short order)
@@ -306,7 +306,8 @@ bool SymbolRanking::contextosIguales(unsigned int   indexA,
 	int comienzoDeContextoAComparar = indexA;
 	if (comienzoDeContextoAComparar<0)
 	{
-		// Este es el caso que en el hash tengo posicion 0, y debido al contexto actual me genera underflow.
+		// This is the case in which the position 0 is in the hashmap and due to the actual context
+		// it generates underflow.
 		return false;
 	}
 	for (unsigned short i=0; i < order; i++)
@@ -319,7 +320,7 @@ bool SymbolRanking::contextosIguales(unsigned int   indexA,
 	return true;
 }
 
-bool SymbolRanking::charsIguales(unsigned int index,
+bool SymbolRanking::sameChars(unsigned int index,
 								 char         charToCompare,
 								 char *       buffer)
 {
@@ -330,7 +331,7 @@ bool SymbolRanking::charsIguales(unsigned int index,
 	return false;
 }
 
-bool SymbolRanking::charNoExcluido(char charToFind)
+bool SymbolRanking::charNotExcluded(char charToFind)
 {
 	auto it = find(exclusionList.begin(), exclusionList.end(), charToFind);
 	if (it == exclusionList.end())

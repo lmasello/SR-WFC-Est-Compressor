@@ -9,7 +9,7 @@
 #include <tuple>
 #include "WFC.h"
 #include "HashMap.h"
-#include "../Exceptions/ErrorDeParametro.h"
+#include "../Exceptions/ParameterError.h"
 
 using namespace std;
 #define MAX_POS 204800
@@ -22,8 +22,7 @@ class SymbolRanking
         unsigned short maxOrder;
 
         /*
-         * Hash (tambien llamado map) con 255*255 claves que son combinacion de dos char. Sus valores
-         * son listas de las posiciones de sus apariciones de dichas claves en el buffer.
+         * It's values are the lists with positions of each key in the buffer.
          */
         HashMap hashmap;
 
@@ -45,11 +44,11 @@ class SymbolRanking
          *  -tuple[1]: Si tuple[0]==true y la operacion es 'd' --> es el caracter ofrecido casteado a unsigned short
          * Si tuple[0]==false, indica la cantidad de ofertas negativas.
          */
-        tuple<bool, unsigned short> buscarEnContexto(unsigned short order,
-													 unsigned int   posCharToRank,
-												 	 char *         buffer,
-													 char           operation,
-													 unsigned short ranking);
+        tuple<bool, unsigned short> seekInContext(unsigned short order,
+												  unsigned int   posCharToRank,
+												  char *         buffer,
+												  char           operation,
+												  unsigned short ranking);
 
         /*
          * Evalua si hay un match de orden 1 y en dicho caso, evalua si la oferta realizada por dicho contexto
@@ -67,26 +66,26 @@ class SymbolRanking
          *  -tuple[1]: Si tuple[0]==true y la operacion es 'd' --> es el caracter ofrecido casteado a unsigned short
          * Si tuple[0]==false, indica la cantidad de ofertas negativas.
          */
-        tuple<bool, unsigned short> busquedaLinealEnContexto(unsigned int   posCharToRank,
+        tuple<bool, unsigned short> linearSearchInContext(unsigned int   posCharToRank,
 															 unsigned short context,
 														  	 char *         buffer,
 														 	 char           operation,
 															 unsigned short ranking);
 
         /*
-         *  Devuelve la lista correspondiente a la clave conformada por el string entre el caracter en
-         * la posicion posFirst del buffer, y el siguiente.
+         * Returns the corresponding list to the key conformed by the string between the character in the
+         * posFirst position from the buffer, and the next one.
          */
         list<unsigned int> * getListOfPositions(char *       buffer,
                 								unsigned int posFirst);
 
         /*
-         *  Dado un vector con 3 char, lo hashea en el map (atributo).
+         * Given an array with 3 chars, it hashes it in the hashmap.
          */
-        void hashear(char         symbol1,
-                     char         symbol2,
-                     char         symbol3,
-                     unsigned int indexFirstChar);
+        void hash(char         symbol1,
+                  char         symbol2,
+                  char         symbol3,
+                  unsigned int indexFirstChar);
 
         /*
          *  Dadas dos offset de un buffer, se comparan N Bytes (N = nro de orden).
@@ -96,36 +95,36 @@ class SymbolRanking
          * Postcondiciones:
          *  Devuelve un boolean de acuerdo a si se produce un match de contextos o no
          */
-        bool contextosIguales(unsigned int   indexA,
+        bool sameContext(unsigned int   indexA,
                               unsigned int   indexB,
                               char *         buffer,
                               unsigned short contextOrder);
 
         /*
-         * Checkea si el contexto actual tiene el mismo hashing que el contexto con el cual se quiere
-         * comparar.
+         * Checks if the actual context has the same hashing as the context with which the comparisson
+         * is to be made.
          */
-        bool hashingIguales(unsigned int hashing1,
+        bool sameHashing(unsigned int hashing1,
                             unsigned int pos,
                             char *       buffer);
 
         /*
-         * Dado un offset de un array, verifica si el char apuntado por esa posicion es el caracter a comparar.
-         * Precondiciones:
-         *  - index debe ser un indice valido del buffer
-         * Postcondiciones:
-         *  Devuelve un boolean de acuerdo a si hay un match entre los caracteres involucrados
+         * Given an offset from an array, verifies if the char poited by that position is the character to compare.
+		 * Preconditions:
+		 *  - index must ve a valid index from the buffer
+		 *  Postconditions:
+		 *   returns a boolean representing if there's a match between the characters involved.
          */
-        bool charsIguales(unsigned int index,
+        bool sameChars(unsigned int index,
                           char         charToCompare,
                           char *       buffer);
 
         /*
-         *  Busca si el caracter ofrecido como ranking esta en la lista de exclusion.
-         * Postcondiciones:
-         *  devuelve True si no se encuentra en la lista.
+         * Searches if the character ofered is in the exclusion list.
+         * Postconditions:
+         *  returns True if it is not in the list.
          */
-        bool charNoExcluido(char charToFind);
+        bool charNotExcluded(char charToFind);
 
     public:
         SymbolRanking();
@@ -135,15 +134,15 @@ class SymbolRanking
         ~SymbolRanking();
 
         /*
-         * Recibe un vector de char a comprimir. El resultado se almacenara en un vector de short
-         * (necesito mas de 256 caracteres por lo que no se puede guardar en un vector de char.
+         * Recieves an array to compress.The result is stored in a short array (more than 256
+         * characters are needed so a char is of no use.
          */
-        void comprimir(char *       toCompress,
+        void compress(char *       toCompress,
                        short *      output,
                        unsigned int size);
 
         /*
-         * Recibe un vector de shorts y genera un vector de chars descomprimidos.
+         * Recieves a short array and generates a char array that represents the chars decompressed.
          */
         void descomprimir(unsigned short * toDecompress,
                           char *           output,

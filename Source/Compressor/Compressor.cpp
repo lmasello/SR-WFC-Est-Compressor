@@ -28,8 +28,8 @@ pair<char *, unsigned int> Compressor::compress(char * buffer,
 
     cout << "Beginning the process of compression with SymbolRanking of order " << ORDER << endl;
 
-    // The compress stage with SR begins.
-    sr -> comprimir(buffer, output, size);
+    // The compress stage with SR method begins.
+    sr -> compress(buffer, output, size);
 
     cout << "SymbolRanking has ended the compression process succesfully." << endl;
 
@@ -37,7 +37,7 @@ pair<char *, unsigned int> Compressor::compress(char * buffer,
 
     cout << "Beginning the process of decompression with Estructured." << endl;
 
-    // The compress stage with Estructured begins.
+    // The compress stage with Estructured method  begins.
     pair<char *, unsigned int> result = estructured -> comprimir(output, size);
 
     delete[] output;
@@ -50,7 +50,7 @@ pair<char *, unsigned int> Compressor::decompress(char * input,
 {
     cout << "Beginning the process of decompression with Estructured." << endl;
 
-    // The decompress stage with Estructured begins.
+    // The decompress stage with Estructured method begins.
     pair<unsigned short *, unsigned int> toDecompress = estructured -> descomprimir(input, size);
 
     cout << "The Estructured method has ended succesfully." << endl;
@@ -67,7 +67,7 @@ pair<char *, unsigned int> Compressor::decompress(char * input,
 
     cout << "Beginning the process of decompression with SymbolRanking." << endl;
 
-    // The decompress stage with SR begins.
+    // The decompress stage with SR method begins.
     sr -> descomprimir(toDecompress.first, output, toDecompress.second);
 
     delete[] toDecompress.first;

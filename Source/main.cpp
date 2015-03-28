@@ -2,7 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include "FileManager/FileManager.h"
-#include "Compresor/Compresor.h"
+#include "Compressor/Compressor.h"
 #include <string.h>
 
 using namespace std;
