@@ -14,10 +14,14 @@ void SymbolRanking::compress(char *       input,
                              short *      output,
                              unsigned int size)
 {
-    /* Busca el contexto con un orden max. Si devuelve (true,x) almacenamos x en el
-    * vector y avanzamos. Si devuelve (false,x) se busca contexto de orden n-1.
-    * En caso de no ocurrencias, se itera hasta llegar a contexto 0, donde se almacena
-    * en el vector el numero ascii correspondiente al literal, mas el numero de no ocurrencias */
+    /*
+     * Searches the  context with a max order. If it returns (true, x) the x is stores in the
+     * array and the process continues. If it return (false, x), the process repeats with an
+     * order n-1.
+     * In the case of non ocurrencies, an iteration is done till context 0, at which point
+     * the ASCII value correspongin to the literal, plus the number of non ocurrencies are stored
+     * in the array.
+     */
 
     unsigned short ctxActual = maxOrder;
     unsigned short minPosToHash = 3;
@@ -30,19 +34,12 @@ void SymbolRanking::compress(char *       input,
     //First characters [0,order-1]
     for(int posCharToRank = 0; posCharToRank < maxOrder; posCharToRank++)
     {
-
-    	cout << "Iteracion: " << posCharToRank << endl;
-
         if (posCharToRank > 2)
         {
             hash(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
         }
 
-        cout << "Parada 2" << endl;
-
         unsigned char charToProcess = input[posCharToRank];
-
-        cout << "charToprocess: " << charToProcess << endl;
 
         output[posCharToRank] = wfc.compress(charToProcess);
     }
@@ -123,7 +120,7 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
         output[posRankToChar] = wfc.decompress(rankToChar);
     }
 
-    //Siguientes caracteres
+    // Next characters.
     for (unsigned int posRankToChar = maxOrder; posRankToChar< size; posRankToChar++)
     {
         if (posRankToChar%102400 == 0)
@@ -158,8 +155,8 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
             }
             else break;
         }
-        // Nota: cuando la tup me devuelve True, quiere decir que el segundo elemento es el caracter ofrecido por un
-        // contexto existente que matcheo. Por lo tanto, esto siempre va a ser un char.
+        // Note: when pair return True, it means the second element is the offered character by an
+        // existing context whichc matched. For that reason, it will always fit a char.
         if(my_pair.first)
         {
             output[posRankToChar] = (char) my_pair.second;
