@@ -16,7 +16,7 @@ Compressor::~Compressor()
 pair<char *, unsigned int> Compressor::compress(char * buffer,
         unsigned int                                   size)
 {
-	calculateEntropy(buffer, size);
+    calculateEntropy(buffer, size);
 
     short * output = new short[size];
 
@@ -78,7 +78,7 @@ pair<char *, unsigned int> Compressor::decompress(char * input,
 }
 
 void Compressor::calculateEntropy(char *       buffer,
-                                unsigned int size)
+                                  unsigned int size)
 {
     float entropy = 0;
     float Pi      = 0;    // Probability of i.

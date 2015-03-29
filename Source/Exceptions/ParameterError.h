@@ -12,7 +12,7 @@ using namespace std;
 class ParameterError:
     public exception
 {
-    public:
-        virtual const char * what() const throw ();
+public:
+    virtual const char * what() const throw ();
 };
 #endif /* ERRORDEPARAMETRO_H_ */

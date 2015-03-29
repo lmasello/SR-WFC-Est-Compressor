@@ -119,7 +119,7 @@ void Estructured::prepareCompression()
 }
 
 pair<char *, unsigned int> Estructured::compress(short *      input,
-												   unsigned int size)
+        unsigned int size)
 {
     prepareCompression();
 
@@ -343,7 +343,7 @@ void Estructured::prepareDecompression()
 }
 
 void Estructured::generateInput(char *       input,
-                                  unsigned int size)
+                                unsigned int size)
 {
     for (unsigned int i = 0; i < size; i++)
     {
@@ -359,7 +359,7 @@ void Estructured::generateInput(char *       input,
 }
 
 pair<unsigned short *, unsigned int> Estructured::decompress(char * input,
-        														unsigned int size)
+        unsigned int size)
 {
     generateInput(input, size);
     prepareDecompression();
@@ -450,13 +450,15 @@ int Estructured::obtainNumber(int level_number)
             // Nothing                       //Expand low half
         }
         else if (low >= Half)
-        {                                 // Expand high half
+        {
+            // Expand high half
             value -= Half;
             low   -= Half;                // Subtract offset to top
             high  -= Half;
         }
         else if ((low >= First_qtr) && (high < Third_qtr))
-        {                                 // Expand middle half
+        {
+            // Expand middle half
             value -= First_qtr;
             low   -= First_qtr;           // Subtract offset to middle
             high  -= First_qtr;
@@ -485,9 +487,9 @@ bool Estructured::readBit()
 }
 
 unsigned short Estructured::accumulatedFreqTillNumber(level_t & level,
-        											   int       number)
+        int       number)
 {
-	// With verifyFreqs, no frequencies higher than 16 bits get through.
+    // With verifyFreqs, no frequencies higher than 16 bits get through.
     unsigned short numbreLowFrequency = 0;
 
     // Case in which the frequencie of the max number of the level is asked for.
@@ -508,7 +510,7 @@ unsigned short Estructured::accumulatedFreqTillNumber(level_t & level,
 }
 
 void Estructured::increaseFreq(level_t & level,
-							   int       number)
+                               int       number)
 {
     // Level total frequencies are updated.
     level.total_ocurrencies++;
@@ -559,8 +561,8 @@ pair<unsigned short *, unsigned int> Estructured::generateDecompressionResult()
 
     for(auto result : *result_d)
     {
-    	output[i] = result;
-    	i++;
+        output[i] = result;
+        i++;
     }
     pair<unsigned short *, unsigned int> par(output, result_d -> size());
 

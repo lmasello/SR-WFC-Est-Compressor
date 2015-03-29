@@ -752,4 +752,5 @@
 			<resource resourceType="PROJECT" workspacePath="/SR-WFC-Est-Compressor"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

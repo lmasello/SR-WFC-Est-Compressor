@@ -75,7 +75,7 @@ void WFC::updateWeightedList(unsigned short newIndex)
 }
 
 bool WFC::isWeighthigher(unsigned short pos1,
-        unsigned short                             pos2)
+                         unsigned short                             pos2)
 {
     unsigned short newCharWeight = charFrequencies[weightedList[pos1]];
     unsigned short previosCharWeight    = charFrequencies[weightedList[pos2]];

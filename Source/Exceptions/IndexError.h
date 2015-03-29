@@ -18,7 +18,7 @@ using namespace std;
 class IndexError:
     public exception
 {
-    public:
-        virtual const char * what() const throw ();
+public:
+    virtual const char * what() const throw ();
 };
 #endif /* INDEXERROR_H_ */
