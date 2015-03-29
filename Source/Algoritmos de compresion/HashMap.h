@@ -53,14 +53,14 @@ public:
     ~HashMap();
 
     /* Returns the value to the key formed by the three char. */
-    list<unsigned int> * get(char first,
-                             char second,
-                             char third);
+    list<unsigned int> * get(unsigned char first,
+                             unsigned char second,
+                             unsigned char third);
 
     /* Assigns the value "value" to the key formed by the three char. */
-    void put(char         first,
-             char         second,
-             char         third,
-             unsigned int value);
+    void put(unsigned char  first,
+             unsigned char second,
+             unsigned char  third,
+             unsigned int   value);
 };
 #endif /* HASHMAP_H_ */

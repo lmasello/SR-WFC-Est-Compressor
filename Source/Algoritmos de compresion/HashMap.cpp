@@ -26,9 +26,9 @@ HashMap::~HashMap()
     delete[] table;
 }
 
-list<unsigned int> * HashMap::get(char first,
-                                  char second,
-                                  char third)
+list<unsigned int> * HashMap::get(unsigned char first,
+                                  unsigned char second,
+                                  unsigned char third)
 {
     unsigned int hash = FHASH(first, second, third);
 
@@ -40,10 +40,10 @@ list<unsigned int> * HashMap::get(char first,
     return (table[hash] -> getValue());
 }
 
-void HashMap::put(char         first,
-                  char         second,
-                  char         third,
-                  unsigned int value)
+void HashMap::put(unsigned char first,
+                  unsigned char second,
+                  unsigned char third,
+                  unsigned int  value)
 {
     unsigned int hash = FHASH(first, second, third);
 

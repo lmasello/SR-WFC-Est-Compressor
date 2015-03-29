@@ -44,7 +44,7 @@ private:
      *  -tuple[1]: Si tuple[0]==true y la operacion es 'd' --> es el caracter ofrecido casteado a unsigned short
      * Si tuple[0]==false, indica la cantidad de ofertas negativas.
      */
-    tuple<bool, unsigned short> seekInContext(unsigned short order,
+    pair<bool, unsigned short> seekInContext(unsigned short order,
             unsigned int   posCharToRank,
             char *         buffer,
             char           operation,
@@ -66,7 +66,7 @@ private:
      *  -tuple[1]: Si tuple[0]==true y la operacion es 'd' --> es el caracter ofrecido casteado a unsigned short
      * Si tuple[0]==false, indica la cantidad de ofertas negativas.
      */
-    tuple<bool, unsigned short> linearSearchInContext(unsigned int   posCharToRank,
+    pair<bool, unsigned short> linearSearchInContext(unsigned int   posCharToRank,
             unsigned short context,
             char *         buffer,
             char           operation,
@@ -82,9 +82,9 @@ private:
     /*
      * Given an array with 3 chars, it hashes it in the hashmap.
      */
-    void hash(char         symbol1,
-              char         symbol2,
-              char         symbol3,
+    void hash(unsigned char       symbol1,
+              unsigned char       symbol2,
+              unsigned char       symbol3,
               unsigned int indexFirstChar);
 
     /*

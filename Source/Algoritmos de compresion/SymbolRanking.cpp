@@ -23,18 +23,30 @@ void SymbolRanking::compress(char *       input,
     unsigned short minPosToHash = 3;
     char charToRank;
     unsigned short amountOfNonOcurrencies; //Number of non-ocurrencies till the symbol is found.
-    tuple<bool,unsigned short> tup;
+    pair<bool, unsigned short> my_pair;
+
+    cout << "Parada 1" << endl;
 
     //First characters [0,order-1]
     for(int posCharToRank = 0; posCharToRank < maxOrder; posCharToRank++)
     {
+
+    	cout << "Iteracion: " << posCharToRank << endl;
+
         if (posCharToRank > 2)
         {
             hash(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
         }
-        char charToProcess = input[posCharToRank];
+
+        cout << "Parada 2" << endl;
+
+        unsigned char charToProcess = input[posCharToRank];
+
+        cout << "charToprocess: " << charToProcess << endl;
+
         output[posCharToRank] = wfc.compress(charToProcess);
     }
+
 
     //Following characters
     for (unsigned int posCharToRank = maxOrder; posCharToRank< size; posCharToRank++)
@@ -51,9 +63,9 @@ void SymbolRanking::compress(char *       input,
         while(ctxActual > 2)
         {
             //The last parameters is not used for compressing, so a 0 is passed.
-            tup = seekInContext(ctxActual,posCharToRank, input,'c',0);
-            amountOfNonOcurrencies += get<1> (tup);
-            if (get<0> (tup))
+            my_pair = seekInContext(ctxActual,posCharToRank, input,'c',0);
+            amountOfNonOcurrencies += my_pair.second;
+            if (my_pair.first)
             {
                 break;
             }
@@ -61,9 +73,9 @@ void SymbolRanking::compress(char *       input,
         }
         while (ctxActual <= 2 && ctxActual > 0)
         {
-            tup = linearSearchInContext(posCharToRank,ctxActual, input,'c',0);
-            amountOfNonOcurrencies += get<1> (tup);
-            if (!get<0> (tup))
+        	my_pair = linearSearchInContext(posCharToRank,ctxActual, input,'c',0);
+            amountOfNonOcurrencies += my_pair.second;
+            if (!my_pair.first)
             {
                 if(ctxActual == 1)
                 {
@@ -74,7 +86,7 @@ void SymbolRanking::compress(char *       input,
             }
             else break;
         }
-        if(get<0>(tup))
+        if(my_pair.first)
         {
             wfc.increaseFreq(charToRank);
         }
@@ -94,7 +106,7 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
     unsigned short ctxActual = maxOrder;
     unsigned short minPosToHash = 3;
     unsigned short rankToChar;
-    tuple<bool,unsigned short> tup;
+    pair<bool,unsigned short> my_pair;
 
     //Primeros rankings [0,orden-1]
     for(unsigned int posRankToChar = 0; posRankToChar < maxOrder; posRankToChar++)
@@ -123,20 +135,20 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
 
         while(ctxActual > 2)
         {
-            tup = seekInContext(ctxActual, posRankToChar, output, 'd', rankToChar);
-            if (get<0> (tup))
+            my_pair = seekInContext(ctxActual, posRankToChar, output, 'd', rankToChar);
+            if (my_pair.first)
             {
                 break;
             }
-            rankToChar -= get<1> (tup);
+            rankToChar -= my_pair.second;
             ctxActual--;
         }
         while (ctxActual <= 2 && ctxActual > 0)
         {
-            tup = linearSearchInContext(posRankToChar, ctxActual, output, 'd', rankToChar);
-            if (!get<0> (tup))
+        	my_pair = linearSearchInContext(posRankToChar, ctxActual, output, 'd', rankToChar);
+            if (!my_pair.first)
             {
-                rankToChar -= get<1> (tup);
+                rankToChar -= my_pair.second;
                 if(ctxActual == 1)
                 {
                     //Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
@@ -148,9 +160,9 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
         }
         // Nota: cuando la tup me devuelve True, quiere decir que el segundo elemento es el caracter ofrecido por un
         // contexto existente que matcheo. Por lo tanto, esto siempre va a ser un char.
-        if(get<0>(tup))
+        if(my_pair.first)
         {
-            output[posRankToChar] = (char) get<1>(tup);
+            output[posRankToChar] = (char) my_pair.second;
             wfc.increaseFreq(output[posRankToChar]);
         }
         if(posRankToChar >= minPosToHash)
@@ -161,17 +173,17 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
     }
 }
 
-tuple<bool,unsigned short> SymbolRanking::seekInContext(unsigned short order,
-        unsigned int   posCharToRank,
-        char *         buffer,
-        char           operation,
-        unsigned short ranking)
+pair<bool,unsigned short> SymbolRanking::seekInContext(unsigned short order,
+													   unsigned int   posCharToRank,
+													   char *         buffer,
+												       char           operation,
+												   	   unsigned short ranking)
 {
     unsigned int indexFirstChar = posCharToRank-order;
     unsigned int hashingAComparar = FHASH(buffer[indexFirstChar], buffer[indexFirstChar+1], buffer[indexFirstChar+2]);
     unsigned short amountOfNonOcurrencies = 0;
     unsigned short offsetDelHash = 3;
-    tuple<bool, unsigned short> tup;
+    pair<bool, unsigned short> my_pair;
     list<unsigned int>* listOfPositions = getListOfPositions(buffer, posCharToRank-3);
 
     if(listOfPositions)
@@ -197,9 +209,9 @@ tuple<bool,unsigned short> SymbolRanking::seekInContext(unsigned short order,
                         bool esElBuscado = sameChars(posDeMatch + offsetDelHash, buffer[posCharToRank], buffer);
                         if (esElBuscado)
                         {
-                            get<0> (tup) = true;
-                            get<1> (tup) = amountOfNonOcurrencies;
-                            return tup;
+                        	my_pair.first = true;
+                        	my_pair.second = amountOfNonOcurrencies;
+                            return my_pair;
                         }
                     }
                     else if(operation=='d')
@@ -208,9 +220,9 @@ tuple<bool,unsigned short> SymbolRanking::seekInContext(unsigned short order,
                         {
                             //The offered char if the decompressed one!
                             unsigned short charDelRanking = (unsigned short) buffer[posDeMatch+offsetDelHash];
-                            get<0> (tup) = true;
-                            get<1> (tup) = charDelRanking;
-                            return tup;
+                            my_pair.first = true;
+                            my_pair.second = charDelRanking;
+                            return my_pair;
                         }
                         ranking--;
                     }
@@ -221,18 +233,18 @@ tuple<bool,unsigned short> SymbolRanking::seekInContext(unsigned short order,
             }
         }
     }
-    get<0> (tup) = false;
-    get<1> (tup) = amountOfNonOcurrencies;
-    return tup;
+    my_pair.first = false;
+    my_pair.second = amountOfNonOcurrencies;
+    return my_pair;
 }
 
-tuple<bool,unsigned short> SymbolRanking::linearSearchInContext(unsigned int   posCharToRank,
-        unsigned short context,
-        char *         buffer,
-        char           operation,
-        unsigned short ranking)
+pair<bool,unsigned short> SymbolRanking::linearSearchInContext(unsigned int   posCharToRank,
+															   unsigned short context,
+															   char *         buffer,
+															   char           operation,
+															   unsigned short ranking)
 {
-    tuple<bool, unsigned short> tup;
+	pair<bool, unsigned short> my_pair;
     unsigned int contextCharToRank = posCharToRank-context;
     unsigned short amountOfNonOcurrencies = 0;
 
@@ -252,9 +264,9 @@ tuple<bool,unsigned short> SymbolRanking::linearSearchInContext(unsigned int   p
                     bool esElBuscado = sameChars(contextAComparar+context, buffer[posCharToRank], buffer);
                     if(esElBuscado)
                     {
-                        get<0> (tup) = true;
-                        get<1> (tup) = amountOfNonOcurrencies;
-                        return tup;
+                    	my_pair.first = true;
+                    	my_pair.second = amountOfNonOcurrencies;
+                        return my_pair;
                     }
                 }
                 else if(operation=='d')
@@ -263,9 +275,9 @@ tuple<bool,unsigned short> SymbolRanking::linearSearchInContext(unsigned int   p
                     {
                         //The offered char is to be decompressed.
                         unsigned short charDelRanking = (unsigned short) buffer[contextAComparar+context];
-                        get<0> (tup) = true;
-                        get<1> (tup) = charDelRanking;
-                        return tup;
+                        my_pair.first = true;
+                        my_pair.second = charDelRanking;
+                        return my_pair;
                     }
                     ranking--;
                 }
@@ -275,20 +287,20 @@ tuple<bool,unsigned short> SymbolRanking::linearSearchInContext(unsigned int   p
             }
         }
     }
-    get<0> (tup) = false;
-    get<1> (tup) = amountOfNonOcurrencies;
-    return tup;
+    my_pair.first = false;
+    my_pair.second = amountOfNonOcurrencies;
+    return my_pair;
 }
 
 list<unsigned int>* SymbolRanking::getListOfPositions(char *       buffer,
-        unsigned int posFirst)
+        											  unsigned int posFirst)
 {
     return hashmap.get(buffer[posFirst], buffer[posFirst+1],buffer[posFirst+2]);
 }
 
-void SymbolRanking::hash(char         symbol1,
-                         char         symbol2,
-                         char         symbol3,
+void SymbolRanking::hash(unsigned char       symbol1,
+                         unsigned char       symbol2,
+                         unsigned char       symbol3,
                          unsigned int indexFirstChar)
 {
     hashmap.put(symbol1, symbol2,symbol3, indexFirstChar);
@@ -296,7 +308,6 @@ void SymbolRanking::hash(char         symbol1,
 
 bool SymbolRanking::sameHashing(unsigned int hashing1,
                                 unsigned int pos,
-
                                 char *       buffer)
 {
     return (hashing1 == FHASH(buffer[pos], buffer[pos+1], buffer[pos+2]));
@@ -307,8 +318,8 @@ bool SymbolRanking::sameContext(unsigned int   indexA,
                                 char *         buffer,
                                 unsigned short order)
 {
-    int comienzoDeContextoAComparar = indexA;
-    if (comienzoDeContextoAComparar<0)
+    int begginingOfContext = indexA;
+    if (begginingOfContext<0)
     {
         // This is the case in which the position 0 is in the hashmap and due to the actual context
         // it generates underflow.
@@ -316,7 +327,7 @@ bool SymbolRanking::sameContext(unsigned int   indexA,
     }
     for (unsigned short i=0; i < order; i++)
     {
-        if (buffer[comienzoDeContextoAComparar+i]!=buffer[indexB+i])
+        if (buffer[begginingOfContext+i]!=buffer[indexB+i])
         {
             return false;
         }

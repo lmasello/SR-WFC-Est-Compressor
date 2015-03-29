@@ -16,7 +16,7 @@ Compressor::~Compressor()
 pair<char *, unsigned int> Compressor::compress(char * buffer,
         unsigned int                                   size)
 {
-    calculateEntropy(buffer, size);
+    //calculateEntropy(buffer, size);
 
     short * output = new short[size];
 
@@ -33,7 +33,7 @@ pair<char *, unsigned int> Compressor::compress(char * buffer,
 
     cout << "SymbolRanking has ended the compression process succesfully." << endl;
 
-    calculateEntropySROutput(output, size);
+    //calculateEntropySROutput(output, size);
 
     cout << "Beginning the process of decompression with Estructured." << endl;
 
@@ -45,8 +45,8 @@ pair<char *, unsigned int> Compressor::compress(char * buffer,
     return result;
 }
 
-pair<char *, unsigned int> Compressor::decompress(char * input,
-        unsigned int                                      size)
+pair<char *, unsigned int> Compressor::decompress(char *      input,
+												  unsigned int size)
 {
     cout << "Beginning the process of decompression with Estructured." << endl;
 
@@ -111,8 +111,8 @@ void Compressor::calculateEntropy(char *       buffer,
     cout << "Input entropy: H = " << entropy << endl;
 }
 
-void Compressor::calculateEntropySROutput(short * output,
-        unsigned int                            size)
+void Compressor::calculateEntropySROutput(short *    output,
+        								  unsigned int size)
 {
     float entropy = 0;
     float Pi;

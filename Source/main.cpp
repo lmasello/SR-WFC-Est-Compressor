@@ -71,12 +71,12 @@ int main(int    argc,
         help();
     }
 
+    // Report result
+    printf("\n%s to %s in %1.2f sec.\n", argv[2], fileOut, double(clock() - start) / CLOCKS_PER_SEC);
+
     delete[] buffer;
     delete[] pairOut.first;
     delete compressor;
-
-    // Report result
-    printf("\n%s to %s in %1.2f sec.\n", argv[2], fileOut, double(clock() - start) / CLOCKS_PER_SEC);
 
     return 0;
 }
