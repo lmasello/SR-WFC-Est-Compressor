@@ -8,7 +8,7 @@
 #include <cstdio>
 #include <cstddef>
 #include "../Algoritmos de compresion/SymbolRanking.h"
-#include "../Algoritmos de compresion/Estructurado.h"
+#include "../Algoritmos de compresion/Estructured.h"
 
 #define ORDER 6
 #define MAX_LEVELS 11
@@ -20,7 +20,7 @@ class Compressor
 {
     private:
         SymbolRanking * sr;
-        Estructurado *  estructured;
+        Estructured *  estructured;
 
         /*
          * Calculates and informs the user of the entropy of the uncompressed file.

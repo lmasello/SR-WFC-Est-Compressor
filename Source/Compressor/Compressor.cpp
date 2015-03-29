@@ -4,7 +4,7 @@
 Compressor::Compressor()
 {
     sr          = new SymbolRanking(ORDER);
-    estructured = new Estructurado();
+    estructured = new Estructured();
 }
 
 Compressor::~Compressor()
@@ -38,7 +38,7 @@ pair<char *, unsigned int> Compressor::compress(char * buffer,
     cout << "Beginning the process of decompression with Estructured." << endl;
 
     // The compress stage with Estructured method  begins.
-    pair<char *, unsigned int> result = estructured -> comprimir(output, size);
+    pair<char *, unsigned int> result = estructured -> compress(output, size);
 
     delete[] output;
 
@@ -51,7 +51,7 @@ pair<char *, unsigned int> Compressor::decompress(char * input,
     cout << "Beginning the process of decompression with Estructured." << endl;
 
     // The decompress stage with Estructured method begins.
-    pair<unsigned short *, unsigned int> toDecompress = estructured -> descomprimir(input, size);
+    pair<unsigned short *, unsigned int> toDecompress = estructured -> decompress(input, size);
 
     cout << "The Estructured method has ended succesfully." << endl;
 
