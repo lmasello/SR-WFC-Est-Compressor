@@ -10,11 +10,11 @@ WFC::WFC()
     }
 }
 
-unsigned short WFC::comprimir(char charToTransform)
+unsigned short WFC::compress(char charToTransform)
 {
     unsigned short index = getIndex(charToTransform);
 
-    incrementarFrecuencia(charToTransform);
+    increaseFreq(charToTransform);
     updateWeightedList(index);
 
     return index;
@@ -38,7 +38,7 @@ unsigned short WFC::getIndex(char charToTransform)
     return index;
 }
 
-void WFC::incrementarFrecuencia(char charToTransform)
+void WFC::increaseFreq(char charToTransform)
 {
     unsigned short newIndex = getIndex(charToTransform);
 
@@ -56,9 +56,9 @@ void WFC::updateWeightedList(unsigned short newIndex)
 
     while (newIndex > 0)
     {
-        bool pesoMayor = elPesoDeLaPosicionEsMayor(newIndex, newIndex - 1);
+        bool higherWeight = isWeighthigher(newIndex, newIndex - 1);
 
-        if (pesoMayor)
+        if (higherWeight)
         {
             char temp = weightedList[newIndex - 1];
 
@@ -74,7 +74,7 @@ void WFC::updateWeightedList(unsigned short newIndex)
     }
 }
 
-bool WFC::elPesoDeLaPosicionEsMayor(unsigned short pos1,
+bool WFC::isWeighthigher(unsigned short pos1,
         unsigned short                             pos2)
 {
     unsigned short newCharWeight = charFrequencies[weightedList[pos1]];
@@ -88,15 +88,13 @@ bool WFC::elPesoDeLaPosicionEsMayor(unsigned short pos1,
     return false;
 }
 
-char WFC::descomprimir(unsigned short numberToTransform)
+char WFC::decompress(unsigned short numberToTransform)
 {
     char outputChar = weightedList[numberToTransform];
 
-    incrementarFrecuencia(outputChar);
+    increaseFreq(outputChar);
     updateWeightedList(numberToTransform);
 
     return outputChar;
 }
 
-
-//~ Formatted by Jindent --- http://www.jindent.com

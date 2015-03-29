@@ -52,12 +52,12 @@ class HashMap
 
         ~HashMap();
 
-        /* Devuelve el valor asignado a la clave pasada por parametro. */
+        /* Returns the value to the key formed by the three char. */
         list<unsigned int> * get(char first,
                                  char second,
                                  char third);
 
-        /* Le asigna el valor value a la clave key */
+        /* Assigns the value "value" to the key formed by the three char. */
         void put(char         first,
                  char         second,
                  char         third,

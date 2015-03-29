@@ -38,8 +38,8 @@ class WFC
          * Precondiciones:
          *  - pos1 y pos2 deben ser menores a 256 y mayores a 0
          */
-        bool elPesoDeLaPosicionEsMayor(unsigned short pos1,
-                                       unsigned short pos2);
+        bool isWeighthigher(unsigned short pos1,
+                            unsigned short pos2);
 
     public:
         WFC();
@@ -49,7 +49,7 @@ class WFC
          * Precondiciones:
          *  - char debe encontrarse en la weithedList
          */
-        unsigned short comprimir(char charToTransform);
+        unsigned short compress(char charToTransform);
 
         /*
          * Recibe un numero y devuelve el char correspondiente al caracter de
@@ -57,11 +57,11 @@ class WFC
          * Precondiciones:
          *  - numberToTransform debe ser un numero entre 0 y weithedList.size()
          */
-        char descomprimir(unsigned short numberToTransform);
+        char decompress(unsigned short numberToTransform);
 
         /*
          * Increases the frequency of the char in the frequency list.
          */
-        void incrementarFrecuencia(char charToIncrement);
+        void increaseFreq(char charToIncrement);
 };
 #endif /* WFC_H_ */

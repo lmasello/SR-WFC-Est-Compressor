@@ -32,7 +32,7 @@ void SymbolRanking::compress(char *       input,
 			hash(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
 		}
 		char charToProcess = input[posCharToRank];
-		output[posCharToRank] = wfc.comprimir(charToProcess);
+		output[posCharToRank] = wfc.compress(charToProcess);
 	}
 
 	//Following characters
@@ -67,7 +67,7 @@ void SymbolRanking::compress(char *       input,
 				if(ctxActual == 1)
 				{
 					//Context 0 case. The actual number is compressed according to the WFC method.
-					amountOfNonOcurrencies += wfc.comprimir(charToRank);
+					amountOfNonOcurrencies += wfc.compress(charToRank);
 				}
 				ctxActual--;
 			}
@@ -75,7 +75,7 @@ void SymbolRanking::compress(char *       input,
 		}
 		if(get<0>(tup))
 		{
-			wfc.incrementarFrecuencia(charToRank);
+			wfc.increaseFreq(charToRank);
 		}
 		if(posCharToRank >= minPosToHash)
 		{
@@ -86,7 +86,7 @@ void SymbolRanking::compress(char *       input,
 	}
 }
 
-void SymbolRanking::descomprimir(unsigned short * toDecompress,
+void SymbolRanking::decompress(unsigned short * toDecompress,
 								 char *           output,
 								 unsigned int     size)
 {
@@ -107,7 +107,7 @@ void SymbolRanking::descomprimir(unsigned short * toDecompress,
 			hash(output[posRankToChar-3], output[posRankToChar-2],output[posRankToChar-1], posRankToChar-3);
 		}
 		rankToChar = toDecompress[posRankToChar];
-		output[posRankToChar] = wfc.descomprimir(rankToChar);
+		output[posRankToChar] = wfc.decompress(rankToChar);
 	}
 
 	//Siguientes caracteres
@@ -139,7 +139,7 @@ void SymbolRanking::descomprimir(unsigned short * toDecompress,
 				if(ctxActual == 1)
 				{
 					//Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
-					output[posRankToChar] = wfc.descomprimir(rankToChar);
+					output[posRankToChar] = wfc.decompress(rankToChar);
 				}
 				ctxActual--;
 			}
@@ -150,7 +150,7 @@ void SymbolRanking::descomprimir(unsigned short * toDecompress,
 		if(get<0>(tup))
 		{
 			output[posRankToChar] = (char) get<1>(tup);
-			wfc.incrementarFrecuencia(output[posRankToChar]);
+			wfc.increaseFreq(output[posRankToChar]);
 		}
 		if(posRankToChar >= minPosToHash)
 		{

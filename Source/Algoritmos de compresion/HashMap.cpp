@@ -49,11 +49,11 @@ void HashMap::put(char         first,
 
     if (!table[hash])
     {
-        list<unsigned int> * lista = new list<unsigned int>;
+        list<unsigned int> * new_list = new list<unsigned int>;
 
-        lista -> push_front(value);
+        new_list -> push_front(value);
 
-        table[hash] = new HashEntry(lista);
+        table[hash] = new HashEntry(new_list);
     }
     else
     {

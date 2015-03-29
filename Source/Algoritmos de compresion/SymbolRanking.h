@@ -34,9 +34,9 @@ class SymbolRanking
          *  - orden: Indica el orden del contexto que se debe buscar el match.
          *  - posCharToRank: Es la posicion actual en el buffer que se esta procesando. Debe ser un unsigned int
          *  - buffer: Contiene los datos que han sido procesados desde la posicion 0 hasta posCharToRank
-         *  - operacion: Indica si la busqueda del contexto se esta realizando para comprimir ('c') o descomprimir('d')
+         *  - operacion: Indica si la busqueda del contexto se esta realizando para comprimir ('c') o decompress('d')
          *               Se debe ingresar 'c' o 'd'. En caso contrario se levanta la excepcion ErrorDeParametro
-         *  - ranking: es unicamente utilizado para el descompresor e indica el ranking del char a descomprimir.
+         *  - ranking: es unicamente utilizado para el descompresor e indica el ranking del char a decompress.
          * Postcondiciones:
          *  -tuple[0] es un bool que indica si la oferta fue positiva (true) o no (false)
          *  -tuple[1]: Si tuple[0]==true y la operacion es 'c' --> indica la cantidad de ofertas negativas que se
@@ -56,9 +56,9 @@ class SymbolRanking
          * Precondiciones:
          *  - posCharToRank: Es la posicion actual en el buffer que se esta procesando. Debe ser un unsigned int
          *  - buffer: Contiene los datos que han sido procesados desde la posicion 0 hasta posCharToRank
-         *  - operacion: Indica si la busqueda del contexto se esta realizando para comprimir ('c') o descomprimir('d')
+         *  - operacion: Indica si la busqueda del contexto se esta realizando para comprimir ('c') o decompress('d')
          *               Se debe ingresar 'c' o 'd'. En caso contrario se levanta la excepcion ErrorDeParametro
-         *  - ranking: es unicamente utilizado para el descompresor e indica el ranking del char a descomprimir
+         *  - ranking: es unicamente utilizado para el descompresor e indica el ranking del char a decompress
          * Postcondiciones:
          *  -tuple[0] es un bool que indica si la oferta fue positiva (true) o no (false)
          *  -tuple[1]: Si tuple[0]==true y la operacion es 'c' --> indica la cantidad de ofertas negativas que se
@@ -144,7 +144,7 @@ class SymbolRanking
         /*
          * Recieves a short array and generates a char array that represents the chars decompressed.
          */
-        void descomprimir(unsigned short * toDecompress,
+        void decompress(unsigned short * toDecompress,
                           char *           output,
                           unsigned int     size);
 };

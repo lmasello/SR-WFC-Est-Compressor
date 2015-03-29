@@ -68,13 +68,13 @@ pair<char *, unsigned int> Compressor::decompress(char * input,
     cout << "Beginning the process of decompression with SymbolRanking." << endl;
 
     // The decompress stage with SR method begins.
-    sr -> descomprimir(toDecompress.first, output, toDecompress.second);
+    sr -> decompress(toDecompress.first, output, toDecompress.second);
 
     delete[] toDecompress.first;
 
-    pair<char *, unsigned int> parSalida(output, toDecompress.second);
+    pair<char *, unsigned int> outputPair(output, toDecompress.second);
 
-    return parSalida;
+    return outputPair;
 }
 
 void Compressor::calculateEntropy(char *       buffer,

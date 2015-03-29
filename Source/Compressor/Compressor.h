@@ -31,7 +31,7 @@ class Compressor
         /*
          * Calculates and informs the user of the entropy of the file after the SymbolRanking compression.
          */
-        void calculateEntropySROutput(short *      salida,
+        void calculateEntropySROutput(short *      output,
                                      unsigned int size);
 
     public:
@@ -56,10 +56,8 @@ class Compressor
          * its output is used as input for the Symbol Ranking compression method.
          * Informs the user of the entropy of the input and final output files.
          */
-        pair<char *, unsigned int> decompress(char * entrada,
+        pair<char *, unsigned int> decompress(char * input,
                 unsigned int                           size);
 };
 #endif
 
-
-//~ Formatted by Jindent --- http://www.jindent.com
