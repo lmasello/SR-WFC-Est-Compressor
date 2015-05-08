@@ -4,6 +4,7 @@ Data compression algorithm which combines Symbol Ranking, Weigthed Frequency Cou
 Based on the papers:
 
 Symbol Ranking Text Compression, by Peter Fenwick
+
 A fast, constant-order, symbol ranking text compressor, by Peter Fenwick
 
 
