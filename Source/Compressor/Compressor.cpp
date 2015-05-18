@@ -21,7 +21,7 @@ pair<char *, unsigned int> Compressor::compress(char * buffer,
 
     short * output = new short[size];
 
-    if (output == NULL)
+    if (output == nullptr)
     {
         fputs("Memory error", stderr);
         exit(2);
@@ -64,7 +64,7 @@ pair<char *, unsigned int> Compressor::decompress(char *      input,
         exit(2);
     }
 
-    calculateEntropySROutput((short *) toDecompress.first, toDecompress.second);
+    //calculateEntropySROutput((short *) toDecompress.first, toDecompress.second);
 
     cout << "Beginning the process of decompression with SymbolRanking." << endl;
 

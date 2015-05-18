@@ -24,7 +24,6 @@ void SymbolRanking::compress(char *       input,
      */
 
     unsigned short ctxActual = maxOrder;
-    unsigned short minPosToHash = 3;
     char charToRank;
     unsigned short amountOfNonOcurrencies; //Number of non-ocurrencies till the symbol is found.
     pair<bool, unsigned short> my_pair;
@@ -85,9 +84,8 @@ void SymbolRanking::compress(char *       input,
         {
             wfc.increaseFreq(charToRank);
         }
-        //if(posCharToRank >= minPosToHash)
-        if (ctxActual > 2)
-            hash(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
+
+        hash(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
         output[posCharToRank] = amountOfNonOcurrencies;
         ctxActual = maxOrder;
     }
@@ -98,7 +96,6 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
                                unsigned int     size)
 {
     unsigned short ctxActual = maxOrder;
-    unsigned short minPosToHash = 3;
     unsigned short rankToChar;
     pair<bool,unsigned short> my_pair;
 
@@ -145,7 +142,7 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
                 rankToChar -= my_pair.second;
                 if(ctxActual == 1)
                 {
-                    //Caso de contexto = 0. Se comprime el numero actual de acuerdo al metodo WFC.
+                	//Case of context zero. The actual number is compressed according to the WFC method.
                     output[posRankToChar] = wfc.decompress(rankToChar);
                 }
                 ctxActual--;
@@ -159,9 +156,7 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
             output[posRankToChar] = (char) my_pair.second;
             wfc.increaseFreq(output[posRankToChar]);
         }
-        //if(posRankToChar >= minPosToHash)
-        //if (ctxActual > 2)
-            hash(output[posRankToChar-3], output[posRankToChar-2],output[posRankToChar-1], posRankToChar-3);
+        hash(output[posRankToChar-3], output[posRankToChar-2],output[posRankToChar-1], posRankToChar-3);
         ctxActual = maxOrder;
     }
 }
