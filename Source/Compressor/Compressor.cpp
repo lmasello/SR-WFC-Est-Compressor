@@ -3,6 +3,7 @@
 
 Compressor::Compressor()
 {
+	// Dont use an ORDER < 4 for reasons
     sr          = new SymbolRanking(ORDER);
     estructured = new Estructured();
 }

@@ -29,8 +29,6 @@ void SymbolRanking::compress(char *       input,
     unsigned short amountOfNonOcurrencies; //Number of non-ocurrencies till the symbol is found.
     pair<bool, unsigned short> my_pair;
 
-    cout << "Parada 1" << endl;
-
     //First characters [0,order-1]
     for(int posCharToRank = 0; posCharToRank < maxOrder; posCharToRank++)
     {
@@ -46,9 +44,9 @@ void SymbolRanking::compress(char *       input,
 
 
     //Following characters
-    for (unsigned int posCharToRank = maxOrder; posCharToRank< size; posCharToRank++)
+    for (unsigned int posCharToRank = maxOrder; posCharToRank < size; posCharToRank++)
     {
-        if (posCharToRank%102400 == 0)
+        if (posCharToRank%204800 == 0)
         {
             cout << posCharToRank/1024 << "Kb" << endl;
         }
@@ -87,10 +85,9 @@ void SymbolRanking::compress(char *       input,
         {
             wfc.increaseFreq(charToRank);
         }
-        if(posCharToRank >= minPosToHash)
-        {
+        //if(posCharToRank >= minPosToHash)
+        if (ctxActual > 2)
             hash(input[posCharToRank-3], input[posCharToRank-2],input[posCharToRank-1], posCharToRank-3);
-        }
         output[posCharToRank] = amountOfNonOcurrencies;
         ctxActual = maxOrder;
     }
@@ -162,10 +159,9 @@ void SymbolRanking::decompress(unsigned short * toDecompress,
             output[posRankToChar] = (char) my_pair.second;
             wfc.increaseFreq(output[posRankToChar]);
         }
-        if(posRankToChar >= minPosToHash)
-        {
+        //if(posRankToChar >= minPosToHash)
+        //if (ctxActual > 2)
             hash(output[posRankToChar-3], output[posRankToChar-2],output[posRankToChar-1], posRankToChar-3);
-        }
         ctxActual = maxOrder;
     }
 }
