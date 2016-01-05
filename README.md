@@ -10,9 +10,11 @@ A fast, constant-order, symbol ranking text compressor, by Peter Fenwick
 
 Usage options:
 
-c/d fileIn FileOut
+c/d fileIn
 
 c: Compress
 d: Decompress
+
+Output file will be fileIn.sr
 
 Pending statistic reports (on memory usage and speed) and table charts comparing with known compression algorithms.
