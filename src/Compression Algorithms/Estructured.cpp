@@ -51,6 +51,9 @@ level_t level_create(int level_number) {
     return level;
 }
 
+void pair_destroy(pair_t *&pPair) {
+
+}
 void level_destroy(level_t *level) {
     list<pair_t *>::iterator it;
 
