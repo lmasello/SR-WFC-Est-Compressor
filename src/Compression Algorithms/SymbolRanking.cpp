@@ -22,16 +22,20 @@ void SymbolRanking::compress(char *input, short *output, unsigned int size) {
     unsigned short amountOfNonOccurrences; //Number of non occurrences till the symbol is found.
     pair<bool, unsigned short> my_pair;
 
+    string ctx;
+
     //First characters [0,order-1]
-    for (int posCharToRank = 0; posCharToRank < maxOrder; posCharToRank++) {
-        if (posCharToRank > 2) {
-            hash(input[posCharToRank - 3], input[posCharToRank - 2], input[posCharToRank - 1], posCharToRank - 3);
-        }
+    output[0] = wfc.compress(input[0]);
+    for (int posCharToRank = 1; posCharToRank < maxOrder; posCharToRank++) {
+        ctx.push_back(input[posCharToRank-1]);
+        currentOrder = posCharToRank;
 
         char charToProcess = input[posCharToRank];
-
+        mapRemainingContexts(ctx, charToProcess);
         output[posCharToRank] = wfc.compress(charToProcess);
     }
+
+    currentOrder = maxOrder;
 
     //Following characters
     for (unsigned int posCharToRank = maxOrder; posCharToRank < size; posCharToRank++) {
@@ -43,6 +47,52 @@ void SymbolRanking::compress(char *input, short *output, unsigned int size) {
         exclusionList.clear();
         amountOfNonOccurrences = 0;
 
+        //New algorithm
+        ctx.clear();
+        /*cout << "Char: " << charToRank << endl;*/
+        while (currentOrder > 0) {
+            //The last parameters is not used for compressing, so a 0 is passed.
+            ctx = getCtx(input, posCharToRank);
+            set<char> matchedChars;
+            try {
+                matchedChars = myMap.at(ctx);
+            }
+            catch(out_of_range) {
+            }
+
+            /*cout << currentOrder << " " << ctx << "   ";
+            for (char current : matchedChars) {
+                cout << current << " ";
+            }
+            cout << matchedChars.size() << endl;
+*/
+            my_pair = lookUpInContext(matchedChars, charToRank, 'c', 0);
+            amountOfNonOccurrences += my_pair.second;
+            if (my_pair.first) {
+                /*cout << "Found" << endl;*/
+                break;
+            }
+            matchedChars.insert(charToRank);
+            myMap[ctx] = matchedChars;
+            //myMap.insert (pair<string, set<char>>(ctx, matchedChars));
+            currentOrder--;
+        }
+
+        if (my_pair.first) {
+            wfc.increaseFreq(charToRank);
+        }
+        if (currentOrder == 0) {
+            //Context 0 case. The actual number is compressed according to the WFC method.
+            amountOfNonOccurrences += wfc.compress(charToRank);
+        }
+
+        mapRemainingContexts(ctx, charToRank);
+        output[posCharToRank] = amountOfNonOccurrences;
+        currentOrder = maxOrder;
+
+
+/*
+        //Old algorithm
         while (currentOrder > 2) {
             //The last parameters is not used for compressing, so a 0 is passed.
             my_pair = seekInContext(posCharToRank, input, 'c', 0);
@@ -64,13 +114,14 @@ void SymbolRanking::compress(char *input, short *output, unsigned int size) {
             }
             else break;
         }
+
         if (my_pair.first) {
             wfc.increaseFreq(charToRank);
         }
 
         hash(input[posCharToRank - 3], input[posCharToRank - 2], input[posCharToRank - 1], posCharToRank - 3);
         output[posCharToRank] = amountOfNonOccurrences;
-        currentOrder = maxOrder;
+        currentOrder = maxOrder;*/
     }
 }
 
@@ -277,4 +328,84 @@ bool SymbolRanking::sameChars(unsigned int index,
 bool SymbolRanking::charExcluded(char charToFind) {
     auto it = find(exclusionList.begin(), exclusionList.end(), charToFind);
     return it != exclusionList.end();
+}
+
+string SymbolRanking::getCtx(char *buffer, unsigned int posCharToRank) {
+    unsigned int pos = posCharToRank - currentOrder;
+    string context;
+    for (int i = 0; i < currentOrder; i++) {
+        context.push_back(buffer[pos+i]);
+    }
+    return context;
+}
+
+void SymbolRanking::mapRemainingContexts(string context, char charToRank) {
+    string currentCtx = context;
+    /*cout << "Map remaining ctx" << endl;*/
+    for(int i = 0; i < currentOrder; i++) {
+        currentCtx = context.substr(i);
+       /* cout << i << " currentCtx: " << currentCtx << " to rank " << charToRank;*/
+        set<char> matchedChars;
+        try {
+            matchedChars = myMap.at(currentCtx);
+        }
+        catch(out_of_range) {
+        }
+        /*cout << "   Value of map before: ";
+        for (char current : matchedChars) {
+            cout << current << " ";
+        }
+        cout << matchedChars.size();*/
+
+        matchedChars.insert(charToRank);
+
+        /*cout << "   Value of map updated to: ";
+        for (char current : matchedChars) {
+            cout << current << " ";
+        }
+        cout << matchedChars.size() << endl;*/
+        myMap[currentCtx] = matchedChars;
+        //myMap.insert (pair<string, set<char>>(currentCtx, matchedChars));
+    }
+}
+
+pair<bool, unsigned short> SymbolRanking::lookUpInContext(set<char> listOfChars,
+                                                          char charToRank,
+                                                          char operation,
+                                                          unsigned short ranking) {
+    unsigned short nonOccurrences = 0;
+    pair<bool, unsigned short> my_pair;
+
+    for (char character : listOfChars) {
+
+        if (charExcluded(character)) continue;
+
+        if (operation == 'c') {
+            bool found = (character == charToRank);
+            if (found) {
+                my_pair.first = true;
+                my_pair.second = nonOccurrences;
+                return my_pair;
+            }
+        }
+        else if (operation == 'd') {
+            if (ranking == 0) {
+                //The offered char if the decompressed one!
+                unsigned short charDelRanking = ( unsigned short ) charToRank;
+                my_pair.first = true;
+                my_pair.second = charDelRanking;
+                return my_pair;
+            }
+            ranking--;
+        }
+        else {
+            throw ParameterError(); //Should never happen.
+        }
+        exclusionList.push_front(character);
+        nonOccurrences++;
+    }
+
+    my_pair.first = false;
+    my_pair.second = nonOccurrences;
+    return my_pair;
 }

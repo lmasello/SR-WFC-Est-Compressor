@@ -6,7 +6,8 @@
 #include <algorithm>
 #include <functional>
 #include <list>
-#include <tuple>
+#include <set>
+#include <map>
 #include "WFC.h"
 #include "HashMap.h"
 #include "../Exceptions/ParameterError.h"
@@ -25,6 +26,8 @@ class SymbolRanking {
          * It's values are the lists with positions of each key in the buffer.
          */
         HashMap hashMap;
+
+        map<string, set<char>> myMap;
 
         /*
          * TODO: translate and update
@@ -124,6 +127,24 @@ class SymbolRanking {
          *  Returns True if the char is in the list.
          */
         bool charExcluded(char charToFind);
+
+        /*
+         * Get the current context corresponding with the current order.
+         */
+        string getCtx(char* buffer, unsigned int posCharToRank);
+
+        /*
+         *
+         */
+        void mapRemainingContexts(string context, char charToRank);
+
+        /*
+         *
+         */
+        pair<bool, unsigned short> lookUpInContext(set<char> listOfChars,
+                                                   char charToRank,
+                                                   char operation,
+                                                   unsigned short ranking);
 
     public:
 

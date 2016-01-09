@@ -24,6 +24,12 @@ pair<char *, unsigned int> Compressor::compress(char *buffer,
 
     cout << "SymbolRanking has ended the compression process succesfully." << endl;
 
+    /*for (int i = 0; i < size; ++i) {
+        cout << output[i] << " ";
+    }
+
+    cout << endl;*/
+
     cout << "Beginning the process of decompression with Estructured." << endl;
 
     // The compress stage with Estructured method  begins.
